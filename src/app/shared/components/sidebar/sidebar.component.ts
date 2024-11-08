@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Importar CommonModule para *ngIf
+import { SidebarService } from '../../../core/services/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -15,8 +16,25 @@ export class SidebarComponent {
     gestionUsuario: false,
   };
 
-  toggleSidebar() {
-    this.isSidebarOpen = !this.isSidebarOpen; // Alterna entre visible e invisible
+  ngOnInit(): void {
+    // Al inicializar, configuramos el sidebar según el tamaño de la pantalla
+    this.checkScreenSize();
+  }
+
+  constructor(private sidebarService: SidebarService) {
+    // Suscribirse a los cambios en el estado del sidebar
+    this.sidebarService.sidebarOpen$.subscribe((isOpen) => {
+      this.isSidebarOpen = isOpen;
+    });
+  }
+
+  @HostListener('window:resize', [])
+  checkScreenSize() {
+    if (window.innerWidth >= 1280) {
+      this.isSidebarOpen = true;
+    } else {
+      this.isSidebarOpen = false;
+    }
   }
 
   toggleMenu(menu: string) {
