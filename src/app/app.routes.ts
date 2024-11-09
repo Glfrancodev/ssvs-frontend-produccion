@@ -13,9 +13,9 @@ export const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
-                path: 'profile',
-                loadComponent: () => import('./business/profile/profile.component'),
-                canActivate: [AuthGuard]
+                path: 'permiso',
+                loadComponent: () => import('./business/permiso/permiso.component'),
+                // canActivate: [AuthGuard]
             },
             {
                 path: 'tables',
