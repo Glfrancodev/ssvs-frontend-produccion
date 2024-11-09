@@ -1,0 +1,88 @@
+<p-toast></p-toast>
+
+<div class="form-container">
+  <h3 style="font-weight: bold; text-align: center;">Buscar Rol por ID</h3>
+  
+  <div class="form-field">
+    <label for="rolId" style="font-weight: bold;">ID del Rol</label>
+    <input
+      id="rolId"
+      type="number"
+      pInputText
+      [(ngModel)]="rolId"
+      placeholder="Ingrese el ID del rol"
+      min="0"
+    />
+  </div>
+
+  <div class="form-field" style="text-align: center;">
+    <p-button
+      icon="pi pi-search"
+      label="Buscar"
+      (click)="buscarRol()"
+      styleClass="p-button-raised p-button-info"
+      [style]="{ width: '120px', height: '40px' }"
+    ></p-button>
+  </div>
+
+  <div *ngIf="rol" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
+    <h3 style="font-weight: bold; text-align: center;">Información del Rol</h3>
+    <div class="form-field">
+      <label style="font-weight: bold;">ID:</label>
+      <span>{{ rol.id }}</span>
+    </div>
+    <div class="form-field">
+      <label style="font-weight: bold;">Nombre:</label>
+      <span>{{ rol.nombre }}</span>
+    </div>
+
+    <!-- Sección para asignar permiso -->
+    <div class="form-field" style="margin-top: 20px;">
+      <label style="font-weight: bold;">Asignar Permiso</label>
+      <p-dropdown
+        [options]="permisosNoAsignados"
+        optionLabel="nombre"
+        optionValue="id"
+        [(ngModel)]="selectedPermisoId"
+        placeholder="Seleccione un permiso"
+      ></p-dropdown>
+    </div>
+    <div class="form-field" style="text-align: center; margin-top: 10px;">
+      <p-button
+        icon="pi pi-plus"
+        label="Asignar"
+        (click)="assignPermiso()"
+        styleClass="p-button-raised p-button-success"
+      ></p-button>
+    </div>
+  </div>
+</div>
+
+<p-table *ngIf="rolPermisos.length > 0" [value]="rolPermisos" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}" [sortField]="sortField" [sortOrder]="sortOrder">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="permiso.id" style="width: 10%">ID Permiso</th>
+      <th style="width: 30%">Nombre Permiso</th>
+      <th style="width: 40%">Descripción</th>
+      <th style="width: 20%">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-rolPermiso>
+    <tr>
+      <td>{{ rolPermiso.permiso.id }}</td>
+      <td>{{ rolPermiso.permiso.nombre }}</td>
+      <td>{{ rolPermiso.permiso.descripcion }}</td>
+      <td>
+        <button 
+          pButton 
+          pRipple 
+          type="button" 
+          icon="pi pi-trash" 
+          class="p-button-rounded p-button-danger" 
+          style="width: 2.5rem; height: 2.5rem;" 
+          (click)="deleteRolPermiso(rolPermiso.id!)">
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

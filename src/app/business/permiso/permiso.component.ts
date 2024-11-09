@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { Permiso } from '../../core/models/permiso';
 import { PermisoService } from '../../core/services/permiso.service';
-import { FormsModule } from '@angular/forms'; // Importa FormsModule para usar ngModel
+import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
@@ -21,16 +21,16 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 })
 export default class PermisoComponent {
   permisos: Permiso[] = [];
-  editedPermisos: { [key: number]: Permiso } = {}; // Para almacenar permisos en edición
-  newPermiso: Permiso = { nombre: '', descripcion: '' }; // Modelo para el nuevo permiso
+  editedPermisos: { [key: number]: Permiso } = {};
+  newPermiso: Permiso = { nombre: '', descripcion: '' };
 
-  // Añade las propiedades de ordenamiento
   sortField: string = 'id';
   sortOrder: number = 1;
 
   constructor(
     private permisoService: PermisoService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private cdr: ChangeDetectorRef // Añade el ChangeDetectorRef aquí
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +79,8 @@ export default class PermisoComponent {
   savePermiso() {
     if (this.newPermiso.nombre && this.newPermiso.descripcion) {
       this.permisoService.createPermiso(this.newPermiso).subscribe((permiso) => {
-        this.permisos.push(permiso);
+        this.permisos = [...this.permisos, permiso]; // Actualiza el array
+        this.cdr.detectChanges(); // Forza la detección de cambios
         this.messageService.add({
           severity: 'success',
           summary: 'Guardado',
