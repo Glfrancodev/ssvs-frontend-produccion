@@ -24,6 +24,10 @@ export default class PermisoComponent {
   editedPermisos: { [key: number]: Permiso } = {}; // Para almacenar permisos en edición
   newPermiso: Permiso = { nombre: '', descripcion: '' }; // Modelo para el nuevo permiso
 
+  // Añade las propiedades de ordenamiento
+  sortField: string = 'id';
+  sortOrder: number = 1;
+
   constructor(
     private permisoService: PermisoService,
     private messageService: MessageService

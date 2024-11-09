@@ -1,20 +1,16 @@
 <p-toast></p-toast>
 
 <div class="form-container">
-    <h3 style="font-weight: bold;">Crear Nuevo Permiso</h3>
+    <h3 style="font-weight: bold;">Crear Nuevo Rol</h3>
     <div class="form-field">
         <label for="nombre" style="font-weight: bold;">Nombre</label>
-        <input id="nombre" type="text" pInputText [(ngModel)]="newPermiso.nombre" placeholder="Nombre del permiso" />
-    </div>
-    <div class="form-field">
-        <label for="descripcion" style="font-weight: bold;">Descripción</label>
-        <input id="descripcion" type="text" pInputText [(ngModel)]="newPermiso.descripcion" placeholder="Descripción del permiso" />
+        <input id="nombre" type="text" pInputText [(ngModel)]="newRol.nombre" placeholder="Nombre del permiso" />
     </div>
     <div class="form-field" style="text-align: center;">
         <p-button
             icon="pi pi-save"
             label="Guardar"
-            (click)="savePermiso()"
+            (click)="saveRol()"
             styleClass="p-button-raised p-button-warning"
             [style]="{ width: '120px', height: '40px' }"
         ></p-button>
@@ -23,21 +19,20 @@
 
 
 
-<p-table [value]="permisos" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}" [sortField]="sortField" [sortOrder]="sortOrder">
+<p-table [value]="roles" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}" [sortField]="sortField" [sortOrder]="sortOrder">
     <ng-template pTemplate="header">
         <tr>
-            <th pSortableColumn="id" style="width:10%">Id</th>
-            <th style="width:30%">Nombre</th>
-            <th style="width:40%">Descripción</th>
+            <th pSortableColumn="id" style="width:30%">Id</th>
+            <th style="width:50%">Nombre</th>
             <th style="width:20%">Acción</th>
         </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-permiso let-editing="editing" let-ri="rowIndex">
-        <tr [pEditableRow]="permiso">
+    <ng-template pTemplate="body" let-rol let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="rol">
             <td>
                 <p-cellEditor>
                     <ng-template pTemplate="output">
-                        {{permiso.id}}
+                        {{rol.id}}
                     </ng-template>
                 </p-cellEditor>
             <td>
@@ -46,25 +41,11 @@
                         <input 
                             pInputText 
                             type="text" 
-                            [(ngModel)]="permiso.nombre" 
+                            [(ngModel)]="rol.nombre" 
                             required />
                     </ng-template>
                     <ng-template pTemplate="output">
-                        {{permiso.nombre}}
-                    </ng-template>
-                </p-cellEditor>
-            </td>
-            <td>
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <input 
-                            pInputText 
-                            type="text" 
-                            [(ngModel)]="permiso.descripcion" 
-                            required />
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{permiso.descripcion}}
+                        {{rol.nombre}}
                     </ng-template>
                 </p-cellEditor>
             </td>
@@ -77,7 +58,7 @@
                         type="button" 
                         pInitEditableRow 
                         icon="pi pi-pencil" 
-                        (click)="onRowEditInit(permiso)" 
+                        (click)="onRowEditInit(rol)" 
                         class="p-button-rounded"
                         style="background-color: #ffffff; color: #007bff; border: none; width: 2.5rem; height: 2.5rem;">
                     </button>
@@ -89,7 +70,7 @@
                         icon="pi pi-trash" 
                         class="p-button-rounded p-button-danger" 
                         style="width: 3rem; height: 3rem;"
-                        (click)="deletePermiso(permiso.id)">
+                        (click)="deleteRol(rol.id)">
                     </button>                
                     <button 
                         *ngIf="editing" 
@@ -98,7 +79,7 @@
                         type="button" 
                         pSaveEditableRow 
                         icon="pi pi-check" 
-                        (click)="onRowEditSave(permiso)" 
+                        (click)="onRowEditSave(rol)" 
                         class="p-button-rounded"
                         style="background-color: #ffffff; color: #28a745; border: none; width: 2.5rem; height: 2.5rem; margin-right: 0.5rem;">
                     </button>
@@ -109,7 +90,7 @@
                         type="button" 
                         pCancelEditableRow 
                         icon="pi pi-times" 
-                        (click)="onRowEditCancel(permiso, ri)" 
+                        (click)="onRowEditCancel(rol, ri)" 
                         class="p-button-rounded"
                         style="background-color: #ffffff; color: #dc3545; border: none; width: 2.5rem; height: 2.5rem;">
                     </button>

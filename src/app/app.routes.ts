@@ -18,8 +18,8 @@ export const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
-                path: 'tables',
-                loadComponent: () => import('./business/tables/tables.component'),
+                path: 'rol',
+                loadComponent: () => import('./business/rol/rol.component'),
                 canActivate: [AuthGuard]
             },
             {
