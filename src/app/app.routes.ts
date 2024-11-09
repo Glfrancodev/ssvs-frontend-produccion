@@ -15,7 +15,7 @@ export const routes: Routes = [
             {
                 path: 'permiso',
                 loadComponent: () => import('./business/permiso/permiso.component'),
-                // canActivate: [AuthGuard]
+                canActivate: [AuthGuard]
             },
             {
                 path: 'tables',

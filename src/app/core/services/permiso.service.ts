@@ -2,20 +2,23 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Permiso } from '../models/permiso';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PermisoService {
   private apiUrl = 'http://localhost:8080/api/permiso';
-  private token = localStorage.getItem('token'); 
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private authService: AuthService
+  ) {}
 
   private getAuthHeaders(): HttpHeaders {
     return new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${this.token}`
+      'Authorization': `Bearer ${this.authService.getToken()}`
     });
   }
 
@@ -27,8 +30,8 @@ export class PermisoService {
     return this.http.get<Permiso>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
 
-  createPermiso(permiso: Permiso): Observable<Permiso[]> {
-    return this.http.post<Permiso[]>(this.apiUrl, permiso, { headers: this.getAuthHeaders() });
+  createPermiso(permiso: Permiso): Observable<Permiso> {
+    return this.http.post<Permiso>(this.apiUrl, permiso, { headers: this.getAuthHeaders() });
   }
 
   updatePermiso(permiso: Permiso): Observable<Permiso> {

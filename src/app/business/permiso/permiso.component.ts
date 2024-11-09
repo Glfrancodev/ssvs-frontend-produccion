@@ -6,11 +6,13 @@ import { MessageService } from 'primeng/api';
 import { Permiso } from '../../core/models/permiso';
 import { PermisoService } from '../../core/services/permiso.service';
 import { FormsModule } from '@angular/forms'; // Importa FormsModule para usar ngModel
+import { ButtonModule } from 'primeng/button';
+import { RippleModule } from 'primeng/ripple';
 
 @Component({
   selector: 'app-permiso',
   standalone: true,
-  imports: [TableModule, CommonModule, ToastModule, FormsModule],
+  imports: [TableModule, CommonModule, ToastModule, FormsModule, ButtonModule, RippleModule],
   providers: [MessageService],
   templateUrl: './permiso.component.html',
   styleUrls: ['./permiso.component.css']
