@@ -8,11 +8,13 @@ import { PermisoService } from '../../core/services/permiso.service';
 import { FormsModule } from '@angular/forms'; // Importa FormsModule para usar ngModel
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 
 @Component({
   selector: 'app-permiso',
   standalone: true,
-  imports: [TableModule, CommonModule, ToastModule, FormsModule, ButtonModule, RippleModule],
+  imports: [TableModule, CommonModule, ToastModule, FormsModule, ButtonModule, RippleModule, InputGroupAddonModule, InputGroupModule],
   providers: [MessageService],
   templateUrl: './permiso.component.html',
   styleUrls: ['./permiso.component.css']
@@ -20,8 +22,12 @@ import { RippleModule } from 'primeng/ripple';
 export default class PermisoComponent {
   permisos: Permiso[] = [];
   editedPermisos: { [key: number]: Permiso } = {}; // Para almacenar permisos en edición
+  newPermiso: Permiso = { nombre: '', descripcion: '' }; // Modelo para el nuevo permiso
 
-  constructor(private permisoService: PermisoService, private messageService: MessageService) {}
+  constructor(
+    private permisoService: PermisoService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit(): void {
     this.getAllPermisos();
@@ -53,5 +59,36 @@ export default class PermisoComponent {
     this.permisos[rowIndex] = this.editedPermisos[permiso.id!] || permiso;
     delete this.editedPermisos[permiso.id!];
     this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Edición cancelada' });
+  }
+
+  deletePermiso(id: number) {
+    this.permisoService.deletePermiso(id).subscribe(() => {
+      this.permisos = this.permisos.filter(permiso => permiso.id !== id);
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Eliminado',
+        detail: 'Permiso eliminado correctamente'
+      });
+    });
+  }
+
+  savePermiso() {
+    if (this.newPermiso.nombre && this.newPermiso.descripcion) {
+      this.permisoService.createPermiso(this.newPermiso).subscribe((permiso) => {
+        this.permisos.push(permiso);
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Guardado',
+          detail: 'Nuevo permiso creado correctamente'
+        });
+        this.newPermiso = { nombre: '', descripcion: '' }; // Resetea el formulario
+      });
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Nombre y descripción son obligatorios'
+      });
+    }
   }
 }

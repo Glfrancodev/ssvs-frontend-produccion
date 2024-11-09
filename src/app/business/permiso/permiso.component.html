@@ -1,10 +1,32 @@
-
-
 <p-toast></p-toast>
+
+<div class="form-container">
+    <h3 style="font-weight: bold;">Crear Nuevo Permiso</h3>
+    <div class="form-field">
+        <label for="nombre" style="font-weight: bold;">Nombre</label>
+        <input id="nombre" type="text" pInputText [(ngModel)]="newPermiso.nombre" placeholder="Nombre del permiso" />
+    </div>
+    <div class="form-field">
+        <label for="descripcion" style="font-weight: bold;">Descripción</label>
+        <input id="descripcion" type="text" pInputText [(ngModel)]="newPermiso.descripcion" placeholder="Descripción del permiso" />
+    </div>
+    <div class="form-field" style="text-align: center;">
+        <p-button
+            icon="pi pi-save"
+            label="Guardar"
+            (click)="savePermiso()"
+            styleClass="p-button-raised p-button-warning"
+            [style]="{ width: '120px', height: '40px' }"
+        ></p-button>
+    </div>
+</div>
+
+
+
 <p-table [value]="permisos" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
     <ng-template pTemplate="header">
         <tr>
-            <th style="width:10%">Id</th>
+            <th pSortableColumn="id" style="width:10%">Id</th>
             <th style="width:30%">Nombre</th>
             <th style="width:40%">Descripción</th>
             <th style="width:20%">Acción</th>
@@ -18,8 +40,6 @@
                         {{permiso.id}}
                     </ng-template>
                 </p-cellEditor>
-            </td>
-            
             <td>
                 <p-cellEditor>
                     <ng-template pTemplate="input">
@@ -51,40 +71,48 @@
             <td>
                 <div class="flex align-items-center justify-content-center gap-2">
                     <button 
-                    *ngIf="!editing" 
-                    pButton 
-                    pRipple 
-                    type="button" 
-                    pInitEditableRow 
-                    icon="pi pi-pencil" 
-                    (click)="onRowEditInit(permiso)" 
-                    class="p-button-rounded"
-                    style="background-color: #007bff; color: white; border: none; width: 2.5rem; height: 2.5rem;">
-                </button>
-                <button 
-                    *ngIf="editing" 
-                    pButton 
-                    pRipple 
-                    type="button" 
-                    pSaveEditableRow 
-                    icon="pi pi-check" 
-                    (click)="onRowEditSave(permiso)" 
-                    class="p-button-rounded"
-                    style="background-color: #28a745; color: white; border: none; width: 2.5rem; height: 2.5rem; margin-right: 0.5rem;">
-                </button>
-                <button 
-                    *ngIf="editing" 
-                    pButton 
-                    pRipple 
-                    type="button" 
-                    pCancelEditableRow 
-                    icon="pi pi-times" 
-                    (click)="onRowEditCancel(permiso, ri)" 
-                    class="p-button-rounded"
-                    style="background-color: #dc3545; color: white; border: none; width: 2.5rem; height: 2.5rem;">
-                </button>
-                
-                
+                        *ngIf="!editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pInitEditableRow 
+                        icon="pi pi-pencil" 
+                        (click)="onRowEditInit(permiso)" 
+                        class="p-button-rounded"
+                        style="background-color: #ffffff; color: #007bff; border: none; width: 2.5rem; height: 2.5rem;">
+                    </button>
+                    <button 
+                        *ngIf="!editing"
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        icon="pi pi-trash" 
+                        class="p-button-rounded p-button-danger" 
+                        style="width: 3rem; height: 3rem;"
+                        (click)="deletePermiso(permiso.id)">
+                    </button>                
+                    <button 
+                        *ngIf="editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pSaveEditableRow 
+                        icon="pi pi-check" 
+                        (click)="onRowEditSave(permiso)" 
+                        class="p-button-rounded"
+                        style="background-color: #ffffff; color: #28a745; border: none; width: 2.5rem; height: 2.5rem; margin-right: 0.5rem;">
+                    </button>
+                    <button 
+                        *ngIf="editing" 
+                        pButton 
+                        pRipple 
+                        type="button" 
+                        pCancelEditableRow 
+                        icon="pi pi-times" 
+                        (click)="onRowEditCancel(permiso, ri)" 
+                        class="p-button-rounded"
+                        style="background-color: #ffffff; color: #dc3545; border: none; width: 2.5rem; height: 2.5rem;">
+                    </button>
                 </div>
             </td>
         </tr>
