@@ -35,4 +35,11 @@ export class MedicoEspecialidadService {
   deleteMedicoEspecialidad(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  // Nuevo método para obtener una relación específica de medicoEspecialidad
+  getMedicoEspecialidadByEspecialidadAndMedico(especialidadId: number, medicoId: number): Observable<MedicoEspecialidad> {
+    const url = `${this.apiUrl}/especialidad/${especialidadId}/medico/${medicoId}`;
+    return this.http.get<MedicoEspecialidad>(url, { headers: this.getAuthHeaders() });
+  }
+
 }

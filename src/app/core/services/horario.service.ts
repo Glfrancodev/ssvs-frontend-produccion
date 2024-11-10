@@ -37,4 +37,9 @@ export class HorarioService {
   deleteHorario(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  getHorariosPorMedicoEspecialidad(medicoEspecialidadId: number): Observable<Horario[]> {
+    return this.http.get<Horario[]>(`${this.apiUrl}/medico-especialidad/${medicoEspecialidadId}`, { headers: this.getAuthHeaders() });
+}
+
 }

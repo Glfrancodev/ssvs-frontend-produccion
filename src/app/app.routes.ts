@@ -74,6 +74,12 @@ export const routes: Routes = [
                 data: { roles: ['SuperUsuario'] }
             },
             {
+                path: 'cupo',
+                loadComponent: () => import('./business/cupo/cupo.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
+            },
+            {
                 path:'',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'
