@@ -1,0 +1,172 @@
+<p-toast></p-toast>
+
+<div class="usuario-list-container">
+  <!-- Formulario para añadir un nuevo usuario -->
+  <div class="add-usuario-form">
+    <h3>Añadir Nuevo Usuario</h3>
+    <div class="form-field">
+      <label for="ci">CI</label>
+      <input id="ci" type="text" pInputText [(ngModel)]="newUsuario.ci" placeholder="Ingrese CI" />
+    </div>
+    <div class="form-field">
+      <label for="correo">Correo</label>
+      <input id="correo" type="email" pInputText [(ngModel)]="newUsuario.correo" placeholder="Ingrese Correo" />
+    </div>
+    <div class="form-field">
+      <label for="contrasena">Contraseña</label>
+      <input id="contrasena" type="password" pInputText [(ngModel)]="newUsuario.contrasena" placeholder="Ingrese Contraseña" />
+    </div>
+    <div class="form-field">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" pInputText [(ngModel)]="newUsuario.nombre" placeholder="Ingrese Nombre" />
+    </div>
+    <div class="form-field">
+      <label for="apellido">Apellido</label>
+      <input id="apellido" type="text" pInputText [(ngModel)]="newUsuario.apellido" placeholder="Ingrese Apellido" />
+    </div>
+    <div class="form-field">
+        <label for="rol">Rol</label>
+        <p-dropdown
+          id="rol"
+          [options]="roles"
+          optionLabel="nombre"
+          optionValue="id"
+          [(ngModel)]="newUsuario.rol!.id"
+          placeholder="Seleccione Rol"
+        ></p-dropdown>
+      </div>
+    <div class="form-field">
+      <p-button
+        label="Añadir Usuario"
+        icon="pi pi-plus"
+        (click)="addUsuario()"
+        styleClass="p-button-raised p-button-success"
+      ></p-button>
+    </div>
+  </div>
+
+  <p-table
+    [value]="usuarios"
+    dataKey="id"
+    editMode="row"
+    [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 10%;">ID</th>
+        <th style="width: 20%;">Correo</th>
+        <th style="width: 15%;">Nombre</th>
+        <th style="width: 15%;">Apellido</th>
+        <th style="width: 10%;">Estado</th>
+        <th style="width: 15%;">Rol</th>
+        <th style="width: 15%;">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-usuario let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="usuario">
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">
+              {{ usuario.id }}
+            </ng-template>
+            <ng-template pTemplate="input">
+              {{ usuario.id }}
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">{{ usuario.correo }}</ng-template>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="usuario.correo" class="input-field" />
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">{{ usuario.nombre }}</ng-template>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="usuario.nombre" class="input-field" />
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">{{ usuario.apellido }}</ng-template>
+            <ng-template pTemplate="input">
+              <input pInputText type="text" [(ngModel)]="usuario.apellido" class="input-field" />
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">{{ usuario.estaActivo ? 'Activo' : 'Inactivo' }}</ng-template>
+            <ng-template pTemplate="input">{{ usuario.estaActivo ? 'Activo' : 'Inactivo' }}</ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">{{ usuario.rol?.nombre }}</ng-template>
+            <ng-template pTemplate="input">
+              <p-dropdown
+                [options]="roles"
+                optionLabel="nombre"
+                optionValue="id"
+                [(ngModel)]="usuario.rol.id"
+                placeholder="Seleccione rol"
+                class="input-dropdown"
+              ></p-dropdown>
+            </ng-template>
+          </p-cellEditor>
+        </td>
+        <td>
+          <div class="flex align-items-center justify-content-center gap-2">
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(usuario)"
+              class="p-button-rounded action-button"
+              style="background-color: #ffffff; color: #007bff; border: none; width: 2rem; height: 2rem;"
+            ></button>
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              icon="pi pi-ban"
+              (click)="toggleEstadoUsuario(usuario)"
+              class="p-button-rounded action-button"
+              [ngClass]="usuario.estaActivo ? 'p-button-danger' : 'p-button-success'"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(usuario)"
+              class="p-button-rounded action-button"
+              style="background-color: #ffffff; color: #28a745; border: none; width: 2rem; height: 2rem; margin-right: 0.3rem;"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel(usuario, ri)"
+              class="p-button-rounded action-button"
+              style="background-color: #ffffff; color: #dc3545; border: none; width: 2rem; height: 2rem;"
+            ></button>
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

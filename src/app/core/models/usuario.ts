@@ -1,6 +1,4 @@
 import { Rol } from './rol';
-import { Asegurado } from './asegurado';
-import { Medico } from './medico';
 
 export interface Usuario {
   id?: number; // Opcional ya que es generado por el backend
@@ -11,6 +9,4 @@ export interface Usuario {
   apellido: string;
   estaActivo: boolean;
   rol?: Rol; // Opcional para optimizar la carga de datos cuando no sea necesario
-  asegurado?: Asegurado; // Opcional para permitir que algunos usuarios no tengan relación con Asegurado
-  medico?: Medico; // Opcional para permitir que algunos usuarios no tengan relación con Medico
 }

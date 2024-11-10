@@ -54,7 +54,7 @@ export default class RolPermisoComponent {
             this.buscarRolPermisos();
           } else {
             // Si el rol es null, significa que no se encontró
-            this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Rol no encontrado' });
+            this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'Ingrese un ID de rol válido' });
             this.rol = null;
             this.rolPermisos = [];
             this.permisosNoAsignados = [];

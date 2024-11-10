@@ -1,0 +1,58 @@
+<p-toast></p-toast>
+
+<div class="add-medico-form">
+  <h3>Añadir Médico</h3>
+  <div class="form-field">
+    <label for="item">Item</label>
+    <input id="item" pInputText [(ngModel)]="nuevoMedico.item" placeholder="Ingrese el item" />
+  </div>
+
+  <div class="form-field">
+    <label for="usuario">Usuario</label>
+    <p-dropdown
+      id="usuario"
+      [options]="usuariosDisponibles"
+      optionLabel="correo"
+      optionValue="id"
+      [(ngModel)]=nuevoMedico.usuario!.id
+      placeholder="Seleccione un usuario"
+    ></p-dropdown>
+  </div>
+
+  <button
+    pButton
+    label="Añadir Médico"
+    icon="pi pi-plus"
+    (click)="addMedico()"
+    class="p-button-success"
+  ></button>
+</div>
+
+<div class="medico-list-container" style="margin-top: 2rem;">
+  <p-table [value]="medicos" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 20%">ID</th>
+        <th style="width: 20%">Item</th>
+        <th style="width: 40%">Nombre Completo</th>
+        <th style="width: 20%">Acción</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-medico>
+      <tr>
+        <td>{{ medico.id }}</td>
+        <td>{{ medico.item }}</td>
+        <td>{{ medico.usuario?.nombre }} {{ medico.usuario?.apellido }}</td>
+        <td>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"
+            (click)="deleteMedico(medico.id)"
+            style="width: 2rem; height: 2rem;"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

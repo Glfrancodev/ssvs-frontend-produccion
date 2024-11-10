@@ -13,6 +13,21 @@ export const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
+                path: 'usuario',
+                loadComponent: () => import('./business/usuario/usuario.component'),
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'medico',
+                loadComponent: () => import('./business/medico/medico.component'),
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'asegurado',
+                loadComponent: () => import('./business/asegurado/asegurado.component'),
+                canActivate: [AuthGuard]
+            },
+            {
                 path: 'permiso',
                 loadComponent: () => import('./business/permiso/permiso.component'),
                 canActivate: [AuthGuard]
