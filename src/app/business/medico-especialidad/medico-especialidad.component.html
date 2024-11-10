@@ -1,0 +1,85 @@
+<p-toast></p-toast>
+
+<div class="form-container">
+  <h3 style="font-weight: bold; text-align: center;">Buscar Especialidad por ID</h3>
+  
+  <div class="form-field">
+    <label for="especialidadId" style="font-weight: bold;">ID de la Especialidad</label>
+    <input
+      id="especialidadId"
+      type="number"
+      pInputText
+      [(ngModel)]="especialidadId"
+      placeholder="Ingrese el ID de la especialidad"
+      min="0"
+    />
+  </div>
+
+  <div class="form-field" style="text-align: center;">
+    <p-button
+      icon="pi pi-search"
+      label="Buscar"
+      (click)="buscarEspecialidad()"
+      styleClass="p-button-raised p-button-info"
+      [style]="{ width: '120px', height: '40px' }"
+    ></p-button>
+  </div>
+
+  <div *ngIf="especialidad" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
+    <h3 style="font-weight: bold; text-align: center;">Información de la Especialidad</h3>
+    <div class="form-field">
+      <label style="font-weight: bold;">ID:</label>
+      <span>{{ especialidad.id }}</span>
+    </div>
+    <div class="form-field">
+      <label style="font-weight: bold;">Nombre:</label>
+      <span>{{ especialidad.nombre }}</span>
+    </div>
+
+    <div class="form-field" style="margin-top: 20px;">
+      <label style="font-weight: bold;">Asignar Médico</label>
+      <p-dropdown
+        [options]="medicosNoAsignados"
+        optionLabel="item"
+        optionValue="id"
+        [(ngModel)]="selectedMedicoId"
+        placeholder="Seleccione un médico"
+      ></p-dropdown>
+    </div>
+    <div class="form-field" style="text-align: center; margin-top: 10px;">
+      <p-button
+        icon="pi pi-plus"
+        label="Asignar"
+        (click)="assignMedico()"
+        styleClass="p-button-raised p-button-success"
+      ></p-button>
+    </div>
+  </div>
+</div>
+
+<p-table *ngIf="medicoEspecialidades.length > 0" [value]="medicoEspecialidades" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}" [sortField]="sortField" [sortOrder]="sortOrder">
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="medico.id" style="width: 10%">ID Médico</th>
+      <th style="width: 30%">Nombre Médico</th>
+      <th style="width: 20%">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-medicoEspecialidad>
+    <tr>
+      <td>{{ medicoEspecialidad.medico.id }}</td>
+      <td>{{medicoEspecialidad.medico.usuario.nombre}} {{medicoEspecialidad.medico.usuario.apellido}}</td>
+      <td>
+        <button 
+          pButton 
+          pRipple 
+          type="button" 
+          icon="pi pi-trash" 
+          class="p-button-rounded p-button-danger" 
+          style="width: 2.5rem; height: 2.5rem;" 
+          (click)="deleteMedicoEspecialidad(medicoEspecialidad.id!)">
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

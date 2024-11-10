@@ -38,7 +38,13 @@ export default class AseguradoComponent {
     sexo: '',
     fechaNacimiento: '',
     usuario: { id: 0, ci: '', correo: '', contrasena: '', nombre: '', apellido: '', estaActivo: true, rol: undefined },
+    historiaClinica: {id:0}
   };
+  editedAsegurados: { [key: number]: Asegurado } = {};
+
+  // Configuración de orden de la tabla
+  sortField: string = 'id';
+  sortOrder: number = 1;
 
   constructor(
     private aseguradoService: AseguradoService,
@@ -68,7 +74,7 @@ export default class AseguradoComponent {
   addAsegurado() {
     this.aseguradoService.createAsegurado(this.nuevoAsegurado).subscribe(
       (data) => {
-        this.getAsegurados();
+        this.getAsegurados()
         this.asegurados.push(data);
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
         this.resetNuevoAsegurado();
@@ -84,6 +90,7 @@ export default class AseguradoComponent {
       sexo: '',
       fechaNacimiento: '',
       usuario: { id: 0, ci: '', correo: '', contrasena: '', nombre: '', apellido: '', estaActivo: true, rol: undefined },
+      historiaClinica: {id:0}
     };
   }
 
@@ -96,5 +103,23 @@ export default class AseguradoComponent {
       },
       (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el asegurado' })
     );
+  }
+
+  onRowEditInit(asegurado: Asegurado) {
+    this.editedAsegurados[asegurado.id!] = { ...asegurado };
+    this.messageService.add({ severity: 'info', summary: 'Edición', detail: 'Editando tipo de sangre' });
+  }
+
+  onRowEditSave(asegurado: Asegurado) {
+    this.aseguradoService.updateAsegurado(asegurado).subscribe(() => {
+      delete this.editedAsegurados[asegurado.id!];
+      this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Tipo de sangre actualizado' });
+    });
+  }
+
+  onRowEditCancel(asegurado: Asegurado, rowIndex: number) {
+    this.asegurados[rowIndex] = this.editedAsegurados[asegurado.id!] || asegurado;
+    delete this.editedAsegurados[asegurado.id!];
+    this.messageService.add({ severity: 'info', summary: 'Cancelado', detail: 'Edición cancelada' });
   }
 }

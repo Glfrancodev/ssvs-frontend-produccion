@@ -80,4 +80,5 @@ export default class MedicoComponent {
       (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo eliminar el médico' })
     );
   }
+  
 }

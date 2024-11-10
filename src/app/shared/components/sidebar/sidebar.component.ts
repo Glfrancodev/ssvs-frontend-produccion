@@ -38,6 +38,15 @@ export class SidebarComponent {
   }
 
   toggleMenu(menu: string) {
-    this.expandedMenus[menu] = !this.expandedMenus[menu];
+    // Si el menú ya está abierto, ciérralo
+    if (this.expandedMenus[menu]) {
+      this.expandedMenus[menu] = false;
+    } else {
+      // Si el menú está cerrado, cerrar todos los demás y abrir solo el seleccionado
+      Object.keys(this.expandedMenus).forEach((key) => {
+        this.expandedMenus[key] = false;
+      });
+      this.expandedMenus[menu] = true;
+    }
   }
 }

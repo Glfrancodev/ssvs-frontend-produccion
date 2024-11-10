@@ -1,9 +1,8 @@
 <p-toast></p-toast>
 
 <div class="add-asegurado-form">
-  <h3>Añadir Asegurado</h3>
-  
-  <div class="form-field">
+  <h3 style="font-weight: bold;">Añadir Asegurado</h3>
+  <div class="form-field" >
     <label for="tipoSangre">Tipo de Sangre</label>
     <input id="tipoSangre" pInputText [(ngModel)]="nuevoAsegurado.tipoSangre" placeholder="Ingrese el tipo de sangre" />
   </div>
@@ -25,7 +24,7 @@
       [options]="usuariosDisponibles"
       optionLabel="correo"
       optionValue="id"
-      [(ngModel)]=nuevoAsegurado.usuario!.id
+      [(ngModel)]="nuevoAsegurado.usuario!.id"
       placeholder="Seleccione un usuario"
     ></p-dropdown>
   </div>
@@ -40,32 +39,80 @@
 </div>
 
 <div class="asegurado-list-container" style="margin-top: 2rem;">
-  <p-table [value]="asegurados" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+  <p-table
+    [value]="asegurados"
+    dataKey="id"
+    editMode="row"
+    [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+  >
     <ng-template pTemplate="header">
       <tr>
-        <th style="width: 20%">ID</th>
-        <th style="width: 20%">Tipo de Sangre</th>
+        <th style="width: 10%">ID</th>
+        <th style="width: 15%">Tipo de Sangre</th>
         <th style="width: 10%">Sexo</th>
         <th style="width: 20%">Fecha de Nacimiento</th>
-        <th style="width: 20%">Nombre Completo</th>
+        <th style="width: 30%">Nombre Completo</th>
+        <th style="width: 5%">Id Historia</th>
         <th style="width: 10%">Acción</th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-asegurado>
-      <tr>
+    <ng-template pTemplate="body" let-asegurado let-editing="editing" let-ri="rowIndex">
+      <tr [pEditableRow]="asegurado">
         <td>{{ asegurado.id }}</td>
-        <td>{{ asegurado.tipoSangre }}</td>
+        <td>
+          <p-cellEditor>
+            <ng-template pTemplate="output">{{ asegurado.tipoSangre }}</ng-template>
+            <ng-template pTemplate="input">
+              <input pInputText [(ngModel)]="asegurado.tipoSangre" class="input-field" />
+            </ng-template>
+          </p-cellEditor>
+        </td>
         <td>{{ asegurado.sexo }}</td>
         <td>{{ asegurado.fechaNacimiento }}</td>
         <td>{{ asegurado.usuario?.nombre }} {{ asegurado.usuario?.apellido }}</td>
+        <td>{{ asegurado.historiaClinica.id }}</td>
         <td>
-          <button
-            pButton
-            icon="pi pi-trash"
-            class="p-button-rounded p-button-danger"
-            (click)="deleteAsegurado(asegurado.id)"
-            style="width: 2rem; height: 2rem;"
-          ></button>
+          <div class="flex align-items-center justify-content-center gap-2">
+            <button
+              *ngIf="!editing"
+              pButton
+              pRipple
+              type="button"
+              pInitEditableRow
+              icon="pi pi-pencil"
+              (click)="onRowEditInit(asegurado)"
+              class="p-button-rounded"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pSaveEditableRow
+              icon="pi pi-check"
+              (click)="onRowEditSave(asegurado)"
+              class="p-button-rounded p-button-success"
+            ></button>
+            <button
+              *ngIf="editing"
+              pButton
+              pRipple
+              type="button"
+              pCancelEditableRow
+              icon="pi pi-times"
+              (click)="onRowEditCancel(asegurado, ri)"
+              class="p-button-rounded p-button-danger"
+            ></button>
+            <button
+              *ngIf="!editing"
+              pButton
+              icon="pi pi-trash"
+              (click)="deleteAsegurado(asegurado.id)"
+              class="p-button-rounded p-button-danger"
+            ></button>
+          </div>
         </td>
       </tr>
     </ng-template>

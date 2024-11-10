@@ -43,6 +43,16 @@ export const routes: Routes = [
                 canActivate: [AuthGuard]
             },
             {
+                path: 'especialidad',
+                loadComponent: () => import('./business/especialidad/especialidad.component'),
+                canActivate: [AuthGuard]
+            },
+            {
+                path: 'asignar-medico',
+                loadComponent: () => import('./business/medico-especialidad/medico-especialidad.component'),
+                canActivate: [AuthGuard]
+            },
+            {
                 path:'',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'
