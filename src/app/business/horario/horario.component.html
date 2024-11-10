@@ -1,0 +1,78 @@
+<p-toast></p-toast>
+
+<div class="add-horario-form">
+  <h3 style="font-weight: bold;">Añadir Nuevo Horario</h3>
+  <div class="form-field">
+    <label for="fecha">Fecha</label>
+    <p-calendar id="fecha" [(ngModel)]="newHorario.fecha" dateFormat="yy-mm-dd"></p-calendar>
+  </div>
+  <div class="form-field">
+    <label for="horaInicio">Hora de Inicio</label>
+    <input id="horaInicio" type="time" pInputText [(ngModel)]="newHorario.horaInicio" placeholder="Ingrese la hora de inicio" />
+  </div>
+  <div class="form-field">
+    <label for="horaFinal">Hora Final</label>
+    <input id="horaFinal" type="time" pInputText [(ngModel)]="newHorario.horaFinal" placeholder="Ingrese la hora final" />
+  </div>
+  <div class="form-field">
+    <label for="cantidadCupos">Cantidad de Cupos</label>
+    <input id="cantidadCupos" type="number" pInputText [(ngModel)]="newHorario.cantidadCupos" placeholder="Ingrese la cantidad de cupos" />
+  </div>
+  <div class="form-field">
+    <label for="medicoEspecialidad">Médico Especialidad</label>
+    <p-dropdown
+    id="medicoEspecialidad"
+    [options]="medicoEspecialidades"
+    optionValue="id"
+    [(ngModel)]="newHorario.medicoEspecialidad!.id"
+    placeholder="Seleccione Médico Especialidad"
+  >
+    <ng-template let-medicoEspecialidad pTemplate="selectedItem">
+      {{ getMedicoEspecialidadLabel(medicoEspecialidad) }}
+    </ng-template>
+    <ng-template let-medicoEspecialidad pTemplate="item">
+      {{ getMedicoEspecialidadLabel(medicoEspecialidad) }}
+    </ng-template>
+  </p-dropdown>
+  
+  </div>
+  <p-button
+    label="Añadir Horario"
+    icon="pi pi-plus"
+    (click)="addHorario()"
+    styleClass="p-button-raised p-button-success"
+  ></p-button>
+</div>
+
+<p-table [value]="horarios" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 10%;">ID</th>
+      <th style="width: 15%;">Fecha</th>
+      <th style="width: 15%;">Hora Inicio</th>
+      <th style="width: 15%;">Hora Final</th>
+      <th style="width: 10%;">Cupos Totales</th>
+      <th style="width: 20%;">Descripcion</th>
+      <th style="width: 15%;">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-horario>
+    <tr>
+      <td>{{ horario.id }}</td>
+      <td>{{ horario.fecha }}</td>
+      <td>{{ horario.horaInicio }}</td>
+      <td>{{ horario.horaFinal }}</td>
+      <td>{{ horario.cantidadCupos }}</td>
+      <td>{{ getMedicoEspecialidadLabel(horario.medicoEspecialidad) }}</td>
+      <td>
+        <button
+          pButton
+          icon="pi pi-trash"
+          class="p-button-rounded p-button-danger"
+          (click)="deleteHorario(horario.id)"
+        ></button>
+      </td>
+      
+    </tr>
+  </ng-template>
+</p-table>

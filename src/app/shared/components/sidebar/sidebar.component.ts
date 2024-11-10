@@ -2,6 +2,8 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Importar CommonModule para *ngIf
 import { SidebarService } from '../../../core/services/sidebar.service';
+import { AuthService } from '../../../core/services/auth.service';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -16,16 +18,20 @@ export class SidebarComponent {
     gestionUsuario: false,
   };
 
+  userRole: string | null = null;
+
   ngOnInit(): void {
     // Al inicializar, configuramos el sidebar según el tamaño de la pantalla
     this.checkScreenSize();
+    this.userRole = this.authService.getUserRole();
   }
 
-  constructor(private sidebarService: SidebarService) {
+  constructor(private sidebarService: SidebarService, private authService: AuthService) {
     // Suscribirse a los cambios en el estado del sidebar
     this.sidebarService.sidebarOpen$.subscribe((isOpen) => {
       this.isSidebarOpen = isOpen;
     });
+    
   }
 
   @HostListener('window:resize', [])
@@ -38,11 +44,9 @@ export class SidebarComponent {
   }
 
   toggleMenu(menu: string) {
-    // Si el menú ya está abierto, ciérralo
     if (this.expandedMenus[menu]) {
       this.expandedMenus[menu] = false;
     } else {
-      // Si el menú está cerrado, cerrar todos los demás y abrir solo el seleccionado
       Object.keys(this.expandedMenus).forEach((key) => {
         this.expandedMenus[key] = false;
       });

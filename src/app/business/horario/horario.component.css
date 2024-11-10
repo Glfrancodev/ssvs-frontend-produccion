@@ -1,10 +1,10 @@
-.permiso-ausencia-list-container {
+.usuario-list-container {
     max-width: 100%;
     margin: auto;
     overflow-x: auto;
-}
-
-.add-permiso-ausencia-form {
+  }
+  
+  .add-usuario-form, .add-horario-form {
     padding: 1rem;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -12,24 +12,25 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 0.5rem;
-}
-
-.add-permiso-ausencia-form h3 {
+  }
+  
+  .add-usuario-form h3, .add-horario-form h3 {
     grid-column: 1 / -1;
     margin-bottom: 0.5rem;
     text-align: center;
-}
-
-.form-field {
+  }
+  
+  .form-field {
     display: flex;
     flex-direction: column;
-}
-
-.input-field {
+  }
+  
+  .input-field {
     width: 100%;
     max-width: 90px;
-}
-
-.input-dropdown {
+  }
+  
+  .input-dropdown {
     width: 100%;
-}
+  }
+  

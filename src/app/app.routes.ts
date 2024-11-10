@@ -10,47 +10,68 @@ export const routes: Routes = [
             {
                 path: 'dashboard',
                 loadComponent: () => import('./business/dashboard/dashboard.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['Medico', 'Asegurado', 'SuperUsuario'] }
             },
             {
                 path: 'usuario',
                 loadComponent: () => import('./business/usuario/usuario.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'medico',
                 loadComponent: () => import('./business/medico/medico.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'asegurado',
                 loadComponent: () => import('./business/asegurado/asegurado.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'permiso',
                 loadComponent: () => import('./business/permiso/permiso.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'rol',
                 loadComponent: () => import('./business/rol/rol.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'rol-permiso',
                 loadComponent: () => import('./business/rol-permiso/rol-permiso.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'especialidad',
                 loadComponent: () => import('./business/especialidad/especialidad.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path: 'asignar-medico',
                 loadComponent: () => import('./business/medico-especialidad/medico-especialidad.component'),
-                canActivate: [AuthGuard]
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
+            },
+            {
+                path: 'permiso-ausencia',
+                loadComponent: () => import('./business/permiso-ausencia/permiso-ausencia.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
+            },
+            {
+                path: 'horario',
+                loadComponent: () => import('./business/horario/horario.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
             },
             {
                 path:'',

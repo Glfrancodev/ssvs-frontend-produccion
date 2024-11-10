@@ -1,1 +1,108 @@
-<p>permiso-ausencia works!</p>
+<p-toast></p-toast>
+
+<div class="add-permiso-ausencia-form">
+  <h3 style="font-weight: bold;">Añadir Nuevo Permiso de Ausencia</h3>
+  <div class="form-field">
+    <label for="fechaPermiso">Fecha del Permiso</label>
+    <input id="fechaPermiso" type="date" pInputText [(ngModel)]="newPermisoAusencia.fechaPermiso" />
+  </div>
+  <div class="form-field">
+    <label for="descripcion">Descripción</label>
+    <input id="descripcion" type="text" pInputText [(ngModel)]="newPermisoAusencia.descripcion" placeholder="Ingrese Descripción" />
+  </div>
+  <div class="form-field">
+    <label for="medico">Médico</label>
+    <p-dropdown
+      id="medico"
+      [options]="medicos"
+      optionLabel="usuario.nombre"
+      optionValue="id"
+      [(ngModel)]="newPermisoAusencia.medico!.id"
+      placeholder="Seleccione Médico"
+    ></p-dropdown>
+  </div>
+  <div class="form-field">
+    <p-button
+      label="Añadir Permiso"
+      icon="pi pi-plus"
+      (click)="addPermisoAusencia()"
+      styleClass="p-button-raised p-button-success"
+    ></p-button>
+  </div>
+</div>
+<p-table
+  [value]="permisosAusencia"
+  dataKey="id"
+  editMode="row"
+  [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 10%;">ID</th>
+      <th style="width: 15%;">Fecha Permiso</th>
+      <th style="width: 30%;">Descripción</th>
+      <th style="width: 15%;">Estado</th>
+      <th style="width: 15%;">Médico</th>
+      <th style="width: 20%;">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-permiso let-editing="editing" let-ri="rowIndex">
+    <tr [pEditableRow]="permiso">
+      <td>{{ permiso.id }}</td>
+      <td>{{ permiso.fechaPermiso }}</td>
+      <td>{{ permiso.descripcion }}</td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <p-dropdown
+              *ngIf="permiso.estado === 'Pendiente'"
+              [options]="estadoOptions"
+              optionLabel="label"
+              optionValue="value"
+              [(ngModel)]="permiso.estado"
+            ></p-dropdown>
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ permiso.estado }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>{{ permiso.medico?.usuario.nombre }} {{ permiso.medico?.usuario.apellido }}</td>
+      <td>
+        <div class="action-buttons">
+          <button
+            *ngIf="permiso.estado === 'Pendiente' && !editing"
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-text"
+            pInitEditableRow
+            (click)="onRowEditInit(permiso)"
+          ></button>
+          <button
+            *ngIf="editing"
+            pButton
+            icon="pi pi-check"
+            class="p-button-rounded p-button-success"
+            pSaveEditableRow
+            (click)="onRowEditSave(permiso)"
+          ></button>
+          <button
+            *ngIf="editing"
+            pButton
+            icon="pi pi-times"
+            class="p-button-rounded p-button-danger"
+            pCancelEditableRow
+            (click)="onRowEditCancel(permiso, ri)"
+          ></button>
+          <button
+            *ngIf="permiso.estado === 'Pendiente' && !editing"
+            pButton
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger"
+            (click)="deletePermisoAusencia(permiso.id)"
+          ></button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

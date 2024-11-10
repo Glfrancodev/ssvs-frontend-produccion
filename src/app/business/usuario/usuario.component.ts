@@ -38,7 +38,7 @@ export default class UsuarioComponent {
     contrasena: '',
     nombre: '',
     apellido: '',
-    estaActivo: true,
+    estaActivo: false,
     rol: { id: 0, nombre: '' } // Asegúrate de que `nombre` esté definido
   };
 
