@@ -51,5 +51,10 @@ export class UsuarioService {
 
   getUsuariosSinMedicoByRol(roleId: number): Observable<Usuario[]> {
     return this.http.get<Usuario[]>(`${this.apiUrl}/rol/${roleId}/sin-medico`, { headers: this.getAuthHeaders() });
-  }  
+  }
+
+  getUsuariosSinAseguradoByRol(roleId: number): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.apiUrl}/rol/${roleId}/sin-asegurado`, { headers: this.getAuthHeaders() });
+  }
+  
 }
