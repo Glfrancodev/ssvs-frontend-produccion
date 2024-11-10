@@ -3,6 +3,8 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Importar CommonModule para *ngIf
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { MedicoService } from '../../../core/services/medico.service';
+import { Especialidad } from '../../../core/models/especialidad';
 
 
 @Component({
@@ -19,20 +21,32 @@ export class SidebarComponent {
   };
 
   userRole: string | null = null;
+  especialidades: Especialidad[] = [];
 
-  ngOnInit(): void {
-    // Al inicializar, configuramos el sidebar según el tamaño de la pantalla
-    this.checkScreenSize();
-    this.userRole = this.authService.getUserRole();
-  }
+  constructor(private sidebarService: SidebarService, private authService: AuthService, private medicoService: MedicoService) {
 
-  constructor(private sidebarService: SidebarService, private authService: AuthService) {
     // Suscribirse a los cambios en el estado del sidebar
     this.sidebarService.sidebarOpen$.subscribe((isOpen) => {
       this.isSidebarOpen = isOpen;
     });
     
   }
+
+  ngOnInit(): void {
+    this.checkScreenSize();
+    this.userRole = this.authService.getUserRole();
+    
+    const correoMedico = this.authService.getAuthenticatedUserEmail();
+    
+    if (correoMedico) {
+      this.medicoService.getEspecialidadesDelMedico(correoMedico).subscribe((data) => {
+        this.especialidades = data;
+      });
+    } else {
+      console.error("El correo del médico autenticado es nulo");
+    }
+  }
+  
 
   @HostListener('window:resize', [])
   checkScreenSize() {

@@ -1,0 +1,32 @@
+<p-table
+  [value]="horarios"
+  dataKey="id"
+  [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width: 20%;">Fecha</th>
+      <th style="width: 20%;">Hora Inicio</th>
+      <th style="width: 20%;">Hora Final</th>
+      <th style="width: 20%;">Cupos Totales</th>
+      <th style="width: 20%;">Acciones</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-horario>
+    <tr>
+      <td>{{ horario.fecha }}</td>
+      <td>{{ horario.horaInicio }}</td>
+      <td>{{ horario.horaFinal }}</td>
+      <td>{{ horario.cantidadCupos }}</td>
+      <td>
+        <button
+          pButton
+          icon="pi pi-arrow-right"
+          (click)="irACupoMedico(horario.id)"
+          class="p-button-rounded p-button-text"
+          title="Ir a Cupo Médico"
+        ></button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

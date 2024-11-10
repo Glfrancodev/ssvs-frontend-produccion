@@ -80,6 +80,18 @@ export const routes: Routes = [
                 data: { roles: ['SuperUsuario'] }
             },
             {
+                path: 'atencion/:especialidad',
+                loadComponent: () => import('./business/atencion/atencion.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Medico'] }
+            },     
+            {
+                path: 'cupo-medico/:idHorario',
+                loadComponent: () => import('./business/cupo-medico/cupo-medico.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Medico'] }
+            },       
+            {
                 path:'',
                 redirectTo: 'dashboard',
                 pathMatch: 'full'

@@ -41,4 +41,6 @@ export class RolService {
   deleteRol(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+
 }

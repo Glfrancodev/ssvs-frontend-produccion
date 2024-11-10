@@ -59,4 +59,16 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
     this.router.navigate(['/login']);
   }
+
+  // Método para obtener el correo del usuario desde el token decodificado
+  getAuthenticatedUserEmail(): string | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const email = payload.sub || null; // 'sub' es comúnmente el correo o nombre de usuario en el token
+    console.log("Authenticated user email:", email);
+    return email;
+  }
+
 }

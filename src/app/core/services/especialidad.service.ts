@@ -41,4 +41,9 @@ export class EspecialidadService {
   deleteEspecialidad(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  getEspecialidadByNombre(nombre: string): Observable<Especialidad> {
+    return this.http.get<Especialidad>(`${this.apiUrl}/nombre/${nombre}`, { headers: this.getAuthHeaders() });
+  }
+
 }
