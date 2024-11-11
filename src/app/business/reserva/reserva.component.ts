@@ -159,6 +159,7 @@ export default class ReservaComponent implements OnInit {
                     this.cupoService.reservarCupo(cupo.id, cupoActualizado).subscribe(
                         response => {
                             console.log("Reserva realizada exitosamente:", response);
+                            this.obtenerCuposPorHorario(this.selectedHorario!.id!);
                         },
                         error => {
                             console.error("Error al actualizar el cupo:", error);

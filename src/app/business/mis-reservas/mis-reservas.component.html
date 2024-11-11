@@ -1,1 +1,35 @@
-<p>mis-reservas works!</p>
+<h3>Mis Reservas</h3>
+<p-table [value]="cupos">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>ID</th>
+      <th>Número</th>
+      <th>Médico</th>
+      <th>Especialidad</th>
+      <th>Fecha Reservada</th>
+      <th>Hora</th>
+      <th>Acción</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-cupo>
+    <tr>
+      <td>{{ cupo.id }}</td>
+      <td>{{ cupo.numero }}</td>
+      <td>{{ cupo.horario?.medicoEspecialidad?.medico?.usuario?.nombre }} {{ cupo.horario?.medicoEspecialidad?.medico?.usuario?.apellido }}</td>
+      <td>{{ cupo.horario?.medicoEspecialidad?.especialidad?.nombre }}</td>
+      <td>{{ cupo.fechaReservado | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ cupo.hora }}</td>
+      <td>
+        <div class="flex align-items-center justify-content-center gap-2">
+          <!-- Icono del basurero para activar la eliminación -->
+          <button *ngIf="!cupo.isDeleting" pButton type="button" icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="confirmDelete(cupo)"></button>
+          
+          <!-- Iconos de confirmación y cancelación de eliminación -->
+          <button *ngIf="cupo.isDeleting" pButton type="button" icon="pi pi-check" class="p-button-rounded p-button-success" (click)="liberarCupo(cupo)"></button>
+          <button *ngIf="cupo.isDeleting" pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-danger" (click)="cancelDelete(cupo)"></button>
+        </div>
+      </td>
+      
+    </tr>
+  </ng-template>
+</p-table>

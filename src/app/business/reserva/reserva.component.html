@@ -43,10 +43,10 @@
 <!-- Tabla de Cupos -->
 <div *ngIf="cupos.length > 0" class="cupo-table">
   <h3>Cupos Disponibles</h3>
-  <p-table [value]="cupos">
+  <p-table [value]="cupos" [sortField]="'id'" [sortOrder]="1">
     <ng-template pTemplate="header">
       <tr>
-        <th>Número</th>
+        <th pSortableColumn="id">Número</th>
         <th>Fecha Reservada</th>
         <th>Hora</th>
         <th>Estado</th>
