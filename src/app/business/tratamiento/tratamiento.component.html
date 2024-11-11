@@ -1,0 +1,18 @@
+<p-table [value]="recetas" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Medicamento</th>
+      <th>Frecuencia</th>
+      <th>Fecha Inicio</th>
+      <th>Fecha Final</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-receta>
+    <tr>
+      <td>{{ receta.medicamento }}</td>
+      <td>{{ receta.frecuencia }}</td>
+      <td>{{ receta.fechaInicio }}</td>
+      <td>{{ receta.fechaFinal }}</td>
+    </tr>
+  </ng-template>
+</p-table>

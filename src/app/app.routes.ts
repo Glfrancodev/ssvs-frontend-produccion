@@ -90,7 +90,25 @@ export const routes: Routes = [
                 loadComponent: () => import('./business/cupo-medico/cupo-medico.component'),
                 canActivate: [AuthGuard],
                 data: { roles: ['Medico'] }
-            },       
+            },
+            {
+                path: 'historia-clinica/:aseguradoId',
+                loadComponent: () => import('./business/historia-clinica/historia-clinica.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Medico', 'SuperUsuario'] }
+            },
+            {
+                path: 'tratamiento/:consultaId',
+                loadComponent: () => import('./business/tratamiento/tratamiento.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Medico', 'SuperUsuario'] }
+            },     
+            {
+                path: 'consulta/:cupoId',
+                loadComponent: () => import('./business/consulta/consulta.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Medico', 'SuperUsuario'] }
+            },          
             {
                 path:'',
                 redirectTo: 'dashboard',

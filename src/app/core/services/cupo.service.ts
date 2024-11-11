@@ -25,4 +25,13 @@ export class CupoService {
   getCuposPorHorario(horarioId: number): Observable<Cupo[]> {
     return this.http.get<Cupo[]>(`${this.apiUrl}/horario/${horarioId}`, { headers: this.getAuthHeaders() });
   }
+
+  // Método para obtener cupos ocupados por horarioId
+  getCuposOcupadosPorHorario(horarioId: number): Observable<Cupo[]> {
+    return this.http.get<Cupo[]>(`${this.apiUrl}/horario/${horarioId}/ocupado`, { headers: this.getAuthHeaders() });
+  }
+
+  getCupoById(id: number): Observable<Cupo> {
+    return this.http.get<Cupo>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  }
 }
