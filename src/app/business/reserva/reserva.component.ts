@@ -152,13 +152,11 @@ export default class ReservaComponent implements OnInit {
                     fechaReservado: new Date().toISOString().split('T')[0], // Formato de fecha actual
                     estado: "Ocupado",
                     horario: cupo.horario,
-                    asegurado: asegurado // Usa el objeto completo del asegurado obtenido
+                    asegurado: {id: asegurado.id} // Usa el objeto completo del asegurado obtenido
                 };
-
                 console.log("Datos del cupo antes de actualizar:", cupoActualizado);
-                
                 if (cupo.id !== undefined) {
-                    this.cupoService.actualizarCupo(cupo.id, cupoActualizado).subscribe(
+                    this.cupoService.reservarCupo(cupo.id, cupoActualizado).subscribe(
                         response => {
                             console.log("Reserva realizada exitosamente:", response);
                         },
@@ -177,5 +175,5 @@ export default class ReservaComponent implements OnInit {
     } else {
         console.error("No se pudo obtener el correo del asegurado.");
     }
-}
+  }
 }
