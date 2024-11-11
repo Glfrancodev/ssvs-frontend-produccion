@@ -41,4 +41,9 @@ export class AseguradoService {
   deleteAsegurado(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  getAseguradoPorCorreo(correo: string): Observable<Asegurado> {
+    return this.http.get<Asegurado>(`${this.apiUrl}/correo/${correo}`, { headers: this.getAuthHeaders()});
+  }
+
 }

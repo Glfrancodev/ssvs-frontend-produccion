@@ -108,7 +108,25 @@ export const routes: Routes = [
                 loadComponent: () => import('./business/consulta/consulta.component'),
                 canActivate: [AuthGuard],
                 data: { roles: ['Medico', 'SuperUsuario'] }
-            },          
+            },    
+            {
+                path: 'reserva',
+                loadComponent: () => import('./business/reserva/reserva.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Asegurado'] }
+            }, 
+            {
+                path: 'mis-reservas',
+                loadComponent: () => import('./business/mis-reservas/mis-reservas.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Asegurado'] }
+            }, 
+            {
+                path: 'mi-historia-clinica',
+                loadComponent: () => import('./business/mi-historia-clinica/mi-historia-clinica.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['Asegurado'] }
+            },       
             {
                 path:'',
                 redirectTo: 'dashboard',

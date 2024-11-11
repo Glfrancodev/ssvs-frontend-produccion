@@ -40,4 +40,7 @@ export class CupoService {
     return this.http.put<Cupo>(`${this.apiUrl}/estado/${id}`, estado, { headers: this.getAuthHeaders() });
   }
 
+  actualizarCupo(id: number, cupo: Cupo): Observable<Cupo> {
+    return this.http.put<Cupo>(`${this.apiUrl}/${id}`, cupo, { headers: this.getAuthHeaders() });
+}
 }

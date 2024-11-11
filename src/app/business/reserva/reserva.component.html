@@ -1,0 +1,74 @@
+<div class="form-container add-usuario-form">
+    <h3>Seleccione Especialidad, Médico y Horario</h3>
+  
+    <!-- Desplegable de Especialidad -->
+    <div class="form-field">
+      <label for="especialidad">Especialidad</label>
+      <p-dropdown
+        [options]="especialidades"
+        [(ngModel)]="selectedEspecialidad"
+        optionLabel="nombre"
+        placeholder="Seleccione una especialidad"
+        (onChange)="onEspecialidadChange()"
+        class="input-dropdown"
+      ></p-dropdown>
+    </div>
+  
+    <!-- Desplegable de Médico, dependiente de la especialidad -->
+    <div class="form-field" *ngIf="medicos.length > 0">
+      <label for="medico">Médico</label>
+      <p-dropdown
+        [options]="medicos"
+        [(ngModel)]="selectedMedico"
+        optionLabel="nombreCompleto"
+        placeholder="Seleccione un médico"
+        (onChange)="onMedicoChange()"
+        class="input-dropdown"
+      ></p-dropdown>
+    </div>
+  
+    <!-- Desplegable de Horario, dependiente del médico seleccionado -->
+    <div class="form-field" *ngIf="horarios.length > 0">
+      <label for="horario">Horario</label>
+      <p-dropdown
+        [options]="horarios"
+        [(ngModel)]="selectedHorario"
+        optionLabel="fecha"
+        placeholder="Seleccione un horario"
+        (onChange)="onHorarioChange()"
+        class="input-dropdown"
+      ></p-dropdown>
+    </div>
+</div>
+  
+<!-- Tabla de Cupos -->
+<div *ngIf="cupos.length > 0" class="cupo-table">
+  <h3>Cupos Disponibles</h3>
+  <p-table [value]="cupos">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Número</th>
+        <th>Fecha Reservada</th>
+        <th>Hora</th>
+        <th>Estado</th>
+        <th>Asegurado</th>
+        <th>Acción</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cupo>
+      <tr>
+        <td>{{ cupo.numero }}</td>
+        <td>{{ cupo.fechaReservado ? (cupo.fechaReservado | date: 'dd/MM/yyyy') : 'No reservada' }}</td>
+        <td>{{ cupo.hora }}</td>
+        <td>{{ cupo.estado }}</td>
+        <td>
+          {{ cupo.asegurado ? (cupo.asegurado.usuario.nombre + ' ' + cupo.asegurado.usuario.apellido) : 'Sin asegurado' }}
+        </td>
+        <td>
+          <!-- Mostrar botón de "Reservar" solo si el estado es "Libre" -->
+          <button *ngIf="cupo.estado === 'Libre'" pButton type="button" label="Reservar" class="p-button-success" (click)="reservarCupo(cupo)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
