@@ -9,7 +9,7 @@ import { Observable, tap } from 'rxjs';
 })
 export class AuthService {
 
-  private LOGIN_URL = 'http://localhost:8080/authenticate';
+  private LOGIN_URL = 'https://ssvs-backend-produccion-production.up.railway.app/authenticate';
   private tokenKey = 'authToken';
 
   constructor(private httpClient: HttpClient, private router: Router) { }

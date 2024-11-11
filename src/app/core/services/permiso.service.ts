@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class PermisoService {
-  private apiUrl = 'http://localhost:8080/api/permiso';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/permiso';
 
   constructor(
     private http: HttpClient,

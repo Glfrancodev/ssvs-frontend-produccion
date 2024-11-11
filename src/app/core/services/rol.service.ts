@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class RolService {
-  private apiUrl = 'http://localhost:8080/api/rol';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/rol';
 
   constructor(
     private http: HttpClient,

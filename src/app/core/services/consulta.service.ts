@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class ConsultaService {
-  private apiUrl = 'http://localhost:8080/api/consulta';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/consulta';
 
   constructor(
     private http: HttpClient,

@@ -9,7 +9,7 @@ import { RolPermiso } from '../models/rolPermiso';
   providedIn: 'root'
 })
 export class RolPermisoService {
-  private apiUrl = 'http://localhost:8080/api/rol-permiso';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/rol-permiso';
 
   constructor(
     private http: HttpClient,

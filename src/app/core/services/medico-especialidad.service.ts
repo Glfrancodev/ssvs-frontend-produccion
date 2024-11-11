@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class MedicoEspecialidadService {
-  private apiUrl = 'http://localhost:8080/api/medico-especialidad';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/medico-especialidad';
 
   constructor(
     private http: HttpClient,

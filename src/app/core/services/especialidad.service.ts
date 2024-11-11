@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class EspecialidadService {
-  private apiUrl = 'http://localhost:8080/api/especialidad';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/especialidad';
 
   constructor(
     private http: HttpClient,

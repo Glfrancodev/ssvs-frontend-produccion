@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class RecetaService {
-  private apiUrl = 'http://localhost:8080/api/receta';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/receta';
 
   constructor(
     private http: HttpClient,

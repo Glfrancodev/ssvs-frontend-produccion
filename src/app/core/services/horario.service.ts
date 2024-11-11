@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class HorarioService {
-  private apiUrl = 'http://localhost:8080/api/horario';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/horario';
 
   constructor(
     private http: HttpClient,

@@ -8,7 +8,7 @@ import { Asegurado } from '../models/asegurado';
   providedIn: 'root'
 })
 export class AseguradoService {
-  private apiUrl = 'http://localhost:8080/api/asegurado';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/asegurado';
 
   constructor(
     private http: HttpClient,

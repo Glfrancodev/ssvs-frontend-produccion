@@ -9,7 +9,7 @@ import { Usuario } from '../models/usuario';
   providedIn: 'root'
 })
 export class UsuarioService {
-  private apiUrl = 'http://localhost:8080/api/usuario';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/usuario';
 
   constructor(
     private http: HttpClient,

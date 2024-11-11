@@ -9,7 +9,7 @@ import { Especialidad } from '../models/especialidad';
   providedIn: 'root'
 })
 export class MedicoService {
-  private apiUrl = 'http://localhost:8080/api/medico';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/medico';
 
   constructor(
     private http: HttpClient,

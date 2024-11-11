@@ -11,7 +11,7 @@ import { Tratamiento } from '../models/tratamiento';
   providedIn: 'root'
 })
 export class TratamientoService {
-  private apiUrl = 'http://localhost:8080/api/tratamiento';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/tratamiento';
 
   constructor(
     private http: HttpClient,

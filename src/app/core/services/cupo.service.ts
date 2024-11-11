@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class CupoService {
-  private apiUrl = 'http://localhost:8080/api/cupo';
+  private apiUrl = 'https://ssvs-backend-produccion-production.up.railway.app/api/cupo';
 
   constructor(
     private http: HttpClient,
