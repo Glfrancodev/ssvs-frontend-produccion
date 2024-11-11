@@ -32,12 +32,13 @@
       <p-dropdown
         [options]="horarios"
         [(ngModel)]="selectedHorario"
-        optionLabel="fecha"
         placeholder="Seleccione un horario"
         (onChange)="onHorarioChange()"
         class="input-dropdown"
+        optionLabel="formattedLabel"
       ></p-dropdown>
     </div>
+
 </div>
   
 <!-- Tabla de Cupos -->

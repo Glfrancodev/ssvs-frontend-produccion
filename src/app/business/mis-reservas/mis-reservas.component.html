@@ -1,5 +1,5 @@
 <h3>Mis Reservas</h3>
-<p-table [value]="cupos">
+<p-table [value]="cupos" [sortField]="'id'" [sortOrder]="1">
   <ng-template pTemplate="header">
     <tr>
       <th>ID</th>
@@ -29,7 +29,6 @@
           <button *ngIf="cupo.isDeleting" pButton type="button" icon="pi pi-times" class="p-button-rounded p-button-danger" (click)="cancelDelete(cupo)"></button>
         </div>
       </td>
-      
     </tr>
   </ng-template>
 </p-table>

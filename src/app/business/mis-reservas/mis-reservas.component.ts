@@ -73,6 +73,7 @@ export default class MisReservasComponent implements OnInit {
         console.log("Cupo liberado exitosamente:", response);
         cupo.estado = 'Libre';
         cupo.isDeleting = false;
+        this.cargarReservas();
       },
       (error) => {
         console.error("Error al liberar el cupo:", error);

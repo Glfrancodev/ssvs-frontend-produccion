@@ -16,8 +16,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { Cupo } from '../../core/models/cupo';
 import { CupoService } from '../../core/services/cupo.service';
-import { AseguradoService } from '../../core/services/asegurado.service'; // Nuevo import para el servicio de Asegurado
-import { AuthService } from '../../core/services/auth.service'; // Servicio de autenticación
+import { AseguradoService } from '../../core/services/asegurado.service';
+import { AuthService } from '../../core/services/auth.service';
 
 interface MedicoDropdownItem {
   id: number | undefined;
@@ -57,25 +57,21 @@ export default class ReservaComponent implements OnInit {
     private medicoEspecialidadService: MedicoEspecialidadService,
     private horarioService: HorarioService,
     private cupoService: CupoService,
-    private aseguradoService: AseguradoService, // Servicio de Asegurado
-    private authService: AuthService // Servicio de autenticación para obtener el correo
+    private aseguradoService: AseguradoService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    console.log("Inicializando ReservaComponent...");
     this.obtenerEspecialidades();
   }
 
   obtenerEspecialidades(): void {
-    console.log("Obteniendo especialidades...");
     this.especialidadService.getEspecialidades().subscribe((data) => {
       this.especialidades = data;
-      console.log("Especialidades obtenidas:", this.especialidades);
     });
   }
 
   onEspecialidadChange(): void {
-    console.log("Especialidad seleccionada:", this.selectedEspecialidad);
     if (this.selectedEspecialidad && this.selectedEspecialidad.id !== undefined) {
       this.obtenerMedicosPorEspecialidad(this.selectedEspecialidad.id);
     } else {
@@ -84,7 +80,6 @@ export default class ReservaComponent implements OnInit {
   }
   
   obtenerMedicosPorEspecialidad(especialidadId: number): void {
-    console.log(`Obteniendo médicos para la especialidad ID: ${especialidadId}`);
     this.medicoEspecialidadService.getMedicoEspecialidades().subscribe((data) => {
       const medicosFiltrados: MedicoDropdownItem[] = data
         .filter((me) => me.especialidad!.id === especialidadId && me.medico !== undefined)
@@ -94,18 +89,15 @@ export default class ReservaComponent implements OnInit {
         }));
 
       this.medicos = medicosFiltrados;
-      console.log("Médicos filtrados por especialidad:", this.medicos);
     });
   }
 
   onMedicoChange(): void {
-    console.log("Médico seleccionado:", this.selectedMedico);
     if (this.selectedEspecialidad?.id !== undefined && this.selectedMedico?.id !== undefined) {
       this.medicoEspecialidadService
         .getMedicoEspecialidadByEspecialidadAndMedico(this.selectedEspecialidad.id, this.selectedMedico.id)
         .subscribe((data) => {
           this.selectedMedicoEspecialidad = data;
-          console.log("MedicoEspecialidad obtenida:", this.selectedMedicoEspecialidad);
           this.obtenerHorariosPorMedicoEspecialidad(this.selectedMedicoEspecialidad.id);
         });
     } else {
@@ -114,23 +106,21 @@ export default class ReservaComponent implements OnInit {
   }
 
   obtenerHorariosPorMedicoEspecialidad(medicoEspecialidadId: number): void {
-    console.log(`Obteniendo horarios para MedicoEspecialidad ID: ${medicoEspecialidadId}`);
     this.horarioService.getHorariosPorMedicoEspecialidad(medicoEspecialidadId).subscribe((data) => {
-      this.horarios = data;
-      console.log("Horarios obtenidos:", this.horarios);
+      this.horarios = data.map((horario) => ({
+        ...horario,
+        formattedLabel: `${horario.fecha} - ${horario.horaInicio} a ${horario.horaFinal}`
+      }));
     });
   }
 
   obtenerCuposPorHorario(horarioId: number): void {
-    console.log(`Obteniendo cupos para horario ID: ${horarioId}`);
     this.cupoService.getCuposPorHorario(horarioId).subscribe((data) => {
       this.cupos = data;
-      console.log("Cupos obtenidos:", this.cupos);
     });
   }
 
   onHorarioChange(): void {
-    console.log("Horario seleccionado:", this.selectedHorario);
     if (this.selectedHorario && this.selectedHorario.id) {
       this.obtenerCuposPorHorario(this.selectedHorario.id);
     } else {
@@ -140,41 +130,38 @@ export default class ReservaComponent implements OnInit {
 
   reservarCupo(cupo: Cupo): void {
     const correoAsegurado = this.authService.getAuthenticatedUserEmail();
-    console.log("Correo del asegurado autenticado:", correoAsegurado);
 
     if (correoAsegurado) {
-        this.aseguradoService.getAseguradoPorCorreo(correoAsegurado).subscribe(
-            asegurado => {
-                console.log("Asegurado encontrado:", asegurado);
+      this.aseguradoService.getAseguradoPorCorreo(correoAsegurado).subscribe(
+        asegurado => {
+          const cupoActualizado: Cupo = {
+            numero: cupo.numero,
+            fechaReservado: new Date().toISOString().split('T')[0],
+            estado: "Ocupado",
+            horario: cupo.horario,
+            asegurado: {id: asegurado.id}
+          };
 
-                const cupoActualizado: Cupo = {
-                    numero: cupo.numero,
-                    fechaReservado: new Date().toISOString().split('T')[0], // Formato de fecha actual
-                    estado: "Ocupado",
-                    horario: cupo.horario,
-                    asegurado: {id: asegurado.id} // Usa el objeto completo del asegurado obtenido
-                };
-                console.log("Datos del cupo antes de actualizar:", cupoActualizado);
-                if (cupo.id !== undefined) {
-                    this.cupoService.reservarCupo(cupo.id, cupoActualizado).subscribe(
-                        response => {
-                            console.log("Reserva realizada exitosamente:", response);
-                            this.obtenerCuposPorHorario(this.selectedHorario!.id!);
-                        },
-                        error => {
-                            console.error("Error al actualizar el cupo:", error);
-                        }
-                    );
-                } else {
-                    console.error("El ID del cupo es undefined. No se puede actualizar el cupo.");
-                }
-            },
-            error => {
-                console.error("Error al obtener el asegurado por correo:", error);
-            }
-        );
+          if (cupo.id !== undefined) {
+            this.cupoService.reservarCupo(cupo.id, cupoActualizado).subscribe(
+              response => {
+                console.log("Reserva realizada exitosamente:", response);
+                this.obtenerCuposPorHorario(this.selectedHorario!.id!);
+              },
+              error => {
+                console.error("Error al actualizar el cupo:", error);
+              }
+            );
+          } else {
+            console.error("El ID del cupo es undefined. No se puede actualizar el cupo.");
+          }
+        },
+        error => {
+          console.error("Error al obtener el asegurado por correo:", error);
+        }
+      );
     } else {
-        console.error("No se pudo obtener el correo del asegurado.");
+      console.error("No se pudo obtener el correo del asegurado.");
     }
   }
 }
