@@ -30,4 +30,8 @@ export class TratamientoService {
     return this.http.get<Tratamiento>(`${this.apiUrl}/consulta/${consultaId}`, { headers: this.getAuthHeaders() });
   }
 
+  createTratamiento(tratamiento: Tratamiento): Observable<Tratamiento> {
+    return this.http.post<Tratamiento>(this.apiUrl, tratamiento, { headers: this.getAuthHeaders() });
+  }
+
 }

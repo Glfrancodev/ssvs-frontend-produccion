@@ -35,7 +35,7 @@ export class ConsultaService {
   }
 
   // Crear una nueva consulta
-  crearConsulta(consulta: Consulta): Observable<Consulta> {
+  createConsulta(consulta: Consulta): Observable<Consulta> {
     return this.http.post<Consulta>(this.apiUrl, consulta, { headers: this.getAuthHeaders() });
   }
 

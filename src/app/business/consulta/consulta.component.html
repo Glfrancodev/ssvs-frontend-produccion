@@ -1,59 +1,54 @@
+<!-- src/app/business/consulta/consulta.component.html -->
 <div class="consulta-container">
-    <form class="form">
-      <h3>Consulta</h3>
-  
-      <!-- Motivo de la consulta -->
+  <div class="form">
+    <h3>Detalles de la Consulta</h3>
+
+    <div class="form-field">
+      <label for="motivo" class="label">Motivo</label>
+      <textarea id="motivo" [(ngModel)]="motivo" name="motivo" class="textarea"></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="diagnostico" class="label">Diagnóstico</label>
+      <textarea id="diagnostico" [(ngModel)]="diagnostico" name="diagnostico" class="textarea"></textarea>
+    </div>
+
+    <div class="form-field">
+      <label for="nota" class="label">Nota</label>
+      <textarea id="nota" [(ngModel)]="nota" name="nota" class="textarea"></textarea>
+    </div>
+
+    <div class="button-container">
+      <button type="button" class="button" (click)="agregarReceta()">Agregar Receta</button>
+    </div>
+
+    <!-- Mostrar las recetas agregadas -->
+    <div *ngFor="let receta of recetas; let i = index" class="form">
+      <h3>Receta {{ i + 1 }}</h3>
+
       <div class="form-field">
-        <label class="label" for="motivo">Motivo</label>
-        <textarea id="motivo" [(ngModel)]="consulta.motivo" name="motivo" class="textarea"></textarea>
+        <label for="medicamento{{ i }}" class="label">Medicamento</label>
+        <input id="medicamento{{ i }}" [(ngModel)]="receta.medicamento" name="medicamento{{ i }}" class="textarea" />
       </div>
-  
-      <!-- Diagnóstico -->
+
       <div class="form-field">
-        <label class="label" for="diagnostico">Diagnóstico</label>
-        <textarea id="diagnostico" [(ngModel)]="consulta.diagnostico" name="diagnostico" class="textarea"></textarea>
+        <label for="frecuencia{{ i }}" class="label">Frecuencia</label>
+        <input id="frecuencia{{ i }}" [(ngModel)]="receta.frecuencia" name="frecuencia{{ i }}" class="textarea" />
       </div>
-  
-      <!-- Nota -->
+
       <div class="form-field">
-        <label class="label" for="nota">Nota</label>
-        <textarea id="nota" [(ngModel)]="consulta.nota" name="nota" class="textarea"></textarea>
+        <label for="fechaInicio{{ i }}" class="label">Fecha de Inicio</label>
+        <input type="date" id="fechaInicio{{ i }}" [(ngModel)]="receta.fechaInicio" name="fechaInicio{{ i }}" class="textarea" />
       </div>
-  
-      <!-- Botón para agregar receta -->
-      <div class="button-container">
-        <button type="button" class="button" (click)="agregarReceta()">Agregar Receta</button>
+
+      <div class="form-field">
+        <label for="fechaFinal{{ i }}" class="label">Fecha Final</label>
+        <input type="date" id="fechaFinal{{ i }}" [(ngModel)]="receta.fechaFinal" name="fechaFinal{{ i }}" class="textarea" />
       </div>
-  
-      <!-- Campos de recetas dinámicos -->
-      <div *ngFor="let receta of recetas; let i = index" class="receta-container">
-        <h4>Receta {{ i + 1 }}</h4>
-  
-        <div class="form-field">
-          <label class="label">Medicamento</label>
-          <input type="text" [(ngModel)]="receta.medicamento" name="medicamento{{i}}" class="input-field" />
-        </div>
-  
-        <div class="form-field">
-          <label class="label">Frecuencia</label>
-          <input type="text" [(ngModel)]="receta.frecuencia" name="frecuencia{{i}}" class="input-field" />
-        </div>
-  
-        <div class="form-field">
-          <label class="label">Fecha Inicio</label>
-          <input type="date" [(ngModel)]="receta.fechaInicio" name="fechaInicio{{i}}" class="input-field" />
-        </div>
-  
-        <div class="form-field">
-          <label class="label">Fecha Final</label>
-          <input type="date" [(ngModel)]="receta.fechaFinal" name="fechaFinal{{i}}" class="input-field" />
-        </div>
-      </div>
-  
-      <!-- Botón para enviar el formulario -->
-      <div class="button-container">
-        <button type="submit" class="button">Guardar Consulta</button>
-      </div>
-    </form>
+    </div>
+
+    <div class="button-container">
+      <button type="button" class="button" (click)="guardarConsulta()">Guardar Consulta</button>
+    </div>
   </div>
-  
+</div>

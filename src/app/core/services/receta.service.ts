@@ -24,6 +24,10 @@ export class RecetaService {
     });
   }
 
+  createReceta(receta: Receta): Observable<Receta> {
+    return this.http.post<Receta>(this.apiUrl, receta, { headers: this.getAuthHeaders() });
+  }
+
   // Método para obtener las recetas por tratamiento ID
   getRecetasByTratamientoId(tratamientoId: number): Observable<Receta[]> {
     return this.http.get<Receta[]>(`${this.apiUrl}/tratamiento/${tratamientoId}`, {
