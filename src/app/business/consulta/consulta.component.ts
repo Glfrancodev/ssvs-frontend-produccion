@@ -18,7 +18,7 @@ import { CupoService } from '../../core/services/cupo.service';
   templateUrl: './consulta.component.html',
   styleUrls: ['./consulta.component.css'],
   standalone: true,
-  imports: [CommonModule,TableModule, FormsModule]
+  imports: [CommonModule, TableModule, FormsModule]
 })
 export default class ConsultaComponent implements OnInit {
   motivo: string = '';
@@ -70,69 +70,83 @@ export default class ConsultaComponent implements OnInit {
     });
   }
 
-    guardarConsulta(): void {
-      if (!this.cupoId || !this.historiaClinicaId) {
-        console.error("Faltan datos para guardar la consulta.");
-        return;
-      }
-
-      // Paso 1: Crear la consulta
-      const nuevaConsulta: Consulta = {
-        fechaConsulta: new Date().toISOString().split('T')[0],
-        motivoConsulta: this.motivo,
-        diagnostico: this.diagnostico,
-        nota: this.nota,
-        cupo: { id: this.cupoId , numero:0, fechaReservado:'', hora:'', estado:'', horario: undefined, asegurado: undefined},
-        historiaClinica: { id: this.historiaClinicaId }
-      };
-
-      console.log('Datos de nuevaConsulta:', nuevaConsulta); // <-- Agrega este console.log
-
-
-      this.consultaService.createConsulta(nuevaConsulta).subscribe(
-        consultaGuardada => {
-          console.log('Consulta guardada:', consultaGuardada);
-
-          // Paso 2: Crear tratamiento si hay recetas
-          if (this.recetas.length > 0) {
-            const nuevoTratamiento: Tratamiento = {
-              fecha: consultaGuardada.fechaConsulta,
-              consulta: { id: consultaGuardada.id , fechaConsulta:'', motivoConsulta:'', diagnostico:'', nota:'', cupo: undefined, historiaClinica: undefined }
-            };
-
-            this.tratamientoService.createTratamiento(nuevoTratamiento).subscribe(
-              tratamientoGuardado => {
-                console.log('Tratamiento guardado:', tratamientoGuardado);
-
-                // Paso 3: Crear recetas asociadas al tratamiento
-                this.recetas.forEach(recetaData => {
-                  const nuevaReceta: Receta = {
-                    medicamento: recetaData.medicamento,
-                    frecuencia: recetaData.frecuencia,
-                    fechaInicio: recetaData.fechaInicio,
-                    fechaFinal: recetaData.fechaFinal,
-                    tratamiento: { id: tratamientoGuardado.id , fecha:''}
-                  };
-
-                  this.recetaService.createReceta(nuevaReceta).subscribe(
-                    recetaGuardada => {
-                      console.log('Receta guardada:', recetaGuardada);
-                    },
-                    error => {
-                      console.error('Error al guardar receta:', error);
-                    }
-                  );
-                });
-              },
-              error => {
-                console.error('Error al guardar el tratamiento:', error);
-              }
-            );
-          }
-        },
-        error => {
-          console.error('Error al guardar la consulta:', error);
-        }
-      );
+  guardarConsulta(): void {
+    if (!this.cupoId || !this.historiaClinicaId) {
+      console.error("Faltan datos para guardar la consulta.");
+      return;
     }
+
+    // Paso 1: Crear la consulta
+    const nuevaConsulta: Consulta = {
+      fechaConsulta: new Date().toISOString().split('T')[0],
+      motivoConsulta: this.motivo,
+      diagnostico: this.diagnostico,
+      nota: this.nota,
+      cupo: { id: this.cupoId, numero: 0, fechaReservado: '', hora: '', estado: '', horario: undefined, asegurado: undefined },
+      historiaClinica: { id: this.historiaClinicaId }
+    };
+
+    this.consultaService.createConsulta(nuevaConsulta).subscribe(
+      consultaGuardada => {
+        console.log('Consulta guardada:', consultaGuardada);
+
+        if (this.recetas.length > 0) {
+          const nuevoTratamiento: Tratamiento = {
+            fecha: consultaGuardada.fechaConsulta,
+            consulta: { id: consultaGuardada.id, fechaConsulta: '', motivoConsulta: '', diagnostico: '', nota: '', cupo: undefined, historiaClinica: undefined }
+          };
+
+          this.tratamientoService.createTratamiento(nuevoTratamiento).subscribe(
+            tratamientoGuardado => {
+              console.log('Tratamiento guardado:', tratamientoGuardado);
+
+              this.recetas.forEach(recetaData => {
+                const nuevaReceta: Receta = {
+                  medicamento: recetaData.medicamento,
+                  frecuencia: recetaData.frecuencia,
+                  fechaInicio: recetaData.fechaInicio,
+                  fechaFinal: recetaData.fechaFinal,
+                  tratamiento: { id: tratamientoGuardado.id, fecha: '' }
+                };
+
+                this.recetaService.createReceta(nuevaReceta).subscribe(
+                  recetaGuardada => {
+                    console.log('Receta guardada:', recetaGuardada);
+                  },
+                  error => {
+                    console.error('Error al guardar receta:', error);
+                  }
+                );
+              });
+
+              // Cambia el estado del cupo a "Terminado" después de guardar todo
+              this.actualizarEstadoCupo();
+            },
+            error => {
+              console.error('Error al guardar el tratamiento:', error);
+            }
+          );
+        } else {
+          // Cambia el estado del cupo a "Terminado" si no hay recetas
+          this.actualizarEstadoCupo();
+        }
+      },
+      error => {
+        console.error('Error al guardar la consulta:', error);
+      }
+    );
+  }
+
+  private actualizarEstadoCupo(): void {
+    this.cupoService.actualizarEstadoCupo(this.cupoId!, "Terminado").subscribe(
+      cupoActualizado => {
+        console.log('Estado del cupo actualizado a "Terminado":', cupoActualizado);
+        // Redirigir al dashboard después de completar todo el proceso
+        this.router.navigate(['/dashboard']);
+      },
+      error => {
+        console.error('Error al actualizar el estado del cupo:', error);
+      }
+    );
+  }
 }

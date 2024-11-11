@@ -34,4 +34,10 @@ export class CupoService {
   getCupoById(id: number): Observable<Cupo> {
     return this.http.get<Cupo>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  // Método para actualizar el estado de un cupo
+  actualizarEstadoCupo(id: number, estado: string): Observable<Cupo> {
+    return this.http.put<Cupo>(`${this.apiUrl}/estado/${id}`, estado, { headers: this.getAuthHeaders() });
+  }
+
 }
