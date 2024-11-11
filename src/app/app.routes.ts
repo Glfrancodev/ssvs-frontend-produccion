@@ -101,7 +101,7 @@ export const routes: Routes = [
                 path: 'tratamiento/:consultaId',
                 loadComponent: () => import('./business/tratamiento/tratamiento.component'),
                 canActivate: [AuthGuard],
-                data: { roles: ['Medico', 'SuperUsuario'] }
+                data: { roles: ['Medico', 'SuperUsuario', 'Asegurado'] }
             },     
             {
                 path: 'consulta/:cupoId',

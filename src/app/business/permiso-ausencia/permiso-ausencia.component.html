@@ -1,35 +1,48 @@
 <p-toast></p-toast>
 
-<div class="add-permiso-ausencia-form">
+<div class="form-container add-permiso-ausencia-form">
   <h3 style="font-weight: bold;">Añadir Nuevo Permiso de Ausencia</h3>
+  
   <div class="form-field">
     <label for="fechaPermiso">Fecha del Permiso</label>
-    <input id="fechaPermiso" type="date" pInputText [(ngModel)]="newPermisoAusencia.fechaPermiso" />
+    <input id="fechaPermiso" type="date" pInputText [(ngModel)]="newPermisoAusencia.fechaPermiso" class="input-field" />
   </div>
+  
   <div class="form-field">
     <label for="descripcion">Descripción</label>
-    <input id="descripcion" type="text" pInputText [(ngModel)]="newPermisoAusencia.descripcion" placeholder="Ingrese Descripción" />
+    <input id="descripcion" type="text" pInputText [(ngModel)]="newPermisoAusencia.descripcion" placeholder="Ingrese Descripción" class="input-field" />
   </div>
+  
   <div class="form-field">
     <label for="medico">Médico</label>
     <p-dropdown
       id="medico"
       [options]="medicos"
-      optionLabel="usuario.nombre"
+      optionLabel="nombreCompleto"
       optionValue="id"
       [(ngModel)]="newPermisoAusencia.medico!.id"
       placeholder="Seleccione Médico"
-    ></p-dropdown>
+      class="input-dropdown"
+    >
+      <ng-template let-medico pTemplate="selectedItem">
+        {{ medico.usuario?.nombre }} {{ medico.usuario?.apellido }}
+      </ng-template>
+      <ng-template let-medico pTemplate="item">
+        {{ medico.usuario?.nombre }} {{ medico.usuario?.apellido }}
+      </ng-template>
+    </p-dropdown>
   </div>
-  <div class="form-field">
+  
+  <div class="form-field center-content">
     <p-button
       label="Añadir Permiso"
       icon="pi pi-plus"
       (click)="addPermisoAusencia()"
-      styleClass="p-button-raised p-button-success"
+      styleClass="p-button-raised p-button-success button-custom"
     ></p-button>
   </div>
 </div>
+
 <p-table
   [value]="permisosAusencia"
   dataKey="id"

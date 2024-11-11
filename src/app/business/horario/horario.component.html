@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 
 <div class="add-horario-form">
-  <h3 style="font-weight: bold;">Añadir Nuevo Horario</h3>
+  <h3>Añadir Nuevo Horario</h3>
   <div class="form-field">
     <label for="fecha">Fecha</label>
-    <p-calendar id="fecha" [(ngModel)]="newHorario.fecha" dateFormat="yy-mm-dd"></p-calendar>
+    <p-calendar id="fecha" [(ngModel)]="newHorario.fecha" dateFormat="yy-mm-dd" class="input-calendar"></p-calendar>
   </div>
   <div class="form-field">
     <label for="horaInicio">Hora de Inicio</label>
@@ -21,30 +21,32 @@
   <div class="form-field">
     <label for="medicoEspecialidad">Médico Especialidad</label>
     <p-dropdown
-    id="medicoEspecialidad"
-    [options]="medicoEspecialidades"
-    optionValue="id"
-    [(ngModel)]="newHorario.medicoEspecialidad!.id"
-    placeholder="Seleccione Médico Especialidad"
-  >
-    <ng-template let-medicoEspecialidad pTemplate="selectedItem">
-      {{ getMedicoEspecialidadLabel(medicoEspecialidad) }}
-    </ng-template>
-    <ng-template let-medicoEspecialidad pTemplate="item">
-      {{ getMedicoEspecialidadLabel(medicoEspecialidad) }}
-    </ng-template>
-  </p-dropdown>
-  
+      id="medicoEspecialidad"
+      [options]="medicoEspecialidades"
+      optionValue="id"
+      [(ngModel)]="newHorario.medicoEspecialidad!.id"
+      placeholder="Seleccione Médico Especialidad"
+      class="input-dropdown"
+    >
+      <ng-template let-medicoEspecialidad pTemplate="selectedItem">
+        {{ getMedicoEspecialidadLabel(medicoEspecialidad) }}
+      </ng-template>
+      <ng-template let-medicoEspecialidad pTemplate="item">
+        {{ getMedicoEspecialidadLabel(medicoEspecialidad) }}
+      </ng-template>
+    </p-dropdown>
   </div>
-  <p-button
-    label="Añadir Horario"
-    icon="pi pi-plus"
-    (click)="addHorario()"
-    styleClass="p-button-raised p-button-success"
-  ></p-button>
+  <div class="form-field center-content">
+    <p-button
+      label="Añadir Horario"
+      icon="pi pi-plus"
+      (click)="addHorario()"
+      styleClass="p-button-raised p-button-success button-custom"
+    ></p-button>
+  </div>
 </div>
 
-<p-table [value]="horarios" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+<p-table [value]="horarios" dataKey="id" editMode="row" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
   <ng-template pTemplate="header">
     <tr>
       <th style="width: 10%;">ID</th>
@@ -52,7 +54,7 @@
       <th style="width: 15%;">Hora Inicio</th>
       <th style="width: 15%;">Hora Final</th>
       <th style="width: 10%;">Cupos Totales</th>
-      <th style="width: 20%;">Descripcion</th>
+      <th style="width: 20%;">Descripción</th>
       <th style="width: 15%;">Acciones</th>
     </tr>
   </ng-template>
@@ -68,11 +70,10 @@
         <button
           pButton
           icon="pi pi-trash"
-          class="p-button-rounded p-button-danger"
+          class="p-button-rounded p-button-danger button-danger"
           (click)="deleteHorario(horario.id)"
         ></button>
       </td>
-      
     </tr>
   </ng-template>
 </p-table>

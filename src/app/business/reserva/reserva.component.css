@@ -1,36 +1,139 @@
+/* Contenedor principal */
 .usuario-list-container {
     max-width: 100%;
     margin: auto;
     overflow-x: auto;
 }
 
+/* Estilos del contenedor de formulario */
 .form-container.add-usuario-form {
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+    padding: 1.5rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    gap: 1rem;
 }
 
+/* Título */
+/* Título de la sección de formulario */
+/* Título de la sección de formulario */
 .form-container h3 {
-    grid-column: 1 / -1;
-    margin-bottom: 0.5rem;
+    grid-column: 1 / -1; /* Ocupa toda la fila en el grid */
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #3f51b5;
     text-align: center;
+    margin: 0; /* Elimina margen adicional */
+    margin-bottom: 1rem; /* Espacio inferior */
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
 }
 
+
+/* Campos del formulario */
 .form-field {
     display: flex;
     flex-direction: column;
+    gap: 0.25rem;
 }
 
-.input-field {
+.form-field label {
+    font-weight: 600;
+    color: #333;
+}
+
+/* Desplegables y campos de entrada */
+.input-dropdown, .input-field {
     width: 100%;
-    max-width: 90px;
+    max-width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 0.95rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-.input-dropdown {
+/* Input dropdown - cambio de color al enfocarse */
+.input-dropdown:focus, .input-field:focus {
+    outline: none;
+    border-color: #3f51b5;
+    box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+}
+
+/* Contenedor de la tabla de cupos */
+.cupo-table {
     width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 1.5rem;
 }
 
+/* Estilos de la tabla */
+.p-table {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 0.95rem;
+}
+
+/* Encabezado de la tabla */
+.p-table thead th {
+    background-color: #3f51b5;
+    color: #ffffff;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Filas de la tabla */
+.p-table tbody tr {
+    transition: background-color 0.3s;
+}
+
+.p-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+.p-table tbody tr:hover {
+    background-color: #e0f7fa;
+}
+
+/* Celdas de la tabla */
+.p-table td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Botón de reservar */
+.p-button-success {
+    background-color: #4caf50 !important;
+    color: #ffffff !important;
+    border: none !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.p-button-success:hover {
+    background-color: #388e3c !important;
+}
+/* Título de la sección de cupos */
+.cupo-table h3 {
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #3f51b5;
+    text-align: center;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
+}

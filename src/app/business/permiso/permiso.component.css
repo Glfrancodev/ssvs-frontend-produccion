@@ -1,21 +1,134 @@
+/* Contenedor principal del formulario de permisos */
 .form-container {
-    width: 100%;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    border: 1px solid #ddd;
+    border-radius: 12px;
     background-color: #f9f9f9;
-    margin: 20px auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    max-width: 100%;
+    margin: auto;
 }
 
+/* Título del formulario */
 .form-container h3 {
-    margin-bottom: 20px;
+    grid-column: 1 / -1; /* Ocupa toda la fila en el grid */
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3f51b5;
     text-align: center;
-    font-size: 1.2rem;
-    color: #333;
+    margin: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
 }
 
-.form-field {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
+/* Campos de formulario */
+.form-field label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+input[pInputText] {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    font-size: 0.95rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+input[pInputText]:focus {
+    outline: none;
+    border-color: #3f51b5;
+    box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+}
+
+/* Botón de Guardar */
+.p-button-warning {
+    background-color: #ffc107 !important;
+    color: #ffffff !important;
+    font-size: 1rem;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: bold;
+    width: 100%;
+    max-width: 150px;
+    margin: auto;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.p-button-warning:hover {
+    background-color: #e0a800 !important;
+}
+
+/* Estilos de la tabla de permisos */
+.p-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.95rem;
+}
+
+/* Encabezado de la tabla */
+.p-table thead th {
+    background-color: #3f51b5;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+}
+
+/* Filas de la tabla */
+.p-table tbody tr {
+    transition: background-color 0.3s;
+}
+
+.p-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+}
+
+.p-table tbody tr:hover {
+    background-color: #e0f7fa;
+}
+
+/* Celdas de la tabla */
+.p-table td {
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Botones de acción en la tabla */
+.p-button-rounded {
+    border-radius: 50% !important;
+}
+
+.p-button-danger {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    color: #d32f2f !important;
+}
+.p-button-danger:hover {
+    background-color: #d32f2f !important;
+    color:white !important;
+}
+
+.p-button-success {
+    background-color: #43a047 !important;
+    color: #ffffff !important;
+}
+
+.p-button-success:hover {
+    background-color: #388e3c !important;
 }

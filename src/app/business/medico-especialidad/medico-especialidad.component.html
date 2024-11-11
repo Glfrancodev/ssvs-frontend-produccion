@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 
 <div class="form-container">
-  <h3 style="font-weight: bold; text-align: center;">Buscar Especialidad por ID</h3>
+  <h3>Buscar Especialidad por ID</h3>
   
   <div class="form-field">
-    <label for="especialidadId" style="font-weight: bold;">ID de la Especialidad</label>
+    <label for="especialidadId">ID de la Especialidad</label>
     <input
       id="especialidadId"
       type="number"
@@ -15,43 +15,43 @@
     />
   </div>
 
-  <div class="form-field" style="text-align: center;">
+  <div class="form-field center-content">
     <p-button
       icon="pi pi-search"
       label="Buscar"
       (click)="buscarEspecialidad()"
-      styleClass="p-button-raised p-button-info"
-      [style]="{ width: '120px', height: '40px' }"
+      styleClass="p-button-raised p-button-info button-custom"
     ></p-button>
   </div>
 
-  <div *ngIf="especialidad" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
-    <h3 style="font-weight: bold; text-align: center;">Información de la Especialidad</h3>
+  <div *ngIf="especialidad" class="specialty-info">
+    <h3>Información de la Especialidad</h3>
     <div class="form-field">
-      <label style="font-weight: bold;">ID:</label>
+      <label>ID:</label>
       <span>{{ especialidad.id }}</span>
     </div>
     <div class="form-field">
-      <label style="font-weight: bold;">Nombre:</label>
+      <label>Nombre:</label>
       <span>{{ especialidad.nombre }}</span>
     </div>
 
-    <div class="form-field" style="margin-top: 20px;">
-      <label style="font-weight: bold;">Asignar Médico</label>
+    <div class="form-field">
+      <label>Asignar Médico</label>
       <p-dropdown
         [options]="medicosNoAsignados"
         optionLabel="item"
         optionValue="id"
         [(ngModel)]="selectedMedicoId"
         placeholder="Seleccione un médico"
+        class="input-dropdown"
       ></p-dropdown>
     </div>
-    <div class="form-field" style="text-align: center; margin-top: 10px;">
+    <div class="form-field center-content">
       <p-button
         icon="pi pi-plus"
         label="Asignar"
         (click)="assignMedico()"
-        styleClass="p-button-raised p-button-success"
+        styleClass="p-button-raised p-button-success button-custom"
       ></p-button>
     </div>
   </div>
@@ -60,23 +60,22 @@
 <p-table *ngIf="medicoEspecialidades.length > 0" [value]="medicoEspecialidades" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}" [sortField]="sortField" [sortOrder]="sortOrder">
   <ng-template pTemplate="header">
     <tr>
-      <th pSortableColumn="medico.id" style="width: 10%">ID Médico</th>
-      <th style="width: 30%">Nombre Médico</th>
-      <th style="width: 20%">Acciones</th>
+      <th pSortableColumn="medico.id">ID Médico</th>
+      <th>Nombre Médico</th>
+      <th>Acciones</th>
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-medicoEspecialidad>
     <tr>
       <td>{{ medicoEspecialidad.medico.id }}</td>
-      <td>{{medicoEspecialidad.medico.usuario.nombre}} {{medicoEspecialidad.medico.usuario.apellido}}</td>
+      <td>{{ medicoEspecialidad.medico.usuario.nombre }} {{ medicoEspecialidad.medico.usuario.apellido }}</td>
       <td>
         <button 
           pButton 
           pRipple 
           type="button" 
           icon="pi pi-trash" 
-          class="p-button-rounded p-button-danger" 
-          style="width: 2.5rem; height: 2.5rem;" 
+          class="p-button-rounded p-button-danger"
           (click)="deleteMedicoEspecialidad(medicoEspecialidad.id!)">
         </button>
       </td>

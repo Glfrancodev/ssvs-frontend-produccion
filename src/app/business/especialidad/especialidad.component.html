@@ -1,79 +1,77 @@
 <p-toast></p-toast>
 
 <div class="form-container">
-    <h3 style="font-weight: bold;">Crear Nueva Especialidad</h3>
-    <div class="form-field">
-        <label for="nombre" style="font-weight: bold;">Nombre</label>
-        <input id="nombre" type="text" pInputText [(ngModel)]="newEspecialidad.nombre" placeholder="Nombre de la especialidad" />
-    </div>
-    <div class="form-field">
-        <label for="descripcion" style="font-weight: bold;">Descripción</label>
-        <input id="descripcion" type="text" pInputText [(ngModel)]="newEspecialidad.descripcion" placeholder="Descripción de la especialidad" />
-    </div>
-    <div class="form-field" style="text-align: center;">
-        <p-button
-            icon="pi pi-save"
-            label="Guardar"
-            (click)="saveEspecialidad()"
-            styleClass="p-button-raised p-button-warning"
-            [style]="{ width: '120px', height: '40px' }"
-        ></p-button>
-    </div>
+  <h3>Crear Nueva Especialidad</h3>
+  <div class="form-field">
+    <label for="nombre">Nombre</label>
+    <input id="nombre" type="text" pInputText [(ngModel)]="newEspecialidad.nombre" placeholder="Nombre de la especialidad" />
+  </div>
+  <div class="form-field">
+    <label for="descripcion">Descripción</label>
+    <input id="descripcion" type="text" pInputText [(ngModel)]="newEspecialidad.descripcion" placeholder="Descripción de la especialidad" />
+  </div>
+  <div class="form-field" style="text-align: center;">
+    <p-button
+      icon="pi pi-save"
+      label="Guardar"
+      (click)="saveEspecialidad()"
+      styleClass="p-button-raised p-button-warning"
+    ></p-button>
+  </div>
 </div>
 
 <p-table [value]="especialidades" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}" [sortField]="sortField" [sortOrder]="sortOrder">
-    <ng-template pTemplate="header">
-        <tr>
-            <th pSortableColumn="id" style="width:20%">ID</th>
-            <th style="width:30%">Nombre</th>
-            <th style="width:30%">Descripción</th>
-            <th style="width:20%">Acción</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate="body" let-especialidad let-editing="editing" let-ri="rowIndex">
-        <tr [pEditableRow]="especialidad">
-            <td>{{ especialidad.id }}</td>
-            <td>
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <input pInputText type="text" [(ngModel)]="especialidad.nombre" required />
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{ especialidad.nombre }}
-                    </ng-template>
-                </p-cellEditor>
-            </td>
-            <td>
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <input pInputText type="text" [(ngModel)]="especialidad.descripcion" required />
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{ especialidad.descripcion }}
-                    </ng-template>
-                </p-cellEditor>
-            </td>
-            <td>
-                <div class="flex align-items-center justify-content-center gap-2">
-                    <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" 
-                            (click)="onRowEditInit(especialidad)" 
-                            class="p-button-rounded" style="background-color: #ffffff; color: #007bff; border: none; width: 2.5rem; height: 2.5rem;">
-                    </button>
-                    <button *ngIf="!editing" pButton pRipple type="button" icon="pi pi-trash" 
-                            class="p-button-rounded p-button-danger" 
-                            style="width: 3rem; height: 3rem;" 
-                            (click)="deleteEspecialidad(especialidad.id)">
-                    </button>                
-                    <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" 
-                            (click)="onRowEditSave(especialidad)" 
-                            class="p-button-rounded" style="background-color: #ffffff; color: #28a745; border: none; width: 2.5rem; height: 2.5rem; margin-right: 0.5rem;">
-                    </button>
-                    <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" 
-                            (click)="onRowEditCancel(especialidad, ri)" 
-                            class="p-button-rounded" style="background-color: #ffffff; color: #dc3545; border: none; width: 2.5rem; height: 2.5rem;">
-                    </button>
-                </div>
-            </td>
-        </tr>
-    </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th pSortableColumn="id" style="width:20%">ID</th>
+      <th style="width:30%">Nombre</th>
+      <th style="width:30%">Descripción</th>
+      <th style="width:20%">Acción</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-especialidad let-editing="editing" let-ri="rowIndex">
+    <tr [pEditableRow]="especialidad">
+      <td>{{ especialidad.id }}</td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="especialidad.nombre" required />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ especialidad.nombre }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <p-cellEditor>
+          <ng-template pTemplate="input">
+            <input pInputText type="text" [(ngModel)]="especialidad.descripcion" required />
+          </ng-template>
+          <ng-template pTemplate="output">
+            {{ especialidad.descripcion }}
+          </ng-template>
+        </p-cellEditor>
+      </td>
+      <td>
+        <div class="flex align-items-center justify-content-center gap-2">
+          <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" 
+                  (click)="onRowEditInit(especialidad)" 
+                  class="p-button-rounded p-button-warning" style="width: 2.5rem; height: 2.5rem;">
+          </button>
+          <button *ngIf="!editing" pButton pRipple type="button" icon="pi pi-trash" 
+                  class="p-button-rounded p-button-danger" 
+                  (click)="deleteEspecialidad(especialidad.id)">
+          </button>
+          <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" 
+                  (click)="onRowEditSave(especialidad)" 
+                  class="p-button-rounded p-button-check" style="width: 2.5rem; height: 2.5rem;">
+          </button>
+          <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" 
+                  (click)="onRowEditCancel(especialidad, ri)" 
+                  class="p-button-rounded p-button-cancel" style="width: 2.5rem; height: 2.5rem;">
+          </button>
+        </div>
+      </td>
+    </tr>
+  </ng-template>
 </p-table>

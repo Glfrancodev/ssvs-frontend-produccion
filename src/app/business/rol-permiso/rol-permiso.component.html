@@ -1,10 +1,10 @@
 <p-toast></p-toast>
 
 <div class="form-container">
-  <h3 style="font-weight: bold; text-align: center;">Buscar Rol por ID</h3>
+  <h3>Buscar Rol por ID</h3>
   
   <div class="form-field">
-    <label for="rolId" style="font-weight: bold;">ID del Rol</label>
+    <label for="rolId">ID del Rol</label>
     <input
       id="rolId"
       type="number"
@@ -21,24 +21,22 @@
       label="Buscar"
       (click)="buscarRol()"
       styleClass="p-button-raised p-button-info"
-      [style]="{ width: '120px', height: '40px' }"
     ></p-button>
   </div>
 
   <div *ngIf="rol" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px;">
-    <h3 style="font-weight: bold; text-align: center;">Información del Rol</h3>
+    <h3>Información del Rol</h3>
     <div class="form-field">
-      <label style="font-weight: bold;">ID:</label>
+      <label>ID:</label>
       <span>{{ rol.id }}</span>
     </div>
     <div class="form-field">
-      <label style="font-weight: bold;">Nombre:</label>
+      <label>Nombre:</label>
       <span>{{ rol.nombre }}</span>
     </div>
 
-    <!-- Sección para asignar permiso -->
     <div class="form-field" style="margin-top: 20px;">
-      <label style="font-weight: bold;">Asignar Permiso</label>
+      <label>Asignar Permiso</label>
       <p-dropdown
         [options]="permisosNoAsignados"
         optionLabel="nombre"
@@ -79,7 +77,6 @@
           type="button" 
           icon="pi pi-trash" 
           class="p-button-rounded p-button-danger" 
-          style="width: 2.5rem; height: 2.5rem;" 
           (click)="deleteRolPermiso(rolPermiso.id!)">
         </button>
       </td>

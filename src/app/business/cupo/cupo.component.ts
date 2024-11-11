@@ -42,6 +42,7 @@ interface MedicoDropdownItem {
 
 export default class CupoComponent implements OnInit {
   especialidades: Especialidad[] = [];
+
   horarios: Horario[] = []; // Añadir lista de horarios
   cupos: Cupo[] = [];
   
@@ -105,7 +106,10 @@ export default class CupoComponent implements OnInit {
 
   obtenerHorariosPorMedicoEspecialidad(medicoEspecialidadId: number): void {
     this.horarioService.getHorariosPorMedicoEspecialidad(medicoEspecialidadId).subscribe((data) => {
-      this.horarios = data;
+      this.horarios = data.map(horario => ({
+        ...horario,
+        label: `${horario.fecha} - ${horario.horaInicio} a ${horario.horaFinal}`
+      }));
     });
   }
 

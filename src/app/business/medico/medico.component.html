@@ -4,7 +4,7 @@
   <h3>Añadir Médico</h3>
   <div class="form-field">
     <label for="item">Item</label>
-    <input id="item" pInputText [(ngModel)]="nuevoMedico.item" placeholder="Ingrese el item" />
+    <input id="item" pInputText [(ngModel)]="nuevoMedico.item" placeholder="Ingrese el item" class="input-field" />
   </div>
 
   <div class="form-field">
@@ -14,8 +14,9 @@
       [options]="usuariosDisponibles"
       optionLabel="correo"
       optionValue="id"
-      [(ngModel)]=nuevoMedico.usuario!.id
+      [(ngModel)]="nuevoMedico.usuario!.id"
       placeholder="Seleccione un usuario"
+      class="p-dropdown"
     ></p-dropdown>
   </div>
 
@@ -49,7 +50,6 @@
             icon="pi pi-trash"
             class="p-button-rounded p-button-danger"
             (click)="deleteMedico(medico.id)"
-            style="width: 2rem; height: 2rem;"
           ></button>
         </td>
       </tr>

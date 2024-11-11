@@ -1,35 +1,108 @@
+/* Contenedor principal de la lista */
 .asegurado-list-container {
   max-width: 100%;
   margin: auto;
   overflow-x: auto;
 }
 
+/* Estilos del contenedor de formulario */
 .add-asegurado-form {
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+  padding: 1.5rem;
+  border: 1px solid #dcdcdc;
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  grid-template-columns: 1fr 1fr; /* Dos columnas */
+  gap: 1rem;
 }
 
+/* Título del formulario */
 .add-asegurado-form h3 {
-  grid-column: 1 / -1;
-  margin-bottom: 0.5rem;
+  grid-column: 1 / -1; /* Ocupa toda la fila en el grid */
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #3f51b5;
   text-align: center;
+  margin: 0;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 0.5rem;
 }
 
-.form-field {
+/* Campos del formulario */
+.form-field label {
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.25rem;
+}
+
+.input-field,
+.input-dropdown,
+.input-calendar {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  font-size: 0.95rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Input dropdown - cambio de color al enfocarse */
+.input-dropdown:focus,
+.input-field:focus,
+.input-calendar:focus {
+  outline: none;
+  border-color: #3f51b5;
+  box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+}
+
+/* Alinear botón a la izquierda */
+.button-container {
+  grid-column: 1 / -1; /* Ocupa toda la fila */
   display: flex;
-  flex-direction: column;
+  justify-content: center;
 }
 
-.input-field {
-  width: 100%;
-  max-width: 90px;
+/* Botón de Añadir Asegurado */
+.p-button-success {
+  background-color: #4caf50 !important;
+  color: #ffffff !important;
+  width: 40%;
+  font-size: 1rem;
+  border-radius: 8px;
+  padding: 0.75rem 0;
+  border: none !important;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 }
 
-.input-dropdown {
-  width: 100%;
+.p-button-success:hover {
+  background-color: #388e3c !important;
+}
+/* Botones de acción en la tabla */
+.p-button-rounded {
+  border-radius: 50% !important;
+}
+
+.p-button-danger {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  color: #d32f2f !important;
+}
+.p-button-danger:hover {
+  background-color: #d32f2f !important;
+  color:white !important;
+}
+
+.p-button-success {
+  background-color: #43a047 !important;
+  color: #ffffff !important;
+}
+
+.p-button-success:hover {
+  background-color: #388e3c !important;
 }

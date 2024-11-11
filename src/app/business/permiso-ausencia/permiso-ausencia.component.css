@@ -1,35 +1,118 @@
-.permiso-ausencia-list-container {
-    max-width: 100%;
-    margin: auto;
-    overflow-x: auto;
-}
-
-.add-permiso-ausencia-form {
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 1rem;
+/* Contenedor del formulario */
+.form-container {
+    padding: 1.5rem;
+    border: 1px solid #dcdcdc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-}
-
-.add-permiso-ausencia-form h3 {
+    gap: 1rem;
+    max-width: 100%;
+    margin: auto;
+  }
+  
+  /* Título del formulario */
+  .form-container h3 {
     grid-column: 1 / -1;
-    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #3f51b5;
     text-align: center;
-}
-
-.form-field {
-    display: flex;
-    flex-direction: column;
-}
-
-.input-field {
+    margin: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Campos del formulario */
+  .form-field label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.25rem;
+  }
+  
+  .input-field,
+  .input-dropdown {
     width: 100%;
-    max-width: 90px;
-}
-
-.input-dropdown {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    background-color: #ffffff;
+    font-size: 0.95rem;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .input-dropdown:focus,
+  .input-field:focus {
+    outline: none;
+    border-color: #3f51b5;
+    box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+  }
+  
+  /* Botón Añadir Permiso */
+  .p-button-success {
     width: 100%;
+    max-width: 150px;
+    font-size: 1rem;
+    border-radius: 8px;
+    padding: 0.75rem;
+    margin: auto;
+  }
+  
+  /* Tabla de Permisos de Ausencia */
+  .p-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-size: 0.95rem;
+  }
+  
+  /* Encabezado de la tabla */
+  .p-table thead th {
+    background-color: #3f51b5;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+  }
+  
+  /* Filas de la tabla */
+  .p-table tbody tr {
+    transition: background-color 0.3s;
+  }
+  
+  .p-table tbody tr:nth-child(even) {
+    background-color: #f7f7f7;
+  }
+  
+  .p-table tbody tr:hover {
+    background-color: #e0f7fa;
+  }
+  
+  /* Botones de acción */
+  .p-button-danger {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    color: #d32f2f !important;
 }
+.p-button-danger:hover {
+    background-color: #d32f2f !important;
+    color:white !important;
+}
+  
+  .p-button-rounded.p-button-success {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #43a047 !important;
+  }
+  
+  .p-button-rounded.p-button-text {
+    color: #007bff !important;
+  }
+  

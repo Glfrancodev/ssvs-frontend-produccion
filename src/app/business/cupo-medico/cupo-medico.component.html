@@ -1,41 +1,44 @@
-<!-- src/app/business/cupo-medico/cupo-medico.component.html -->
-<p-table [value]="cupos" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
-  <ng-template pTemplate="header">
-    <tr>
-      <th style="width: 15%;">Número</th>
-      <th style="width: 20%;">Fecha Reservado</th>
-      <th style="width: 15%;">Hora</th>
-      <th style="width: 15%;">Fecha Horario</th>
-      <th style="width: 20%;">Nombre Asegurado</th>
-      <th style="width: 15%;">Acciones</th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-cupo>
-    <tr>
-      <td>{{ cupo.numero }}</td>
-      <td>{{ cupo.fechaReservado }}</td>
-      <td>{{ cupo.hora }}</td>
-      <td>{{ cupo.horario.fecha }}</td>
-      <td>{{ cupo.asegurado.usuario.nombre }} {{ cupo.asegurado.usuario.apellido }}</td>
-      <td>
-        <!-- Botón "Historia Clínica" con ícono de tres puntos suspensivos -->
-        <button 
-          pButton 
-          type="button" 
-          icon="pi pi-ellipsis-h" 
-          class="p-button-rounded p-button-text p-button-info"
-          (click)="verHistoriaClinica(cupo.asegurado.id)">
-        </button>
+<div class="cupo-container">
+  <h3>Tus Citas</h3>
+  <!-- src/app/business/cupo-medico/cupo-medico.component.html -->
+  <p-table [value]="cupos" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 15%;">Número</th>
+        <th style="width: 20%;">Fecha Reservado</th>
+        <th style="width: 15%;">Hora</th>
+        <th style="width: 15%;">Fecha Horario</th>
+        <th style="width: 20%;">Nombre Asegurado</th>
+        <th style="width: 15%;">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-cupo>
+      <tr>
+        <td>{{ cupo.numero }}</td>
+        <td>{{ cupo.fechaReservado }}</td>
+        <td>{{ cupo.hora }}</td>
+        <td>{{ cupo.horario.fecha }}</td>
+        <td>{{ cupo.asegurado.usuario.nombre }} {{ cupo.asegurado.usuario.apellido }}</td>
+        <td>
+          <!-- Botón "Historia Clínica" con ícono de tres puntos suspensivos -->
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-ellipsis-h" 
+            class="p-button-rounded p-button-text p-button-info"
+            (click)="verHistoriaClinica(cupo.asegurado.id)">
+          </button>
 
-        <!-- Botón "Iniciar Consulta" con ícono de flecha hacia la derecha -->
-        <button 
-          pButton 
-          type="button" 
-          icon="pi pi-arrow-right" 
-          class="p-button-rounded p-button-text p-button-success"
-          (click)="iniciarConsulta(cupo.id)">
-        </button>
-      </td>
-    </tr>
-  </ng-template>
-</p-table>
+          <!-- Botón "Iniciar Consulta" con ícono de flecha hacia la derecha -->
+          <button 
+            pButton 
+            type="button" 
+            icon="pi pi-arrow-right" 
+            class="p-button-rounded p-button-text p-button-success"
+            (click)="iniciarConsulta(cupo.id)">
+          </button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

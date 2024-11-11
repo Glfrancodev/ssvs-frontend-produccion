@@ -1,4 +1,4 @@
-<!-- src/app/business/consulta/consulta.component.html -->
+
 <div class="consulta-container">
   <div class="form">
     <h3>Detalles de la Consulta</h3>
@@ -18,12 +18,8 @@
       <textarea id="nota" [(ngModel)]="nota" name="nota" class="textarea"></textarea>
     </div>
 
-    <div class="button-container">
-      <button type="button" class="button" (click)="agregarReceta()">Agregar Receta</button>
-    </div>
-
     <!-- Mostrar las recetas agregadas -->
-    <div *ngFor="let receta of recetas; let i = index" class="form">
+    <div *ngFor="let receta of recetas; let i = index" class="form receta-form">
       <h3>Receta {{ i + 1 }}</h3>
 
       <div class="form-field">
@@ -47,7 +43,9 @@
       </div>
     </div>
 
+    <!-- Botones de acción en la parte inferior -->
     <div class="button-container">
+      <button type="button" class="button" (click)="agregarReceta()">Agregar Receta</button>
       <button type="button" class="button" (click)="guardarConsulta()">Guardar Consulta</button>
     </div>
   </div>

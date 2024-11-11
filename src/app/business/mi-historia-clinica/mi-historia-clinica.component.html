@@ -1,1 +1,32 @@
-<p>mi-historia-clinica works!</p>
+<h3>Historia Clínica</h3>
+<p-table [value]="consultas" [sortField]="'fechaConsulta'" [sortOrder]="-1">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Fecha de Consulta</th>
+      <th>Motivo</th>
+      <th>Diagnóstico</th>
+      <th>Nota</th>
+      <th>Médico</th>
+      <th>Acciones</th>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-consulta>
+    <tr>
+      <td>{{ consulta.fechaConsulta | date: 'dd/MM/yyyy' }}</td>
+      <td>{{ consulta.motivoConsulta }}</td>
+      <td>{{ consulta.diagnostico }}</td>
+      <td>{{ consulta.nota }}</td>
+      <td>{{ consulta.cupo.horario.medicoEspecialidad.medico?.usuario.nombre }} {{ consulta.cupo.horario.medicoEspecialidad.medico?.usuario.apellido }}</td>
+      <td>
+        <button 
+          pButton 
+          type="button" 
+          icon="pi pi-arrow-right" 
+          class="p-button-rounded p-button-info" 
+          (click)="irATratamiento(consulta.id)">
+        </button>
+      </td>
+    </tr>
+  </ng-template>
+</p-table>

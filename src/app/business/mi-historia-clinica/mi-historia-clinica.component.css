@@ -1,0 +1,69 @@
+/* Título */
+h3 {
+    text-align: center;
+    color: #3f51b5;
+    font-weight: bold;
+    font-size: 1.8rem; /* Aumenta el tamaño de la fuente */
+    margin: 0; /* Elimina márgenes adicionales */
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.5rem;
+}
+  
+  .p-table {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Estilos de la cabecera */
+  .p-table thead th {
+    background-color: #3f51b5;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    padding: 12px;
+  }
+  
+  .p-table tbody tr {
+    transition: background-color 0.3s;
+  }
+  
+  .p-table tbody tr:nth-child(even) {
+    background-color: #f5f5f5;
+  }
+  
+  /* Hover para las filas */
+  .p-table tbody tr:hover {
+    background-color: #e0f7fa;
+  }
+  
+  /* Estilos de las celdas */
+  .p-table td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  /* Botón de acción */
+  .p-button-info {
+    background-color: #1e88e5 !important;
+    border: none !important;
+    color: #ffffff !important;
+  }
+  
+  .p-button-info:hover {
+    background-color: #1565c0 !important;
+  }
+  
+  .p-button-rounded {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  

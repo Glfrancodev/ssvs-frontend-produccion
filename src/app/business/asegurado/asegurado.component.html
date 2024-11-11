@@ -1,20 +1,21 @@
 <p-toast></p-toast>
 
 <div class="add-asegurado-form">
-  <h3 style="font-weight: bold;">Añadir Asegurado</h3>
-  <div class="form-field" >
+  <h3>Añadir Asegurado</h3>
+  
+  <div class="form-field">
     <label for="tipoSangre">Tipo de Sangre</label>
-    <input id="tipoSangre" pInputText [(ngModel)]="nuevoAsegurado.tipoSangre" placeholder="Ingrese el tipo de sangre" />
+    <input id="tipoSangre" pInputText [(ngModel)]="nuevoAsegurado.tipoSangre" placeholder="Ingrese el tipo de sangre" class="input-field" />
   </div>
 
   <div class="form-field">
     <label for="sexo">Sexo</label>
-    <input id="sexo" pInputText [(ngModel)]="nuevoAsegurado.sexo" placeholder="Ingrese el sexo" maxlength="1" />
+    <input id="sexo" pInputText [(ngModel)]="nuevoAsegurado.sexo" placeholder="Ingrese el sexo" maxlength="1" class="input-field" />
   </div>
 
   <div class="form-field">
     <label for="fechaNacimiento">Fecha de Nacimiento</label>
-    <p-calendar [(ngModel)]="nuevoAsegurado.fechaNacimiento" dateFormat="yy-mm-dd"></p-calendar>
+    <p-calendar [(ngModel)]="nuevoAsegurado.fechaNacimiento" dateFormat="yy-mm-dd" class="input-calendar"></p-calendar>
   </div>
 
   <div class="form-field">
@@ -26,17 +27,21 @@
       optionValue="id"
       [(ngModel)]="nuevoAsegurado.usuario!.id"
       placeholder="Seleccione un usuario"
+      class="input-dropdown"
     ></p-dropdown>
   </div>
 
-  <button
-    pButton
-    label="Añadir Asegurado"
-    icon="pi pi-plus"
-    (click)="addAsegurado()"
-    class="p-button-success"
-  ></button>
+  <div class="form-field button-container">
+    <button
+      pButton
+      label="Añadir Asegurado"
+      (click)="addAsegurado()"
+      class="p-button-success"
+    ></button>
+  </div>
 </div>
+
+
 
 <div class="asegurado-list-container" style="margin-top: 2rem;">
   <p-table
