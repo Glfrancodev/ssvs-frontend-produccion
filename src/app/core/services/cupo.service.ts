@@ -44,6 +44,10 @@ export class CupoService {
   reservarCupo(id: number, cupo: Partial<Cupo>): Observable<Cupo> {
     return this.http.put<Cupo>(`${this.apiUrl}/reservar/${id}`, cupo, { headers: this.getAuthHeaders() });
   }
+    // Método para reservar un cupo
+  quitarCupo(id: number, cupo: Partial<Cupo>): Observable<Cupo> {
+    return this.http.put<Cupo>(`${this.apiUrl}/no/reservar/${id}`, cupo, { headers: this.getAuthHeaders() });
+  }
 
   obtenerCuposPorAsegurado(aseguradoId: number): Observable<Cupo[]> {
     return this.http.get<Cupo[]>(`${this.apiUrl}/asegurado/${aseguradoId}`, { headers: this.getAuthHeaders() });

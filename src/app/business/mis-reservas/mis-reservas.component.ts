@@ -68,7 +68,7 @@ export default class MisReservasComponent implements OnInit {
       estado: 'Libre'
     };
 
-    this.cupoService.reservarCupo(cupo.id!, cupoActualizado).subscribe(
+    this.cupoService.quitarCupo(cupo.id!, cupoActualizado).subscribe(
       (response) => {
         console.log("Cupo liberado exitosamente:", response);
         cupo.estado = 'Libre';
