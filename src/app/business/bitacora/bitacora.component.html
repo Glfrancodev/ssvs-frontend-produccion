@@ -1,0 +1,40 @@
+<p-toast></p-toast>
+
+<div class="bitacora-container">
+  <h3>Registro de Bitácora</h3>
+
+  <!-- Filtro de rango de fechas -->
+  <div class="filter-date-range">
+    <label for="start-date">Fecha Inicio:</label>
+    <input type="date" id="start-date" [(ngModel)]="selectedRange.start" />
+    <label for="end-date">Fecha Fin:</label>
+    <input type="date" id="end-date" [(ngModel)]="selectedRange.end" />
+    <button pButton label="Filtrar" icon="pi pi-filter" (click)="filterByDateRange()"></button>
+  </div>
+
+  <!-- Tabla de registros de bitácora -->
+  <p-table [value]="bitacoras" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Correo</th>
+        <th>Fecha</th>
+        <th>Hora</th>
+        <th>IP</th>
+        <th>Acción</th>
+        <th>Detalle</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-bitacora>
+      <tr>
+        <td>{{ bitacora.id }}</td>
+        <td>{{ bitacora.correo }}</td>
+        <td>{{ bitacora.fecha | date: 'dd/MM/yyyy' }}</td>
+        <td>{{ bitacora.hora }}</td>
+        <td>{{ bitacora.ip }}</td>
+        <td>{{ bitacora.accion }}</td>
+        <td>{{ bitacora.detalle }}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
