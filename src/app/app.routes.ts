@@ -126,7 +126,13 @@ export const routes: Routes = [
                 loadComponent: () => import('./business/mi-historia-clinica/mi-historia-clinica.component'),
                 canActivate: [AuthGuard],
                 data: { roles: ['Asegurado'] }
-            },       
+            },
+            {
+                path: 'bitacora',
+                loadComponent: () => import('./business/bitacora/bitacora.component'),
+                canActivate: [AuthGuard],
+                data: { roles: ['SuperUsuario'] }
+            },    
             {
                 path:'',
                 redirectTo: 'dashboard',
