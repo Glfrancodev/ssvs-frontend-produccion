@@ -36,11 +36,12 @@ export default class BitacoraComponent {
   }
 
   filterByDateRange() {
-    this.bitacoraService
-      .getBitacorasByDateRange(this.selectedRange.start, this.selectedRange.end)
-      .subscribe((data) => {
-        this.bitacoras = data;
-        this.messageService.add({ severity: 'info', summary: 'Filtrado', detail: 'Registros filtrados por rango de fechas' });
-      });
+    // Convertir las fechas a instancias de Date antes de enviarlas al servicio
+    const startDate = new Date(this.selectedRange.start);
+    const endDate = new Date(this.selectedRange.end);
+
+    this.bitacoraService.getBitacorasByDateRange(startDate, endDate).subscribe((data) => {
+      this.bitacoras = data;
+    });
   }
 }

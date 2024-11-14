@@ -29,7 +29,10 @@ export class BitacoraService {
 
   // Filtrar registros de bitácora por rango de fechas
   getBitacorasByDateRange(startDate: Date, endDate: Date): Observable<Bitacora[]> {
-    const url = `${this.apiUrl}/filter?start=${startDate.toISOString()}&end=${endDate.toISOString()}`;
+    const startDateStr = startDate.toISOString().split('T')[0]; // formato "yyyy-MM-dd"
+    const endDateStr = endDate.toISOString().split('T')[0];
+
+    const url = `${this.apiUrl}/fecha/rango?inicio=${startDateStr}&fin=${endDateStr}`;
     return this.http.get<Bitacora[]>(url, { headers: this.getAuthHeaders() });
   }
 
