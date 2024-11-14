@@ -1,4 +1,3 @@
-// src/app/business/cupo-medico/cupo-medico.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CupoService } from '../../core/services/cupo.service';
@@ -10,6 +9,12 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { BitacoraService } from '../../core/services/bitacora.service';
+import { MessageService } from 'primeng/api';
+import { Bitacora } from '../../core/models/bitacora';
+import { AuthService } from '../../core/services/auth.service';
+import { Asegurado } from '../../core/models/asegurado';
+import { AseguradoService } from '../../core/services/asegurado.service';
 
 @Component({
   selector: 'app-cupo-medico',
@@ -17,6 +22,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
   styleUrls: ['./cupo-medico.component.css'],
   standalone: true,
   imports: [CommonModule, TableModule, FormsModule, ButtonModule, RippleModule, InputGroupAddonModule, InputGroupModule],
+  providers: [MessageService]
 })
 export default class CupoMedicoComponent implements OnInit {
   cupos: Cupo[] = [];
@@ -24,7 +30,11 @@ export default class CupoMedicoComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private cupoService: CupoService,
-    private router: Router
+    private router: Router,
+    private bitacoraService: BitacoraService,
+    private messageService: MessageService,
+    private authService: AuthService,
+    private aseguradoService: AseguradoService
   ) {}
 
   ngOnInit(): void {
@@ -49,14 +59,47 @@ export default class CupoMedicoComponent implements OnInit {
     );
   }
 
-  // Método para redirigir al componente historia-clinica
+  // Método para redirigir al componente historia-clinica y registrar en bitácora
   verHistoriaClinica(aseguradoId: number): void {
-    this.router.navigate(['/historia-clinica', aseguradoId]);
+    this.aseguradoService.getAseguradoById(aseguradoId).subscribe(asegurado => {
+      const nombreAsegurado = `${asegurado.usuario!.nombre} ${asegurado.usuario!.apellido}`;
+      this.registrarBitacora('Listar Historia Clinica', `Listar Historia Clinica de ${nombreAsegurado}`);
+      this.router.navigate(['/historia-clinica', aseguradoId]);
+    });
   }
 
-  // Método para redirigir al componente Consulta
+  // Método para redirigir al componente Consulta y registrar en bitácora
   iniciarConsulta(cupoId: number): void {
-    this.router.navigate(['/consulta', cupoId]);
+    this.cupoService.getCupoById(cupoId).subscribe(cupo => {
+      const nombreAsegurado = `${cupo.asegurado!.usuario!.nombre} ${cupo.asegurado!.usuario!.apellido}`;
+      this.registrarBitacora('Comienzo de la consulta', `Comienzo de la consulta de ${nombreAsegurado}`);
+      this.router.navigate(['/consulta', cupoId]);
+    });
   }
 
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
+  }
 }

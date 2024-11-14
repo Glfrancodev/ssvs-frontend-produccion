@@ -132,4 +132,10 @@ export class SidebarComponent {
   listarCupos(): void {
     this.registrarBitacora('Listar cupos', 'El usuario accedió a la lista de cupos');
   }
+
+  // Método para registrar en bitácora al seleccionar una especialidad
+  listarHorariosEspecialidad(especialidadNombre: string): void {
+    this.registrarBitacora('Listar horarios', `Listar sus horarios de ${especialidadNombre}`);
+  }
+
 }

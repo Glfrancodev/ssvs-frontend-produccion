@@ -241,7 +241,8 @@
         >
           <!-- Generar dinámicamente las especialidades del médico -->
           <li *ngFor="let especialidad of especialidades">
-            <a [routerLink]="['/atencion', especialidad.nombre]">
+            <a (click)="listarHorariosEspecialidad(especialidad.nombre)"
+            [routerLink]="['/atencion', especialidad.nombre]">
               <button
                 class="middle none font-sans font-bold center transition-all text-xs py-3 rounded-lg text-white hover:bg-white/10 flex w-full items-center gap-4 px-4 capitalize"
                 type="button"

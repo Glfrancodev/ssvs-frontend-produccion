@@ -18,6 +18,8 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { BitacoraService } from '../../core/services/bitacora.service';
+import { Bitacora } from '../../core/models/bitacora';
 
 @Component({
   selector: 'app-atencion',
@@ -39,7 +41,8 @@ export default class AtencionComponent implements OnInit {
     private medicoService: MedicoService,
     private medicoEspecialidadService: MedicoEspecialidadService,
     private authService: AuthService,
-    private horarioService: HorarioService
+    private horarioService: HorarioService,
+    private bitacoraService: BitacoraService,
   ) {}
 
   ngOnInit(): void {
@@ -110,8 +113,42 @@ export default class AtencionComponent implements OnInit {
     );
   }
 
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
+  }
+
   irACupoMedico(idHorario: number | undefined): void {
     if (idHorario !== undefined) {
+      const horario = this.horarios.find(h => h.id === idHorario);
+      const especialidad = this.especialidadSeleccionada.nombre;
+
+      // Registro en la bitácora
+      const detalle = `Listar mis cupos ocupados del (${horario?.fecha} de ${horario?.horaInicio} a ${horario?.horaFinal}) de (${especialidad})`;
+      this.registrarBitacora('Listar cupos ocupados', detalle);
+
+      // Navega a la página de cupo médico
       this.router.navigate(['/cupo-medico', idHorario]);
     } else {
       console.error('El ID del horario es undefined.');
