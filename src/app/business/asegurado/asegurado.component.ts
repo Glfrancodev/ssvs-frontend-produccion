@@ -105,37 +105,45 @@ export default class AseguradoComponent {
   }
 
   addAsegurado() {
-    console.log("Inicio de addAsegurado. Estado inicial de nuevoAsegurado:", this.nuevoAsegurado);
+    console.log('Iniciando el proceso de creación de asegurado...');
   
     this.aseguradoService.createAsegurado(this.nuevoAsegurado).subscribe(
       (data) => {
-        console.log("Respuesta de createAsegurado:", data);
+        console.log('Asegurado creado en el backend, datos recibidos:', data);
   
-        this.getAsegurados();
-        this.asegurados.push(data);
+        // Verifica que data.id no sea undefined antes de hacer la llamada
+        if (data.id !== undefined) {
+          // Llama al backend para obtener el asegurado completo
+          this.aseguradoService.getAseguradoById(data.id).subscribe((aseguradoCompleto) => {
+            console.log('Datos completos del asegurado recibidos:', aseguradoCompleto);
+            
+            this.getAsegurados();
+            this.asegurados.push(aseguradoCompleto);
   
-        this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
+            // Mensaje de éxito
+            this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
   
-        // Registro en bitácora
-        console.log("Correo del asegurado que se intentará registrar en bitácora:", this.nuevoAsegurado.usuario?.correo);
-        this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${this.nuevoAsegurado.usuario?.correo}`);
-  
-        // Reiniciar formulario de nuevoAsegurado
-        this.resetNuevoAsegurado();
-        console.log("Estado después de resetNuevoAsegurado:", this.nuevoAsegurado);
-  
-        // Recargar lista de usuarios disponibles
-        this.getUsuariosDisponibles();
+            // Registro en bitácora con el correo completo del usuario
+            const bitacoraDetalle = `Asegurado creado: ${aseguradoCompleto.usuario?.correo}`;
+            console.log('Detalle para bitácora:', bitacoraDetalle);
+            
+            this.registrarBitacora('Añadir asegurado', bitacoraDetalle);
+            
+            this.resetNuevoAsegurado();
+            this.getUsuariosDisponibles();
+          });
+        } else {
+          console.error('Error: ID del asegurado no definido');
+        }
       },
       (error) => {
-        console.error("Error al intentar crear asegurado:", error);
+        console.error('Error al crear el asegurado en el backend:', error);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el asegurado' });
       }
     );
   }
   
   
-
   resetNuevoAsegurado() {
     this.nuevoAsegurado = {
       tipoSangre: '',
