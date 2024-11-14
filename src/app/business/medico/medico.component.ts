@@ -58,14 +58,15 @@ export default class MedicoComponent {
   }
 
   addMedico() {
+    const correoMedico = this.nuevoMedico.usuario?.correo; // Guarda el correo antes de reiniciar
+  
     this.medicoService.createMedico(this.nuevoMedico).subscribe(
       (data) => {
         this.getMedicos();
         this.medicos.push(data);
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Médico añadido correctamente' });
         
-        // Registro en bitácora
-        const correoMedico = this.nuevoMedico.usuario?.correo;
+        // Registro en bitácora usando el correo guardado
         this.registrarBitacora('Añadir médico', `Médico creado: ${correoMedico}`);
         
         this.resetNuevoMedico();
@@ -74,6 +75,8 @@ export default class MedicoComponent {
       (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el médico' })
     );
   }
+  
+  
 
   deleteMedico(id: number) {
     const medicoEliminado = this.medicos.find((medico) => medico.id === id);
