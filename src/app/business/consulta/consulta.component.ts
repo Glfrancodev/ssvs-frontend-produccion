@@ -12,6 +12,9 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { FormsModule } from '@angular/forms';
 import { CupoService } from '../../core/services/cupo.service';
+import { BitacoraService } from '../../core/services/bitacora.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Bitacora } from '../../core/models/bitacora';
 
 @Component({
   selector: 'app-consulta',
@@ -34,7 +37,9 @@ export default class ConsultaComponent implements OnInit {
     private tratamientoService: TratamientoService,
     private recetaService: RecetaService,
     private cupoService: CupoService,
-    private router: Router
+    private router: Router,
+    private bitacoraService: BitacoraService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -75,7 +80,7 @@ export default class ConsultaComponent implements OnInit {
       console.error("Faltan datos para guardar la consulta.");
       return;
     }
-
+  
     // Paso 1: Crear la consulta
     const nuevaConsulta: Consulta = {
       fechaConsulta: new Date().toISOString().split('T')[0],
@@ -85,21 +90,27 @@ export default class ConsultaComponent implements OnInit {
       cupo: { id: this.cupoId, numero: 0, fechaReservado: '', hora: '', estado: '', horario: undefined, asegurado: undefined },
       historiaClinica: { id: this.historiaClinicaId }
     };
-
+  
     this.consultaService.createConsulta(nuevaConsulta).subscribe(
       consultaGuardada => {
         console.log('Consulta guardada:', consultaGuardada);
-
+        
+        // Registrar en bitácora la creación de la consulta
+        this.registrarBitacora('Guardar consulta', `Consulta de ${this.cupoId} de ${nuevaConsulta.cupo?.asegurado?.usuario?.nombre || 'asegurado'} añadida`);
+  
         if (this.recetas.length > 0) {
           const nuevoTratamiento: Tratamiento = {
             fecha: consultaGuardada.fechaConsulta,
             consulta: { id: consultaGuardada.id, fechaConsulta: '', motivoConsulta: '', diagnostico: '', nota: '', cupo: undefined, historiaClinica: undefined }
           };
-
+  
           this.tratamientoService.createTratamiento(nuevoTratamiento).subscribe(
             tratamientoGuardado => {
               console.log('Tratamiento guardado:', tratamientoGuardado);
-
+  
+              // Registrar en bitácora la creación del tratamiento
+              this.registrarBitacora('Guardar tratamiento', `Tratamiento ${tratamientoGuardado.id} generado para consulta ${consultaGuardada.id}`);
+  
               this.recetas.forEach(recetaData => {
                 const nuevaReceta: Receta = {
                   medicamento: recetaData.medicamento,
@@ -108,17 +119,20 @@ export default class ConsultaComponent implements OnInit {
                   fechaFinal: recetaData.fechaFinal,
                   tratamiento: { id: tratamientoGuardado.id, fecha: '' }
                 };
-
+  
                 this.recetaService.createReceta(nuevaReceta).subscribe(
                   recetaGuardada => {
                     console.log('Receta guardada:', recetaGuardada);
+  
+                    // Registrar en bitácora la creación de cada receta
+                    this.registrarBitacora('Guardar receta', `Receta ${recetaGuardada.id} para tratamiento ${tratamientoGuardado.id}`);
                   },
                   error => {
                     console.error('Error al guardar receta:', error);
                   }
                 );
               });
-
+  
               // Cambia el estado del cupo a "Terminado" después de guardar todo
               this.actualizarEstadoCupo();
             },
@@ -136,6 +150,7 @@ export default class ConsultaComponent implements OnInit {
       }
     );
   }
+  
 
   private actualizarEstadoCupo(): void {
     this.cupoService.actualizarEstadoCupo(this.cupoId!, "Terminado").subscribe(
@@ -149,4 +164,31 @@ export default class ConsultaComponent implements OnInit {
       }
     );
   }
+
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
+  }
+  
 }

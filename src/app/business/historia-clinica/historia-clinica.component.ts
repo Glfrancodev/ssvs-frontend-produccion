@@ -13,6 +13,9 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { BitacoraService } from '../../core/services/bitacora.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Bitacora } from '../../core/models/bitacora';
 
 @Component({
   selector: 'app-historia-clinica',
@@ -30,7 +33,9 @@ export default class HistoriaClinicaComponent implements OnInit {
     private route: ActivatedRoute,
     private aseguradoService: AseguradoService,
     private consultaService: ConsultaService,
-    private tratamientoService: TratamientoService
+    private tratamientoService: TratamientoService,
+    private bitacoraService: BitacoraService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -85,9 +90,56 @@ export default class HistoriaClinicaComponent implements OnInit {
     });
   }
   
-  // Método para navegar al componente Tratamiento
-  irATratamiento(consultaId: number): void {
-    this.router.navigate(['/tratamiento', consultaId]);
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string, callback: () => void): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => {
+            console.log('Registro de bitácora exitoso');
+            callback(); // Llamar al callback cuando se complete el registro
+          },
+          error: (err) => {
+            console.error('Error al registrar en bitácora', err);
+            callback(); // Llamar al callback incluso si hay un error
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Error al obtener IP', err);
+        callback(); // Llamar al callback incluso si hay un error en obtener la IP
+      }
+    });
   }
 
+
+  // Método para navegar al componente Tratamiento y registrar en bitácora
+  irATratamiento(consultaId: number): void {
+    if (this.asegurado) {
+      const nombreAsegurado = `${this.asegurado.usuario!.nombre} ${this.asegurado.usuario!.apellido}`;
+      const detalle = `Listar tratamiento de la consulta (${consultaId}) del paciente (${nombreAsegurado})`;
+
+      // Registrar en bitácora y luego navegar al tratamiento
+      this.registrarBitacora('Listar tratamiento', detalle, () => {
+        this.router.navigate(['/tratamiento', consultaId]);
+      });
+    } else {
+      console.error('El asegurado no está disponible.');
+      // En caso de que no se tenga el asegurado, igual navegamos al tratamiento
+      this.router.navigate(['/tratamiento', consultaId]);
+    }
+  }
 }
