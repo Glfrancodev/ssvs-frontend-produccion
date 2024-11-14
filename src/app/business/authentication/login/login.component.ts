@@ -37,8 +37,8 @@ export default class LoginComponent {
     this.bitacoraService.getUserIP().subscribe({
       next: (response) => {
         const now = new Date();
-        const fecha = now.toISOString().split('T')[0]; // Obtiene la fecha en formato "YYYY-MM-DD"
-        const hora = now.toTimeString().split(' ')[0]; // Obtiene la hora en formato "HH:MM:SS"
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
         const bitacoraEntry: Bitacora = {
           correo: this.correo,
