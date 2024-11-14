@@ -105,20 +105,35 @@ export default class AseguradoComponent {
   }
 
   addAsegurado() {
+    console.log("Inicio de addAsegurado. Estado inicial de nuevoAsegurado:", this.nuevoAsegurado);
+  
     this.aseguradoService.createAsegurado(this.nuevoAsegurado).subscribe(
       (data) => {
+        console.log("Respuesta de createAsegurado:", data);
+  
         this.getAsegurados();
         this.asegurados.push(data);
+  
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
+  
         // Registro en bitácora
+        console.log("Correo del asegurado que se intentará registrar en bitácora:", this.nuevoAsegurado.usuario?.correo);
         this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${this.nuevoAsegurado.usuario?.correo}`);
-        
+  
+        // Reiniciar formulario de nuevoAsegurado
         this.resetNuevoAsegurado();
+        console.log("Estado después de resetNuevoAsegurado:", this.nuevoAsegurado);
+  
+        // Recargar lista de usuarios disponibles
         this.getUsuariosDisponibles();
       },
-      (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el asegurado' })
+      (error) => {
+        console.error("Error al intentar crear asegurado:", error);
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el asegurado' });
+      }
     );
   }
+  
   
 
   resetNuevoAsegurado() {
