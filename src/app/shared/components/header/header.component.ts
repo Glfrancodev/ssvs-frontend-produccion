@@ -28,8 +28,8 @@ export class HeaderComponent {
     this.bitacoraService.getUserIP().subscribe({
       next: (response) => {
         const now = new Date();
-        const fecha = now.toISOString().split('T')[0]; // Fecha en formato "YYYY-MM-DD"
-        const hora = now.toTimeString().split(' ')[0]; // Hora en formato "HH:MM:SS"
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
         const bitacoraEntry: Bitacora = {
           correo: this.authService.getAuthenticatedUserEmail() || '', // Asume que tienes este método para obtener el correo del usuario autenticado
