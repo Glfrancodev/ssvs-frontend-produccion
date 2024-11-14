@@ -100,7 +100,7 @@ export default class PermisoAusenciaComponent {
   
         // Registro en bitácora con el nombre completo del médico
         const medicoLabel = `${permisoCompleto.medico?.usuario?.nombre} ${permisoCompleto.medico?.usuario?.apellido}`;
-        this.registrarBitacora('Añadir Permiso Ausencia', `Añadir Permiso Ausencia para el (${permisoCompleto.fechaPermiso}) de (${medicoLabel})`);
+        this.registrarBitacora('Añadir Permiso Ausencia', `Añadir Permiso Ausencia para el ${permisoCompleto.fechaPermiso} de ${medicoLabel}`);
   
         // Reiniciar el formulario después de agregar
         this.newPermisoAusencia = {

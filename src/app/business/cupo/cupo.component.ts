@@ -2,10 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EspecialidadService } from '../../core/services/especialidad.service';
 import { MedicoEspecialidadService } from '../../core/services/medico-especialidad.service';
-import { HorarioService } from '../../core/services/horario.service'; // Añadir servicio de Horarios
+import { HorarioService } from '../../core/services/horario.service';
+import { BitacoraService } from '../../core/services/bitacora.service'; // Servicio de bitácora
 import { Especialidad } from '../../core/models/especialidad';
 import { Medico } from '../../core/models/medico';
-import { Horario } from '../../core/models/horario'; // Importar modelo de Horario
+import { Horario } from '../../core/models/horario';
 import { DropdownModule } from 'primeng/dropdown';
 import { ToastModule } from 'primeng/toast';
 import { TableModule } from 'primeng/table';
@@ -16,6 +17,8 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { Cupo } from '../../core/models/cupo';
 import { CupoService } from '../../core/services/cupo.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Bitacora } from '../../core/models/bitacora';
 
 interface MedicoDropdownItem {
   id: number | undefined;
@@ -39,24 +42,24 @@ interface MedicoDropdownItem {
   templateUrl: './cupo.component.html',
   styleUrls: ['./cupo.component.css']
 })
-
 export default class CupoComponent implements OnInit {
   especialidades: Especialidad[] = [];
-
-  horarios: Horario[] = []; // Añadir lista de horarios
+  horarios: Horario[] = [];
   cupos: Cupo[] = [];
   
   selectedEspecialidad: Especialidad | null = null;
   selectedMedico: Medico | null = null;
   selectedMedicoEspecialidad: any;
   selectedHorario: Horario | null = null;
-  medicos: MedicoDropdownItem[] = []; // Cambiamos el tipo aquí
+  medicos: MedicoDropdownItem[] = [];
 
   constructor(
     private especialidadService: EspecialidadService,
     private medicoEspecialidadService: MedicoEspecialidadService,
-    private horarioService: HorarioService, // Inyectar servicio de Horarios
-    private cupoService: CupoService
+    private horarioService: HorarioService,
+    private cupoService: CupoService,
+    private bitacoraService: BitacoraService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -122,9 +125,42 @@ export default class CupoComponent implements OnInit {
   onHorarioChange(): void {
     if (this.selectedHorario && this.selectedHorario.id) {
       this.obtenerCuposPorHorario(this.selectedHorario.id);
+
+      // Obtener el nombre completo del médico y la especialidad
+      const especialidadLabel = this.selectedEspecialidad?.nombre || 'Especialidad desconocida';
+      const medicoLabel = `${this.selectedMedico?.usuario?.nombre || 'Nombre desconocido'} ${this.selectedMedico?.usuario?.apellido || 'Apellido desconocido'}`;
+      const horarioLabel = `${this.selectedHorario.fecha} de ${this.selectedHorario.horaInicio} a ${this.selectedHorario.horaFinal}`;
+
+      // Registrar en bitácora
+      this.registrarBitacora('Listar cupos', `Listar cupos de ${especialidadLabel} de ${medicoLabel} el ${horarioLabel}`);
     } else {
       this.cupos = [];
     }
   }
 
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
+  }
 }
