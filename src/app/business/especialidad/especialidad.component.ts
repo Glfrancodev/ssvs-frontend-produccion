@@ -10,6 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { BitacoraService } from '../../core/services/bitacora.service'; // Importa el servicio de bitácora
+import { Bitacora } from '../../core/models/bitacora';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-especialidad',
@@ -30,7 +33,9 @@ export default class EspecialidadComponent {
   constructor(
     private especialidadService: EspecialidadService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef
+    private bitacoraService: BitacoraService, // Inyecta el servicio de bitácora
+    private cdr: ChangeDetectorRef,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +58,9 @@ export default class EspecialidadComponent {
       this.especialidadService.updateEspecialidad(especialidad).subscribe(() => {
         delete this.editedEspecialidades[especialidad.id!];
         this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Especialidad actualizada' });
+        
+        // Registro en bitácora
+        this.registrarBitacora('Editar especialidad', `Especialidad editada: ${especialidad.nombre}`);
       });
     } else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Nombre y descripción son obligatorios' });
@@ -66,6 +74,7 @@ export default class EspecialidadComponent {
   }
 
   deleteEspecialidad(id: number) {
+    const especialidadEliminada = this.especialidades.find(especialidad => especialidad.id === id);
     this.especialidadService.deleteEspecialidad(id).subscribe(() => {
       this.especialidades = this.especialidades.filter(especialidad => especialidad.id !== id);
       this.messageService.add({
@@ -73,6 +82,11 @@ export default class EspecialidadComponent {
         summary: 'Eliminado',
         detail: 'Especialidad eliminada correctamente'
       });
+
+      // Registro en bitácora
+      if (especialidadEliminada) {
+        this.registrarBitacora('Eliminar especialidad', `Especialidad eliminada: ${especialidadEliminada.nombre}`);
+      }
     });
   }
 
@@ -86,6 +100,10 @@ export default class EspecialidadComponent {
           summary: 'Guardado',
           detail: 'Nueva especialidad creada correctamente'
         });
+        
+        // Registro en bitácora
+        this.registrarBitacora('Añadir especialidad', `Especialidad creada: ${especialidad.nombre}`);
+        
         this.newEspecialidad = { nombre: '', descripcion: '' };
       });
     } else {
@@ -95,5 +113,31 @@ export default class EspecialidadComponent {
         detail: 'Nombre y descripción son obligatorios'
       });
     }
+  }
+
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
   }
 }

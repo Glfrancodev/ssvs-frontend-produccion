@@ -6,6 +6,7 @@ import { MedicoEspecialidad } from '../../core/models/medicoEspecialidad';
 import { EspecialidadService } from '../../core/services/especialidad.service';
 import { MedicoService } from '../../core/services/medico.service';
 import { MedicoEspecialidadService } from '../../core/services/medico-especialidad.service';
+import { BitacoraService } from '../../core/services/bitacora.service';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
@@ -13,6 +14,8 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { Bitacora } from '../../core/models/bitacora';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-medico-especialidad',
@@ -36,7 +39,9 @@ export default class MedicoEspecialidadComponent {
     private especialidadService: EspecialidadService,
     private medicoService: MedicoService,
     private medicoEspecialidadService: MedicoEspecialidadService,
-    private messageService: MessageService
+    private bitacoraService: BitacoraService, // Inyecta el servicio de bitácora
+    private messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {}
@@ -48,6 +53,9 @@ export default class MedicoEspecialidadComponent {
           if (especialidad) {
             this.especialidad = especialidad;
             this.buscarMedicoEspecialidades();
+
+            // Registro en bitácora
+            this.registrarBitacora('Listar especialidades', `Listar especialidades de ${this.especialidad.nombre}`);
           } else {
             this.messageService.add({ severity: 'warn', summary: 'Advertencia', detail: 'Ingrese un ID de especialidad válido' });
             this.especialidad = null;
@@ -92,12 +100,18 @@ export default class MedicoEspecialidadComponent {
         () => {
           this.buscarMedicoEspecialidades();
           this.buscarMedicosNoAsignados();
+          const medicoAsignado = this.medicosNoAsignados.find((medico) => medico.id === this.selectedMedicoId);
           this.selectedMedicoId = null;
           this.messageService.add({
             severity: 'success',
             summary: 'Asignado',
             detail: 'Médico asignado correctamente',
           });
+
+          // Registro en bitácora
+          if (medicoAsignado) {
+            this.registrarBitacora('Asignar especialidad', `Asignó ${this.especialidad?.nombre} a ${medicoAsignado.usuario!.nombre} ${medicoAsignado.usuario!.apellido}`);
+          }
         },
         () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo asignar el médico' })
       );
@@ -107,6 +121,7 @@ export default class MedicoEspecialidadComponent {
   }
 
   deleteMedicoEspecialidad(id: number) {
+    const medicoEspecialidadEliminada = this.medicoEspecialidades.find((me) => me.id === id);
     this.medicoEspecialidadService.deleteMedicoEspecialidad(id).subscribe(() => {
       this.medicoEspecialidades = this.medicoEspecialidades.filter((me) => me.id !== id);
       this.buscarMedicosNoAsignados();
@@ -115,6 +130,40 @@ export default class MedicoEspecialidadComponent {
         summary: 'Eliminado',
         detail: 'Médico de la especialidad eliminado correctamente',
       });
+
+      // Registro en bitácora
+      if (medicoEspecialidadEliminada) {
+        this.registrarBitacora(
+          'Eliminar especialidad',
+          `Quitó ${medicoEspecialidadEliminada.especialidad?.nombre} a ${medicoEspecialidadEliminada.medico?.usuario!.nombre} ${medicoEspecialidadEliminada.medico?.usuario!.apellido}`
+        );
+      }
+    });
+  }
+
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
     });
   }
 }

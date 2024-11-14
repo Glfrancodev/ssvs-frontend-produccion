@@ -70,13 +70,14 @@ export default class AseguradoComponent {
     );
   }
 
+  // Método para registrar en la bitácora
   registrarBitacora(accion: string, detalle: string): void {
     this.bitacoraService.getUserIP().subscribe({
       next: (response) => {
         const now = new Date();
         const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
         const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
-  
+
         const bitacoraEntry: Bitacora = {
           correo: this.authService.getAuthenticatedUserEmail() || '',
           fecha: fecha,
@@ -85,7 +86,7 @@ export default class AseguradoComponent {
           accion: accion,
           detalle: detalle
         };
-  
+
         this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
           next: () => console.log('Registro de bitácora exitoso'),
           error: (err) => console.error('Error al registrar en bitácora', err)
@@ -94,7 +95,7 @@ export default class AseguradoComponent {
       error: (err) => console.error('Error al obtener IP', err)
     });
   }
-  
+
 
   getUsuariosDisponibles() {
     this.usuarioService.getUsuariosSinAseguradoByRol(2).subscribe(
@@ -106,17 +107,23 @@ export default class AseguradoComponent {
   addAsegurado() {
     this.aseguradoService.createAsegurado(this.nuevoAsegurado).subscribe(
       (data) => {
-        this.getAsegurados()
+        this.getAsegurados();
         this.asegurados.push(data);
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
+        
+        // Verifica si el correo está en `data.usuario`, de lo contrario, usa el correo de `this.nuevoAsegurado`.
+        const correoAsegurado = data.usuario?.correo || this.nuevoAsegurado.usuario?.correo;
+        
         // Registro en bitácora
-        this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${data.usuario?.correo}`);
+        this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${correoAsegurado}`);
+        
         this.resetNuevoAsegurado();
         this.getUsuariosDisponibles();
       },
       (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el asegurado' })
     );
   }
+  
 
   resetNuevoAsegurado() {
     this.nuevoAsegurado = {

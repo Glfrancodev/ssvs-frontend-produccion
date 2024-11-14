@@ -48,25 +48,33 @@ export default class RolPermisoComponent {
 
   ngOnInit(): void {}
 
+  // Método para registrar en la bitácora
   registrarBitacora(accion: string, detalle: string): void {
-    const now = new Date();
-    const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
-    const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
-    const bitacoraEntry: Bitacora = {
-      correo: this.authService.getAuthenticatedUserEmail() || '',
-      fecha: fecha,
-      hora: hora,
-      ip: 'IP_DEL_USUARIO', // Puedes obtener la IP si ya tienes el servicio configurado para obtenerla
-      accion: accion,
-      detalle: detalle
-    };
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
 
-    this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
-      next: () => console.log('Registro de bitácora exitoso'),
-      error: (err) => console.error('Error al registrar en bitácora', err)
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
     });
   }
+
+
 
   buscarRol() {
     if (this.rolId > 0) {
