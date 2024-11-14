@@ -49,6 +49,9 @@ export default class LoginComponent {
           detalle: 'El usuario inició sesión en la plataforma'
         };
 
+        // Mostrar los datos en consola antes de insertarlos
+        console.log('Datos de bitácora antes de la inserción:', bitacoraEntry);
+
         this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
           next: () => console.log('Bitácora registrada con éxito'),
           error: (err) => console.error('Error al registrar en la bitácora', err)
