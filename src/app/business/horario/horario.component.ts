@@ -111,8 +111,13 @@ export default class HorarioComponent {
   
 
   getMedicoEspecialidadLabel(medicoEspecialidad: MedicoEspecialidad): string {
-    return `Especialidad: ${medicoEspecialidad.especialidad!.nombre} - Médico: ${medicoEspecialidad.medico!.usuario!.nombre} ${medicoEspecialidad.medico!.usuario!.apellido}`;
+    const especialidadNombre = medicoEspecialidad?.especialidad?.nombre || 'Sin especialidad';
+    const medicoNombre = medicoEspecialidad?.medico?.usuario?.nombre || 'Nombre desconocido';
+    const medicoApellido = medicoEspecialidad?.medico?.usuario?.apellido || 'Apellido desconocido';
+  
+    return `Especialidad: ${especialidadNombre} - Médico: ${medicoNombre} ${medicoApellido}`;
   }
+  
 
   deleteHorario(id: number) {
     const horarioEliminado = this.horarios.find((horario) => horario.id === id);

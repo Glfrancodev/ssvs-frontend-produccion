@@ -65,7 +65,7 @@ export default class MedicoComponent {
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Médico añadido correctamente' });
         
         // Registro en bitácora
-        const correoMedico = data.usuario?.correo || this.nuevoMedico.usuario?.correo;
+        const correoMedico = this.nuevoMedico.usuario?.correo;
         this.registrarBitacora('Añadir médico', `Médico creado: ${correoMedico}`);
         
         this.resetNuevoMedico();

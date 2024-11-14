@@ -112,7 +112,7 @@ export default class AseguradoComponent {
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
         
         // Verifica si el correo está en `data.usuario`, de lo contrario, usa el correo de `this.nuevoAsegurado`.
-        const correoAsegurado = data.usuario?.correo || this.nuevoAsegurado.usuario?.correo;
+        const correoAsegurado = this.nuevoAsegurado.usuario!.correo;
         
         // Registro en bitácora
         this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${correoAsegurado}`);
