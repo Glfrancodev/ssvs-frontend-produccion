@@ -75,31 +75,41 @@ export default class HorarioComponent {
   }
 
   addHorario() {
-    if (this.newHorario.medicoEspecialidad && this.newHorario.medicoEspecialidad.id) { // Verifica que medicoEspecialidad no sea undefined
-      this.horarioService.createHorario(this.newHorario).subscribe((horario) => {
-        this.getAllHorarios();
-        const medicoEspecialidadLabel = this.getMedicoEspecialidadLabel(this.newHorario);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Horario Agregado',
-          detail: 'Nuevo horario creado correctamente',
-        });
+    if (this.newHorario.medicoEspecialidad && this.newHorario.medicoEspecialidad.id) {
+      this.horarioService.createHorario(this.newHorario).subscribe(
+        (horario) => {
+          // Llama al backend para obtener el horario completo con los detalles de MedicoEspecialidad
+          this.horarioService.getHorarioById(horario.id!).subscribe((horarioCompleto) => {
+            this.getAllHorarios();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Horario Agregado',
+              detail: 'Nuevo horario creado correctamente',
+            });
   
-        // Registro en bitácora
-        this.registrarBitacora(
-          'Añadir horario',
-          `Añadir horario (${this.newHorario.fecha}) desde (${this.newHorario.horaInicio}) hasta las (${this.newHorario.horaFinal}) a (${medicoEspecialidadLabel})`
-        );
+            // Registro en bitácora con los detalles completos de MedicoEspecialidad
+            const medicoEspecialidadLabel = this.getMedicoEspecialidadLabel(horarioCompleto.medicoEspecialidad!);
+            this.registrarBitacora(
+              'Añadir horario',
+              `Añadir horario (${horarioCompleto.fecha}) desde (${horarioCompleto.horaInicio}) hasta las (${horarioCompleto.horaFinal}) a (${medicoEspecialidadLabel})`
+            );
   
-        // Reiniciar el formulario de nuevo horario
-        this.newHorario = {
-          fecha: '',
-          horaInicio: '',
-          horaFinal: '',
-          cantidadCupos: 0,
-          medicoEspecialidad: { id: 0 }
-        };
-      });
+            // Reiniciar el formulario de nuevo horario
+            this.newHorario = {
+              fecha: '',
+              horaInicio: '',
+              horaFinal: '',
+              cantidadCupos: 0,
+              medicoEspecialidad: { id: 0 }
+            };
+          });
+        },
+        (error) => this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo añadir el horario'
+        })
+      );
     } else {
       this.messageService.add({
         severity: 'error',
@@ -108,6 +118,7 @@ export default class HorarioComponent {
       });
     }
   }
+  
   
 
   getMedicoEspecialidadLabel(medicoEspecialidad: MedicoEspecialidad): string {

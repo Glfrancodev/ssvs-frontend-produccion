@@ -58,26 +58,32 @@ export default class MedicoComponent {
   }
 
   addMedico() {
-    const correoMedico = this.nuevoMedico.usuario?.correo; // Guarda el correo antes de reiniciar
-  
     this.medicoService.createMedico(this.nuevoMedico).subscribe(
       (data) => {
-        this.getMedicos();
-        this.medicos.push(data);
-        this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Médico añadido correctamente' });
-        
-        // Registro en bitácora usando el correo guardado
-        this.registrarBitacora('Añadir médico', `Médico creado: ${correoMedico}`);
-        
-        this.resetNuevoMedico();
-        this.getUsuariosDisponibles();
+        if (data.id !== undefined) { // Verifica que el ID no sea undefined
+          // Llama al backend para obtener el médico completo
+          this.medicoService.getMedicoById(data.id).subscribe((medicoCompleto) => {
+            this.getMedicos();
+            this.medicos.push(medicoCompleto);
+            
+            // Mensaje de éxito
+            this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Médico añadido correctamente' });
+            
+            // Registro en bitácora con el correo completo del usuario
+            const correoMedico = medicoCompleto.usuario?.correo;
+            this.registrarBitacora('Añadir médico', `Médico creado: ${correoMedico}`);
+            
+            this.resetNuevoMedico();
+            this.getUsuariosDisponibles();
+          });
+        } else {
+          console.error('Error: ID del médico creado es undefined');
+        }
       },
       (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el médico' })
     );
   }
   
-  
-
   deleteMedico(id: number) {
     const medicoEliminado = this.medicos.find((medico) => medico.id === id);
     this.medicoService.deleteMedico(id).subscribe(

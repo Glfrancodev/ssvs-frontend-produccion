@@ -26,6 +26,11 @@ export class HorarioService {
     return this.http.get<Horario[]>(this.apiUrl, { headers: this.getAuthHeaders() });
   }
 
+  getHorarioById(id: number): Observable<Horario> {
+    return this.http.get<Horario>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  }
+
+
   createHorario(horario: Horario): Observable<Horario> {
     return this.http.post<Horario>(this.apiUrl, horario, { headers: this.getAuthHeaders() });
   }
