@@ -31,17 +31,17 @@ export default class BitacoraComponent {
 
   getAllBitacoras() {
     this.bitacoraService.getBitacoras().subscribe((data) => {
-      this.bitacoras = data;
+      this.bitacoras = data.sort((a, b) => (b.id ?? 0) - (a.id ?? 0)); // Ordenar por ID descendente
     });
   }
-
+  
   filterByDateRange() {
-    // Convertir las fechas a instancias de Date antes de enviarlas al servicio
     const startDate = new Date(this.selectedRange.start);
     const endDate = new Date(this.selectedRange.end);
-
+  
     this.bitacoraService.getBitacorasByDateRange(startDate, endDate).subscribe((data) => {
-      this.bitacoras = data;
+      this.bitacoras = data.sort((a, b) => (b.id ?? 0) - (a.id ?? 0)); // Ordenar por ID descendente
     });
   }
+  
 }
