@@ -10,6 +10,9 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { BitacoraService } from '../../core/services/bitacora.service';
+import { AuthService } from '../../core/services/auth.service';
+import { Bitacora } from '../../core/models/bitacora';
 
 @Component({
   selector: 'app-permiso',
@@ -30,6 +33,8 @@ export default class RolComponent {
   constructor(
     private rolService: RolService,
     private messageService: MessageService,
+    private bitacoraService: BitacoraService,
+    private authService: AuthService,
     private cdr: ChangeDetectorRef // Inyecta ChangeDetectorRef
   ) {}
 
@@ -43,6 +48,31 @@ export default class RolComponent {
     });
   }
 
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+  
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+  
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
+  }
+  
   onRowEditInit(rol: Rol) {
     this.editedRoles[rol.id!] = { ...rol };
     this.messageService.add({ severity: 'info', summary: 'Edición', detail: 'Editando rol' });
@@ -53,6 +83,8 @@ export default class RolComponent {
       this.rolService.updateRol(rol).subscribe(() => {
         delete this.editedRoles[rol.id!];
         this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Rol actualizado' });
+        // Registro en bitácora
+        this.registrarBitacora('Actualizar Rol', `Rol actualizado: ${rol.nombre}`);
       });
     } else {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Nombre es obligatorio' });
@@ -66,6 +98,7 @@ export default class RolComponent {
   }
 
   deleteRol(id: number) {
+    const rolEliminado = this.roles.find(rol => rol.id === id);
     this.rolService.deleteRol(id).subscribe(() => {
       this.roles = this.roles.filter(rol => rol.id !== id);
       this.messageService.add({
@@ -73,6 +106,10 @@ export default class RolComponent {
         summary: 'Eliminado',
         detail: 'Rol eliminado correctamente'
       });
+
+      // Registro en bitácora
+      this.registrarBitacora('Eliminar Rol', `Rol eliminado: ${rolEliminado?.nombre}`);
+
     });
   }
 
@@ -86,6 +123,8 @@ export default class RolComponent {
           summary: 'Guardado',
           detail: 'Nuevo rol creado correctamente'
         });
+        // Registro en bitácora
+        this.registrarBitacora('Añadir Rol', `Rol añadido: ${rol.nombre}`);
         this.newRol = { nombre: '' }; // Resetea el formulario
       });
     } else {
