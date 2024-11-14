@@ -115,6 +115,8 @@ export default class PermisoAusenciaComponent {
   }
 
   onRowEditSave(permiso: PermisoAusencia) {
+    console.log('Permiso antes de actualizar:', permiso); // Consola: Verifica el permiso antes de la actualización
+  
     this.permisoAusenciaService.updatePermisoAusencia(permiso).subscribe(() => {
       delete this.editedPermisosAusencia[permiso.id!];
       this.messageService.add({
@@ -123,9 +125,11 @@ export default class PermisoAusenciaComponent {
         detail: 'El estado del permiso ha sido actualizado correctamente'
       });
       this.getAllPermisosAusencia();
-
+      
       // Registro en bitácora
-      const medicoLabel = `${permiso!.medico!.usuario!.nombre} ${permiso!.medico!.usuario!.apellido}`;
+      const medicoLabel = `${permiso.medico?.usuario?.nombre || 'Desconocido'} ${permiso.medico?.usuario?.apellido || 'Desconocido'}`;
+      console.log('Etiqueta de médico para bitácora:', medicoLabel); // Consola: Verifica el nombre del médico
+      console.log('Estado del permiso para bitácora:', permiso.estado); // Consola: Verifica el estado del permiso
       this.registrarBitacora('Modificar Permiso Ausencia', `Permiso para el (${permiso.fechaPermiso}) de (${medicoLabel}) fue ${permiso.estado}`);
     });
   }
@@ -137,6 +141,8 @@ export default class PermisoAusenciaComponent {
 
   deletePermisoAusencia(id: number) {
     const permisoEliminado = this.permisosAusencia.find((permiso) => permiso.id === id);
+    console.log('Permiso encontrado para eliminar:', permisoEliminado); // Consola: Verifica el permiso encontrado antes de eliminar
+    
     this.permisoAusenciaService.deletePermisoAusencia(id).subscribe(() => {
       this.permisosAusencia = this.permisosAusencia.filter(permiso => permiso.id !== id);
       this.messageService.add({
@@ -144,10 +150,11 @@ export default class PermisoAusenciaComponent {
         summary: 'Eliminado',
         detail: 'Permiso de ausencia eliminado correctamente'
       });
-
+      
       // Registro en bitácora
       if (permisoEliminado) {
-        const medicoLabel = `${permisoEliminado!.medico!.usuario!.nombre} ${permisoEliminado!.medico!.usuario!.apellido}`;
+        const medicoLabel = `${permisoEliminado.medico?.usuario?.nombre || 'Desconocido'} ${permisoEliminado.medico?.usuario?.apellido || 'Desconocido'}`;
+        console.log('Etiqueta de médico para bitácora:', medicoLabel); // Consola: Verifica el nombre del médico
         this.registrarBitacora('Eliminar Permiso Ausencia', `Permiso para el (${permisoEliminado.fechaPermiso}) de (${medicoLabel}) eliminada`);
       }
     });
