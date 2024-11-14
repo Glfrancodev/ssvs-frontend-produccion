@@ -105,16 +105,13 @@ export default class AseguradoComponent {
   }
 
   addAsegurado() {
-    const correoAsegurado = this.nuevoAsegurado.usuario?.correo; // Guarda el correo antes de reiniciar
-  
     this.aseguradoService.createAsegurado(this.nuevoAsegurado).subscribe(
       (data) => {
         this.getAsegurados();
         this.asegurados.push(data);
         this.messageService.add({ severity: 'success', summary: 'Añadido', detail: 'Asegurado añadido correctamente' });
-  
-        // Registro en bitácora usando el correo guardado
-        this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${correoAsegurado}`);
+        // Registro en bitácora
+        this.registrarBitacora('Añadir asegurado', `Asegurado creado: ${this.nuevoAsegurado.usuario?.correo}`);
         
         this.resetNuevoAsegurado();
         this.getUsuariosDisponibles();
@@ -122,7 +119,6 @@ export default class AseguradoComponent {
       (error) => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'No se pudo añadir el asegurado' })
     );
   }
-  
   
 
   resetNuevoAsegurado() {
