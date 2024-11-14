@@ -87,36 +87,38 @@ export default class PermisoAusenciaComponent {
       });
       return;
     }
-
+  
     this.permisoAusenciaService.createPermisoAusencia(this.newPermisoAusencia).subscribe((permiso) => {
-      this.getAllPermisosAusencia();
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Permiso de Ausencia Agregado',
-        detail: 'Nuevo permiso de ausencia creado correctamente',
+      // Llama al backend para obtener el permiso completo con los datos del médico
+      this.permisoAusenciaService.getPermisoAusenciaById(permiso.id!).subscribe((permisoCompleto) => {
+        this.getAllPermisosAusencia();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Permiso de Ausencia Agregado',
+          detail: 'Nuevo permiso de ausencia creado correctamente',
+        });
+  
+        // Registro en bitácora con el nombre completo del médico
+        const medicoLabel = `${permisoCompleto.medico?.usuario?.nombre} ${permisoCompleto.medico?.usuario?.apellido}`;
+        this.registrarBitacora('Añadir Permiso Ausencia', `Añadir Permiso Ausencia para el (${permisoCompleto.fechaPermiso}) de (${medicoLabel})`);
+  
+        // Reiniciar el formulario después de agregar
+        this.newPermisoAusencia = {
+          fechaPermiso: '',
+          descripcion: '',
+          estado: 'Pendiente',
+          medico: { id: 0, item: '', usuario: { ci: '', correo: '', contrasena: '', nombre: '', apellido: '', estaActivo: true } }
+        };
       });
-
-      // Registro en bitácora
-      const medicoLabel = `${this.newPermisoAusencia!.medico!.usuario!.nombre} ${this.newPermisoAusencia!.medico!.usuario!.apellido}`;
-      this.registrarBitacora('Añadir Permiso Ausencia', `Añadir Permiso Ausencia para el (${this.newPermisoAusencia.fechaPermiso}) de (${medicoLabel})`);
-
-      // Reiniciar el formulario después de agregar
-      this.newPermisoAusencia = {
-        fechaPermiso: '',
-        descripcion: '',
-        estado: 'Pendiente',
-        medico: { id: 0, item: '', usuario: { ci: '', correo: '', contrasena: '', nombre: '', apellido: '', estaActivo: true } }
-      };
     });
   }
+  
 
   onRowEditInit(permiso: PermisoAusencia) {
     this.editedPermisosAusencia[permiso.id!] = { ...permiso };
   }
 
   onRowEditSave(permiso: PermisoAusencia) {
-    console.log('Permiso antes de actualizar:', permiso); // Consola: Verifica el permiso antes de la actualización
-  
     this.permisoAusenciaService.updatePermisoAusencia(permiso).subscribe(() => {
       delete this.editedPermisosAusencia[permiso.id!];
       this.messageService.add({
@@ -125,12 +127,9 @@ export default class PermisoAusenciaComponent {
         detail: 'El estado del permiso ha sido actualizado correctamente'
       });
       this.getAllPermisosAusencia();
-      
       // Registro en bitácora
       const medicoLabel = `${permiso.medico?.usuario?.nombre || 'Desconocido'} ${permiso.medico?.usuario?.apellido || 'Desconocido'}`;
-      console.log('Etiqueta de médico para bitácora:', medicoLabel); // Consola: Verifica el nombre del médico
-      console.log('Estado del permiso para bitácora:', permiso.estado); // Consola: Verifica el estado del permiso
-      this.registrarBitacora('Modificar Permiso Ausencia', `Permiso para el (${permiso.fechaPermiso}) de (${medicoLabel}) fue ${permiso.estado}`);
+      this.registrarBitacora('Modificar Permiso Ausencia', `Permiso para el ${permiso.fechaPermiso} de ${medicoLabel} fue ${permiso.estado}`);
     });
   }
 
@@ -141,8 +140,6 @@ export default class PermisoAusenciaComponent {
 
   deletePermisoAusencia(id: number) {
     const permisoEliminado = this.permisosAusencia.find((permiso) => permiso.id === id);
-    console.log('Permiso encontrado para eliminar:', permisoEliminado); // Consola: Verifica el permiso encontrado antes de eliminar
-    
     this.permisoAusenciaService.deletePermisoAusencia(id).subscribe(() => {
       this.permisosAusencia = this.permisosAusencia.filter(permiso => permiso.id !== id);
       this.messageService.add({
@@ -150,12 +147,10 @@ export default class PermisoAusenciaComponent {
         summary: 'Eliminado',
         detail: 'Permiso de ausencia eliminado correctamente'
       });
-      
       // Registro en bitácora
       if (permisoEliminado) {
         const medicoLabel = `${permisoEliminado.medico?.usuario?.nombre || 'Desconocido'} ${permisoEliminado.medico?.usuario?.apellido || 'Desconocido'}`;
-        console.log('Etiqueta de médico para bitácora:', medicoLabel); // Consola: Verifica el nombre del médico
-        this.registrarBitacora('Eliminar Permiso Ausencia', `Permiso para el (${permisoEliminado.fechaPermiso}) de (${medicoLabel}) eliminada`);
+        this.registrarBitacora('Eliminar Permiso Ausencia', `Permiso para el ${permisoEliminado.fechaPermiso} de ${medicoLabel} eliminada`);
       }
     });
   }

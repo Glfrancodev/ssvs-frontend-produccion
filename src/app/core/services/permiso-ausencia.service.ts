@@ -26,6 +26,10 @@ export class PermisoAusenciaService {
     return this.http.get<PermisoAusencia[]>(this.apiUrl, { headers: this.getAuthHeaders() });
   }
 
+  getPermisoAusenciaById(id: number): Observable<PermisoAusencia> {
+    return this.http.get<PermisoAusencia>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  }
+
   createPermisoAusencia(permiso: PermisoAusencia): Observable<PermisoAusencia> {
     return this.http.post<PermisoAusencia>(this.apiUrl, permiso, { headers: this.getAuthHeaders() });
   }
