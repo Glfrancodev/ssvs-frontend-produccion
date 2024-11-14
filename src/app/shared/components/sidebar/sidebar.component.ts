@@ -5,6 +5,8 @@ import { SidebarService } from '../../../core/services/sidebar.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { MedicoService } from '../../../core/services/medico.service';
 import { Especialidad } from '../../../core/models/especialidad';
+import { BitacoraService } from '../../../core/services/bitacora.service'; // Importa el servicio de bitácora
+import { Bitacora } from '../../../core/models/bitacora';
 
 
 @Component({
@@ -23,8 +25,7 @@ export class SidebarComponent {
   userRole: string | null = null;
   especialidades: Especialidad[] = [];
 
-  constructor(private sidebarService: SidebarService, private authService: AuthService, private medicoService: MedicoService) {
-
+  constructor(private sidebarService: SidebarService, private authService: AuthService, private medicoService: MedicoService, private bitacoraService: BitacoraService) {
     // Suscribirse a los cambios en el estado del sidebar
     this.sidebarService.sidebarOpen$.subscribe((isOpen) => {
       this.isSidebarOpen = isOpen;
@@ -67,4 +68,36 @@ export class SidebarComponent {
       this.expandedMenus[menu] = true;
     }
   }
+
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = now.toISOString().split('T')[0];
+        const hora = now.toTimeString().split(' ')[0];
+        
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
+  }
+
+  // Llamada desde el botón de usuario para registrar "Listar usuarios"
+  listarUsuarios(): void {
+    this.registrarBitacora('Listar usuarios', 'El usuario accedió a la lista de usuarios');
+  }
+
 }
