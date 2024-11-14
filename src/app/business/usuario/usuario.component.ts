@@ -13,6 +13,9 @@ import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { DropdownModule } from 'primeng/dropdown';
+import { BitacoraService } from '../../core/services/bitacora.service'; // Importa el servicio de bitácora
+import { Bitacora } from '../../core/models/bitacora';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-usuario',
@@ -46,12 +49,40 @@ export default class UsuarioComponent {
     private usuarioService: UsuarioService,
     private rolService: RolService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private bitacoraService: BitacoraService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.getAllUsuarios();
     this.getAllRoles();
+  }
+
+  // Método para registrar en la bitácora
+  registrarBitacora(accion: string, detalle: string): void {
+    this.bitacoraService.getUserIP().subscribe({
+      next: (response) => {
+        const now = new Date();
+        const fecha = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${now.getDate().toString().padStart(2, '0')}`;
+        const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+
+        const bitacoraEntry: Bitacora = {
+          correo: this.authService.getAuthenticatedUserEmail() || '',
+          fecha: fecha,
+          hora: hora,
+          ip: response.ip,
+          accion: accion,
+          detalle: detalle
+        };
+
+        this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
+          next: () => console.log('Registro de bitácora exitoso'),
+          error: (err) => console.error('Error al registrar en bitácora', err)
+        });
+      },
+      error: (err) => console.error('Error al obtener IP', err)
+    });
   }
 
   getAllUsuarios() {
@@ -81,6 +112,8 @@ export default class UsuarioComponent {
     this.usuarioService.updateUsuario(usuario).subscribe(() => {
       delete this.editedUsuarios[usuario.id!];
       this.messageService.add({ severity: 'success', summary: 'Guardado', detail: 'Usuario actualizado' });
+      // Registro en bitácora
+      this.registrarBitacora('Editar usuario', `Usuario editado: ${usuario.correo}`);
       this.getAllUsuarios();
     });
   }
@@ -101,6 +134,9 @@ export default class UsuarioComponent {
         summary: usuario.estaActivo ? 'Activado' : 'Desactivado',
         detail: `Usuario ${usuario.estaActivo ? 'activado' : 'desactivado'} correctamente`,
       });
+      // Registro en bitácora
+      const accion = usuario.estaActivo ? 'Activar usuario' : 'Desactivar usuario';
+      this.registrarBitacora(accion, `Usuario ${accion.toLowerCase()}: ${usuario.correo}`);
     });
   }
 
@@ -112,6 +148,10 @@ export default class UsuarioComponent {
         summary: 'Usuario Agregado',
         detail: 'Nuevo usuario creado correctamente',
       });
+
+      // Registro en bitácora
+      this.registrarBitacora('Añadir usuario', `Usuario creado: ${usuario.correo}`);
+
       // Reiniciar el formulario después de agregar
       this.newUsuario = {
         ci: '',
