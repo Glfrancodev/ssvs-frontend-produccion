@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EspecialidadService } from '../../core/services/especialidad.service';
 import { MedicoEspecialidadService } from '../../core/services/medico-especialidad.service';
 import { HorarioService } from '../../core/services/horario.service';
-import { BitacoraService } from '../../core/services/bitacora.service'; // Servicio de bitácora
+import { BitacoraService } from '../../core/services/bitacora.service';
 import { Especialidad } from '../../core/models/especialidad';
 import { Medico } from '../../core/models/medico';
 import { Horario } from '../../core/models/horario';
@@ -126,13 +126,15 @@ export default class CupoComponent implements OnInit {
     if (this.selectedHorario && this.selectedHorario.id) {
       this.obtenerCuposPorHorario(this.selectedHorario.id);
 
-      // Obtener el nombre completo del médico y la especialidad
-      const especialidadLabel = this.selectedEspecialidad?.nombre || 'Especialidad desconocida';
-      const medicoLabel = `${this.selectedMedico?.usuario?.nombre || 'Nombre desconocido'} ${this.selectedMedico?.usuario?.apellido || 'Apellido desconocido'}`;
-      const horarioLabel = `${this.selectedHorario.fecha} de ${this.selectedHorario.horaInicio} a ${this.selectedHorario.horaFinal}`;
+      // Obtener los datos completos del médico asociado
+      this.medicoEspecialidadService.getMedicoEspecialidadById(this.selectedMedicoEspecialidad.id).subscribe((medicoEspecialidadCompleto) => {
+        const especialidadLabel = this.selectedEspecialidad?.nombre || 'Especialidad desconocida';
+        const medicoLabel = `${medicoEspecialidadCompleto.medico!.usuario!.nombre} ${medicoEspecialidadCompleto.medico!.usuario!.apellido}`;
+        const horarioLabel = `${this.selectedHorario?.fecha} de ${this.selectedHorario?.horaInicio} a ${this.selectedHorario?.horaFinal}`;
 
-      // Registrar en bitácora
-      this.registrarBitacora('Listar cupos', `Listar cupos de ${especialidadLabel} de ${medicoLabel} el ${horarioLabel}`);
+        // Registrar en bitácora con datos completos
+        this.registrarBitacora('Listar cupos', `Listar cupos de ${especialidadLabel} de ${medicoLabel} el ${horarioLabel}`);
+      });
     } else {
       this.cupos = [];
     }

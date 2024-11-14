@@ -28,6 +28,11 @@ export class MedicoEspecialidadService {
     return this.http.get<MedicoEspecialidad[]>(this.apiUrl, { headers: this.getAuthHeaders() });
   }
 
+  getMedicoEspecialidadById(id: number): Observable<MedicoEspecialidad> {
+    return this.http.get<MedicoEspecialidad>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
+  }
+
+
   createMedicoEspecialidad(medicoEspecialidad: MedicoEspecialidad): Observable<MedicoEspecialidad> {
     return this.http.post<MedicoEspecialidad>(this.apiUrl, medicoEspecialidad, { headers: this.getAuthHeaders() });
   }
