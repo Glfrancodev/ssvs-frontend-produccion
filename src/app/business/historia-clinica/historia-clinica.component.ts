@@ -16,6 +16,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { BitacoraService } from '../../core/services/bitacora.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Bitacora } from '../../core/models/bitacora';
+import { PdfExportService } from '../../core/services/pdf-export.service';
 
 @Component({
   selector: 'app-historia-clinica',
@@ -35,7 +36,8 @@ export default class HistoriaClinicaComponent implements OnInit {
     private consultaService: ConsultaService,
     private tratamientoService: TratamientoService,
     private bitacoraService: BitacoraService,
-    private authService: AuthService
+    private authService: AuthService,
+    private pdfExportService: PdfExportService
   ) {}
 
   ngOnInit(): void {
@@ -140,6 +142,23 @@ export default class HistoriaClinicaComponent implements OnInit {
       console.error('El asegurado no está disponible.');
       // En caso de que no se tenga el asegurado, igual navegamos al tratamiento
       this.router.navigate(['/tratamiento', consultaId]);
+    }
+  }
+
+  // Método para exportar la historia clínica como PDF
+  exportarHistoriaClinica(): void {
+    if (this.consultas.length > 0) {
+      const columnas = ['id', 'fechaConsulta', 'motivoConsulta', 'diagnostico', 'nota'];
+      const datos = this.consultas.map((consulta) => ({
+        id: consulta.id,
+        fechaConsulta: consulta.fechaConsulta,
+        motivoConsulta: consulta.motivoConsulta,
+        diagnostico: consulta.diagnostico,
+        nota: consulta.nota,
+      }));
+      this.pdfExportService.exportToPDF(datos, columnas, 'Historia Clínica', 'historia_clinica');
+    } else {
+      console.error('No hay datos para exportar.');
     }
   }
 }

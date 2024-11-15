@@ -39,8 +39,10 @@ export default class MisReservasComponent implements OnInit {
           if (asegurado.id !== undefined) {
             this.cupoService.obtenerCuposPorAsegurado(asegurado.id).subscribe(
               (cupos) => {
-                this.cupos = cupos.map(cupo => ({ ...cupo, isDeleting: false }));
-                console.log("Cupos obtenidos:", this.cupos);
+                // Filtrar cupos que estén en estado "Ocupado"
+                const cuposOcupados = cupos.filter(cupo => cupo.estado === 'Ocupado');
+                this.cupos = cuposOcupados.map(cupo => ({ ...cupo, isDeleting: false }));
+                console.log("Cupos ocupados obtenidos:", this.cupos);
               },
               (error) => console.error('Error al obtener cupos:', error)
             );
@@ -54,6 +56,7 @@ export default class MisReservasComponent implements OnInit {
       console.error('No se pudo obtener el correo del asegurado.');
     }
   }
+  
 
   confirmDelete(cupo: CupoConEstado): void {
     cupo.isDeleting = true; // Muestra los iconos de confirmación

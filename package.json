@@ -17,6 +17,8 @@
     "@angular/platform-browser-dynamic": "^18.2.0",
     "@angular/router": "^18.2.0",
     "http-server": "^14.1.1",
+    "jspdf": "^2.5.2",
+    "jspdf-autotable": "^3.8.4",
     "jwt-decode": "^4.0.0",
     "primeicons": "^7.0.0",
     "primeng": "^17.18.11",
