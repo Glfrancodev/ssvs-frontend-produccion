@@ -61,20 +61,15 @@ export class ConsultaService {
   }
 
   // src/app/core/services/consulta.service.ts
-  subirArchivoConsulta(archivo: File, consultaId: number): Observable<any> {
+  subirArchivoConsulta(archivo: File, consultaId: number): Observable<{ url: string }> {
     const formData = new FormData();
-    formData.append('archivo', archivo); // archivo debe ser un objeto File
-    formData.append('consultaId', consultaId.toString()); // consultaId debe ser un número válido
-    
-    console.log(archivo);
-    console.log(archivo instanceof File); // Debería ser true
+    formData.append('archivo', archivo);
+    formData.append('consultaId', consultaId.toString());
 
-    console.log(consultaId); // Debería ser un número válido
-
-    return this.http.post<any>(
-      `https://ssvs-backend-produccion-production.up.railway.app/api/archivos/subir`,
-      formData,
-      { headers: this.getMultipartAuthHeaders() } // Autorización
+    return this.http.post<{ url: string }>(
+        `https://ssvs-backend-produccion-production.up.railway.app/api/archivos/subir`,
+        formData,
+        { headers: this.getMultipartAuthHeaders() }
     );
   }
 }

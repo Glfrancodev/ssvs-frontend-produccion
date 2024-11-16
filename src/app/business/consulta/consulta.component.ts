@@ -114,7 +114,7 @@ export default class ConsultaComponent implements OnInit {
         if (consultaGuardada.id) {
           this.archivosAdjuntos.forEach(archivo => {
             this.consultaService.subirArchivoConsulta(archivo, consultaGuardada.id!).subscribe({
-              next: (response) => console.log('Archivo subido:', response),
+              next: (response) => console.log('Archivo subido:', response.url),
               error: (err) => console.error('Error al subir archivo:', err)
             });
           });
