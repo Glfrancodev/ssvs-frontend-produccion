@@ -6,6 +6,8 @@ import { ConsultaService } from '../../core/services/consulta.service';
 import { Consulta } from '../../core/models/consulta';
 import { Receta } from '../../core/models/receta';
 import { TableModule } from 'primeng/table';
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -106,4 +108,23 @@ export default class TratamientoComponent implements OnInit {
       },
     });
   }
+
+  exportarPDF(): void {
+    const content: HTMLElement | null = document.querySelector('.tratamiento-container');
+    if (content) {
+      html2canvas(content, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('detalle-consulta.pdf');
+      });
+    } else {
+      console.error('Error: no se pudo encontrar el contenido para exportar.');
+    }
+  }
+
 }

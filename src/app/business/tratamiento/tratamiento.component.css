@@ -112,3 +112,18 @@
 .archivo-item button:hover {
   background-color: #2c387e;
 }
+
+.exportar-pdf button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.exportar-pdf button:hover {
+  background-color: #388e3c;
+}
