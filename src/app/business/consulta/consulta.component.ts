@@ -15,6 +15,7 @@ import { CupoService } from '../../core/services/cupo.service';
 import { BitacoraService } from '../../core/services/bitacora.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Bitacora } from '../../core/models/bitacora';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-consulta',
@@ -31,6 +32,8 @@ export default class ConsultaComponent implements OnInit {
   cupoId?: number;
   historiaClinicaId?: number;
   archivosAdjuntos: File[] = []; // Lista de archivos adjuntos
+  cargando: boolean = false;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -108,20 +111,30 @@ export default class ConsultaComponent implements OnInit {
     };
   
     this.consultaService.createConsulta(nuevaConsulta).subscribe(
-      consultaGuardada => {
+      async consultaGuardada => {
         console.log('Consulta guardada:', consultaGuardada);
-        
+  
         if (consultaGuardada.id) {
-          this.archivosAdjuntos.forEach(archivo => {
-            this.consultaService.subirArchivoConsulta(archivo, consultaGuardada.id!).subscribe({
-              next: (response) => console.log('Archivo subido:', response.url),
-              error: (err) => console.error('Error al subir archivo:', err)
-            });
-          });
+          // Mostrar "Guardando..." mientras se suben los archivos
+          this.mostrarCargando(true);
+  
+          try {
+            // Subir todos los archivos y esperar que terminen
+            const uploadRequests = this.archivosAdjuntos.map(archivo =>
+              lastValueFrom(this.consultaService.subirArchivoConsulta(archivo, consultaGuardada.id!))
+            );
+            await Promise.all(uploadRequests); // Espera que todas las subidas terminen
+            console.log('Todos los archivos subidos correctamente.');
+          } catch (error) {
+            console.error('Error al subir archivos:', error);
+          } finally {
+            // Ocultar "Guardando..." después de completar las subidas
+            this.mostrarCargando(false);
+          }
         } else {
           console.error('El ID de la consulta guardada es undefined.');
         }
-
+  
         // Registrar en bitácora la creación de la consulta
         this.registrarBitacora('Guardar consulta', `Consulta de ${this.cupoId} de ${nuevaConsulta.cupo?.asegurado?.usuario?.nombre || 'asegurado'} añadida`);
   
@@ -177,6 +190,19 @@ export default class ConsultaComponent implements OnInit {
       }
     );
   }
+  
+  // Método para mostrar u ocultar un indicador de carga
+  mostrarCargando(mostrar: boolean): void {
+    if (mostrar) {
+      // Lógica para mostrar un indicador de carga (puede ser un spinner o texto)
+      console.log('Mostrando indicador de carga...');
+    } else {
+      // Lógica para ocultarlo
+      console.log('Ocultando indicador de carga...');
+    }
+  }
+  
+  
   
 
   private actualizarEstadoCupo(): void {
