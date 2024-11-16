@@ -116,6 +116,7 @@ export default class ConsultaComponent implements OnInit {
   
         if (consultaGuardada.id) {
           // Mostrar "Guardando..." mientras se suben los archivos
+          this.cargando = true;
           this.mostrarCargando(true);
   
           try {
@@ -129,6 +130,7 @@ export default class ConsultaComponent implements OnInit {
             console.error('Error al subir archivos:', error);
           } finally {
             // Ocultar "Guardando..." después de completar las subidas
+            this.cargando = false;
             this.mostrarCargando(false);
           }
         } else {

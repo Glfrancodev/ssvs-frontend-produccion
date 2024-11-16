@@ -66,6 +66,12 @@
     </div>
   </div>
 </div>
-<div *ngIf="cargando" class="loading-overlay">
-  <p>Guardando, por favor espere...</p>
+
+
+<!-- Overlay bloqueador -->
+<div *ngIf="cargando" class="overlay">
+  <div class="overlay-content">
+    <div class="spinner"></div>
+    <p>Guardando, por favor espere...</p>
+  </div>
 </div>
