@@ -36,13 +36,11 @@
 
   <!-- Mostrar los archivos asociados -->
   <h4>Archivos Adjuntos</h4>
-  <ul *ngIf="archivos.length > 0">
-    <li *ngFor="let archivo of archivos">
-      <button class="link-button" (click)="descargarArchivo(archivo.nombre)">
-        {{ archivo.nombre }}
-      </button>
-    </li>
-  </ul>
+  <div class="archivos-adjuntos" *ngIf="archivos.length > 0">
+    <div class="archivo-item" *ngFor="let archivo of archivos">
+      <span>{{ archivo.nombre }}</span>
+      <button (click)="descargarArchivo(archivo.nombre)">Descargar</button>
+    </div>
+  </div>
   <p *ngIf="archivos.length === 0">No hay archivos adjuntos para esta consulta.</p>
-
 </div>

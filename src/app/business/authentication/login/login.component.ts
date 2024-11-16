@@ -16,6 +16,8 @@ import { CommonModule } from '@angular/common';
 export default class LoginComponent {
   correo: string = '';
   contrasena: string = '';
+  cargando: boolean = false;
+  error: string = '';
 
   constructor(
     private authService: AuthService,
@@ -24,12 +26,19 @@ export default class LoginComponent {
   ) {}
 
   login(): void {
+    this.cargando = true; // Mostrar el indicador de carga
+    this.error = ''; // Limpiar errores anteriores
+
     this.authService.login(this.correo, this.contrasena).subscribe({
       next: () => {
         this.registrarBitacora();
+        this.cargando = false; // Ocultar indicador de carga
         this.router.navigate(['/dashboard']);
       },
-      error: (err) => console.error('Login failed', err)
+      error: () => {
+        this.cargando = false; // Ocultar indicador de carga
+        this.error = 'Datos ingresados Erróneos'; // Mostrar mensaje de error
+      }
     });
   }
 
@@ -48,9 +57,6 @@ export default class LoginComponent {
           accion: 'Inicio de sesión correcto',
           detalle: 'El usuario inició sesión en la plataforma'
         };
-
-        // Mostrar los datos en consola antes de insertarlos
-        console.log('Datos de bitácora antes de la inserción:', bitacoraEntry);
 
         this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
           next: () => console.log('Bitácora registrada con éxito'),
