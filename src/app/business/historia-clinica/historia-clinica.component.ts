@@ -27,8 +27,15 @@ import { PdfExportService } from '../../core/services/pdf-export.service';
 })
 export default class HistoriaClinicaComponent implements OnInit {
   asegurado: Asegurado | null = null;
-  consultas: (Consulta & { tieneTratamiento?: boolean })[] = [];
-
+  mostrarSeleccionColumnas: boolean = false;
+  columnasDisponibles = [
+    { campo: 'id', titulo: 'ID Consulta', seleccionada: true },
+    { campo: 'fechaConsulta', titulo: 'Fecha Consulta', seleccionada: true },
+    { campo: 'motivoConsulta', titulo: 'Motivo Consulta', seleccionada: true },
+    { campo: 'diagnostico', titulo: 'Diagnóstico', seleccionada: true },
+    { campo: 'nota', titulo: 'Nota', seleccionada: true }
+  ];
+  consultas: any[] = []; // Datos de las consultas
   constructor(
     private router: Router,
     private route: ActivatedRoute,
@@ -146,19 +153,32 @@ export default class HistoriaClinicaComponent implements OnInit {
   }
 
   // Método para exportar la historia clínica como PDF
-  exportarHistoriaClinica(): void {
-    if (this.consultas.length > 0) {
-      const columnas = ['id', 'fechaConsulta', 'motivoConsulta', 'diagnostico', 'nota'];
-      const datos = this.consultas.map((consulta) => ({
-        id: consulta.id,
-        fechaConsulta: consulta.fechaConsulta,
-        motivoConsulta: consulta.motivoConsulta,
-        diagnostico: consulta.diagnostico,
-        nota: consulta.nota,
-      }));
-      this.pdfExportService.exportToPDF(datos, columnas, 'Historia Clínica', 'historia_clinica');
-    } else {
-      console.error('No hay datos para exportar.');
-    }
+    toggleSeleccionColumna(columna: any): void {
+    columna.seleccionada = !columna.seleccionada;
   }
+
+  exportarHistoriaClinica(): void {
+    const columnasSeleccionadas = this.columnasDisponibles
+      .filter((columna) => columna.seleccionada)
+      .map((columna) => columna.campo);
+  
+    const datosFiltrados = this.consultas.map((consulta) =>
+      columnasSeleccionadas.reduce((acc: Record<string, any>, key: string) => {
+        acc[key] = consulta[key];
+        return acc;
+      }, {})
+    );
+  
+    const titulosSeleccionados = this.columnasDisponibles
+      .filter((columna) => columna.seleccionada)
+      .map((columna) => columna.titulo);
+  
+    this.pdfExportService.exportToPDF(
+      datosFiltrados,
+      titulosSeleccionados,
+      'Historia Clínica',
+      'historia_clinica'
+    );
+  }
+
 }

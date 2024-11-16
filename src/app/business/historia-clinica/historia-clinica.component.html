@@ -1,4 +1,32 @@
-
+<div class="column-selector-container">
+    <button
+      pButton
+      type="button"
+      label="Seleccionar Columnas"
+      icon="pi pi-cog"
+      (click)="mostrarSeleccionColumnas = !mostrarSeleccionColumnas"
+    ></button>
+  </div>
+  
+  <div *ngIf="mostrarSeleccionColumnas" class="column-selector">
+    <h4>Selecciona las columnas a exportar:</h4>
+    <div *ngFor="let columna of columnasDisponibles">
+      <input
+        type="checkbox"
+        [checked]="columna.seleccionada"
+        (change)="toggleSeleccionColumna(columna)"
+      />
+      <label>{{ columna.titulo }}</label>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Exportar Seleccionadas"
+      icon="pi pi-file-pdf"
+      (click)="exportarHistoriaClinica()"
+    ></button>
+  </div>
+  
 <div class="historia-clinica-container">
   <h3>Historia Clínica de Usuario</h3>
   <button pButton type="button" label="Exportar PDF" icon="pi pi-file-pdf" (click)="exportarHistoriaClinica()"></button>

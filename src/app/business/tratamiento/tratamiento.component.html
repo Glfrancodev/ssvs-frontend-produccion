@@ -1,9 +1,9 @@
+<div class="exportar-pdf">
+  <button (click)="exportarPDF()">Exportar como PDF</button>
+</div>
+
+
 <div class="tratamiento-container">
-
-  <div class="exportar-pdf">
-    <button (click)="exportarPDF()">Exportar como PDF</button>
-  </div>
-
   <h3>Detalle de Consulta</h3>
 
   <!-- Mostrar los detalles de la consulta -->
@@ -38,7 +38,8 @@
     </ng-template>
   </p-table>
   <p *ngIf="recetas.length === 0">No hay recetas asociadas a esta consulta.</p>
-
+</div>
+<div class = "archivos-container">
   <!-- Mostrar los archivos asociados -->
   <h4>Archivos Adjuntos</h4>
   <div class="archivos-adjuntos" *ngIf="archivos.length > 0">
