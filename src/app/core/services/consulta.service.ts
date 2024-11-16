@@ -72,4 +72,13 @@ export class ConsultaService {
         { headers: this.getMultipartAuthHeaders() }
     );
   }
+
+  getArchivosPorConsulta(consultaId: number): Observable<{ nombre: string; url: string }[]> {
+    return this.http.get<{ nombre: string; url: string }[]>(
+      `https://ssvs-backend-produccion-production.up.railway.app/api/archivos/consulta/${consultaId}`,
+      { headers: this.getAuthHeaders() }
+    );
+  }
+  
+
 }

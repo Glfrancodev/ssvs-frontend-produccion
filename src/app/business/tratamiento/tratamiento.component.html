@@ -1,7 +1,20 @@
 <div class="tratamiento-container">
-  <h3>Tratamiento del Paciente</h3>
+  <h3>Detalle de Consulta</h3>
 
-  <p-table [value]="recetas" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
+  <!-- Mostrar los detalles de la consulta -->
+  <div class="consulta-detalle" *ngIf="consulta">
+    <p><strong>ID:</strong> {{ consulta!.id }}</p>
+    <p><strong>Asegurado:</strong> {{ consulta!.cupo?.asegurado?.usuario?.nombre }} {{ consulta!.cupo?.asegurado?.usuario?.apellido }}</p>
+    <p><strong>Fecha Consulta:</strong> {{ consulta!.fechaConsulta }}</p>
+    <p><strong>Motivo:</strong> {{ consulta!.motivoConsulta }}</p>
+    <p><strong>Nota:</strong> {{ consulta!.nota }}</p>
+    <p><strong>Médico:</strong> {{ consulta!.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.nombre }}</p>
+    <p><strong>Cupo:</strong> {{ consulta!.cupo?.id }}</p>
+  </div>
+
+  <!-- Mostrar las recetas -->
+  <h4>Recetas</h4>
+  <p-table *ngIf="recetas.length > 0" [value]="recetas" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
     <ng-template pTemplate="header">
       <tr>
         <th>Medicamento</th>
@@ -19,4 +32,14 @@
       </tr>
     </ng-template>
   </p-table>
+  <p *ngIf="recetas.length === 0">No hay recetas asociadas a esta consulta.</p>
+
+  <!-- Mostrar los archivos asociados -->
+  <h4>Archivos Adjuntos</h4>
+  <ul *ngIf="archivos.length > 0">
+    <li *ngFor="let archivo of archivos">
+      <a [href]="archivo.url" target="_blank">{{ archivo.nombre }}</a>
+    </li>
+  </ul>
+  <p *ngIf="archivos.length === 0">No hay archivos adjuntos para esta consulta.</p>
 </div>

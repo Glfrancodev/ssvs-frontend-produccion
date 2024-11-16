@@ -2,32 +2,51 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RecetaService } from '../../core/services/receta.service';
 import { TratamientoService } from '../../core/services/tratamiento.service';
+import { ConsultaService } from '../../core/services/consulta.service';
+import { Consulta } from '../../core/models/consulta';
 import { Receta } from '../../core/models/receta';
-import { Tratamiento } from '../../core/models/tratamiento';
 import { TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tratamiento',
   standalone: true,
   templateUrl: './tratamiento.component.html',
   styleUrls: ['./tratamiento.component.css'],
-  imports: [TableModule]
+  imports: [TableModule, CommonModule]
 })
 export default class TratamientoComponent implements OnInit {
-  recetas: Receta[] = [];
+  consulta: Consulta | null = null; // Detalles de la consulta
+  recetas: Receta[] = []; // Lista de recetas asociadas
+  archivos: { nombre: string; url: string }[] = []; // Archivos asociados
   tratamientoId?: number;
 
   constructor(
     private recetaService: RecetaService,
     private tratamientoService: TratamientoService,
+    private consultaService: ConsultaService,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    const consultaId = Number(this.route.snapshot.paramMap.get('consultaId')); // obtienes el consultaId de la URL
+    const consultaId = Number(this.route.snapshot.paramMap.get('consultaId')); // Obtiene el consultaId de la URL
     if (consultaId) {
+      this.obtenerDetallesConsulta(consultaId);
       this.obtenerTratamientoYRecetas(consultaId);
+      this.obtenerArchivosConsulta(consultaId);
     }
+  }
+
+  private obtenerDetallesConsulta(consultaId: number): void {
+    // Llamada para obtener los detalles de la consulta
+    this.consultaService.getConsultaPorId(consultaId).subscribe(
+      consulta => {
+        this.consulta = consulta;
+      },
+      error => {
+        console.error('Error al obtener detalles de la consulta:', error);
+      }
+    );
   }
 
   private obtenerTratamientoYRecetas(consultaId: number): void {
@@ -36,7 +55,7 @@ export default class TratamientoComponent implements OnInit {
       tratamiento => {
         if (tratamiento.id) {
           this.tratamientoId = tratamiento.id; // Guarda el tratamientoId
-          this.cargarRecetas(tratamiento.id);  // Carga las recetas con el tratamientoId obtenido
+          this.cargarRecetas(tratamiento.id); // Carga las recetas con el tratamientoId obtenido
         }
       },
       error => {
@@ -53,6 +72,21 @@ export default class TratamientoComponent implements OnInit {
       },
       error => {
         console.error('Error al cargar recetas:', error);
+      }
+    );
+  }
+
+  private obtenerArchivosConsulta(consultaId: number): void {
+    // Llamada para obtener la lista de archivos asociados a la consulta
+    this.consultaService.getArchivosPorConsulta(consultaId).subscribe(
+      archivos => {
+        this.archivos = archivos.map(archivo => ({
+          nombre: archivo.nombre,
+          url: archivo.url
+        }));
+      },
+      error => {
+        console.error('Error al cargar archivos:', error);
       }
     );
   }
