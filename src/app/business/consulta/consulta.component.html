@@ -43,6 +43,22 @@
       </div>
     </div>
 
+    <div class="form-field">
+      <h3>Archivos Adjuntos</h3>
+    
+      <!-- Rellenar la lista de archivos -->
+      <ul>
+        <li *ngFor="let archivo of archivosAdjuntos; let i = index">
+          {{ archivo.name }} ({{ archivo.size / 1024 | number: '1.0-2' }} KB)
+          <button type="button" class="delete-button" (click)="eliminarArchivo(i)">Eliminar</button>
+        </li>
+      </ul>
+    
+      <!-- Botón para seleccionar archivos -->
+      <input type="file" multiple (change)="seleccionarArchivos($event)" />
+    </div>
+    
+
     <!-- Botones de acción en la parte inferior -->
     <div class="button-container">
       <button type="button" class="button" (click)="agregarReceta()">Agregar Receta</button>

@@ -24,6 +24,14 @@ export class ConsultaService {
     });
   }
 
+  private getMultipartAuthHeaders(): HttpHeaders {
+    return new HttpHeaders({
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${this.authService.getToken()}`,
+      'Accept': 'application/octet-stream'
+    });
+  }
+
   // Obtener todas las consultas
   getConsultas(): Observable<Consulta[]> {
     return this.http.get<Consulta[]>(this.apiUrl, { headers: this.getAuthHeaders() });
@@ -52,5 +60,18 @@ export class ConsultaService {
   // Obtener todas las consultas por historia clínica ID
   getConsultasPorHistoriaClinicaId(historiaClinicaId: number): Observable<Consulta[]> {
     return this.http.get<Consulta[]>(`${this.apiUrl}/historia/${historiaClinicaId}`, { headers: this.getAuthHeaders() });
+  }
+
+  // src/app/core/services/consulta.service.ts
+  subirArchivoConsulta(archivo: File, consultaId: number): Observable<any> {
+    const formData = new FormData();
+    formData.append('archivo', archivo);
+    formData.append('consultaId', consultaId.toString());
+
+    return this.http.post<any>(
+      `https://ssvs-backend-produccion-production.up.railway.app/api/archivos/subir`,
+      formData,
+      { headers: this.getMultipartAuthHeaders() } // Autorización
+    );
   }
 }

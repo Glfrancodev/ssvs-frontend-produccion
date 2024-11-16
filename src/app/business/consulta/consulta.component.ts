@@ -30,6 +30,7 @@ export default class ConsultaComponent implements OnInit {
   recetas: { medicamento: string; frecuencia: string; fechaInicio: string; fechaFinal: string }[] = [];
   cupoId?: number;
   historiaClinicaId?: number;
+  archivosAdjuntos: File[] = []; // Lista de archivos adjuntos
 
   constructor(
     private route: ActivatedRoute,
@@ -48,6 +49,21 @@ export default class ConsultaComponent implements OnInit {
     if (this.cupoId) {
       this.obtenerHistoriaClinicaIdDesdeCupo(this.cupoId);
     }
+  }
+
+  // Método para manejar la selección de archivos
+  seleccionarArchivos(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files) {
+      Array.from(input.files).forEach(file => {
+        this.archivosAdjuntos.push(file);
+      });
+    }
+  }
+
+  // Método para eliminar un archivo de la lista
+  eliminarArchivo(index: number): void {
+    this.archivosAdjuntos.splice(index, 1);
   }
 
   private obtenerHistoriaClinicaIdDesdeCupo(cupoId: number): void {
@@ -95,6 +111,17 @@ export default class ConsultaComponent implements OnInit {
       consultaGuardada => {
         console.log('Consulta guardada:', consultaGuardada);
         
+        if (consultaGuardada.id) {
+          this.archivosAdjuntos.forEach(archivo => {
+            this.consultaService.subirArchivoConsulta(archivo, consultaGuardada.id!).subscribe({
+              next: (response) => console.log('Archivo subido:', response),
+              error: (err) => console.error('Error al subir archivo:', err)
+            });
+          });
+        } else {
+          console.error('El ID de la consulta guardada es undefined.');
+        }
+
         // Registrar en bitácora la creación de la consulta
         this.registrarBitacora('Guardar consulta', `Consulta de ${this.cupoId} de ${nuevaConsulta.cupo?.asegurado?.usuario?.nombre || 'asegurado'} añadida`);
   
@@ -162,7 +189,7 @@ export default class ConsultaComponent implements OnInit {
       error => {
         console.error('Error al actualizar el estado del cupo:', error);
       }
-    );
+    );  
   }
 
   // Método para registrar en la bitácora
