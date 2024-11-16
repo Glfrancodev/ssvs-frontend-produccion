@@ -26,9 +26,7 @@ export class ConsultaService {
 
   private getMultipartAuthHeaders(): HttpHeaders {
     return new HttpHeaders({
-      'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${this.authService.getToken()}`,
-      'Accept': 'application/octet-stream'
     });
   }
 
@@ -65,8 +63,13 @@ export class ConsultaService {
   // src/app/core/services/consulta.service.ts
   subirArchivoConsulta(archivo: File, consultaId: number): Observable<any> {
     const formData = new FormData();
-    formData.append('archivo', archivo);
-    formData.append('consultaId', consultaId.toString());
+    formData.append('archivo', archivo); // archivo debe ser un objeto File
+    formData.append('consultaId', consultaId.toString()); // consultaId debe ser un número válido
+    
+    console.log(archivo);
+    console.log(archivo instanceof File); // Debería ser true
+
+    console.log(consultaId); // Debería ser un número válido
 
     return this.http.post<any>(
       `https://ssvs-backend-produccion-production.up.railway.app/api/archivos/subir`,
