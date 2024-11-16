@@ -80,5 +80,9 @@ export class ConsultaService {
     );
   }
   
+  descargarArchivo(nombreArchivo: string): Observable<Blob> {
+    const url = `https://ssvs-backend-produccion-production.up.railway.app/api/archivos/descargar/${nombreArchivo}`;
+    return this.http.get(url, { headers: this.getAuthHeaders(), responseType: 'blob' });
+  }
 
 }

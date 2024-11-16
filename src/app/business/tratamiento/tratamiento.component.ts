@@ -90,4 +90,20 @@ export default class TratamientoComponent implements OnInit {
       }
     );
   }
+
+  descargarArchivo(nombreArchivo: string): void {
+    this.consultaService.descargarArchivo(nombreArchivo).subscribe({
+      next: (blob) => {
+        const a = document.createElement('a');
+        const objectUrl = URL.createObjectURL(blob);
+        a.href = objectUrl;
+        a.download = nombreArchivo; // Nombre del archivo descargado
+        a.click();
+        URL.revokeObjectURL(objectUrl);
+      },
+      error: (error) => {
+        console.error('Error al descargar el archivo:', error);
+      },
+    });
+  }
 }
