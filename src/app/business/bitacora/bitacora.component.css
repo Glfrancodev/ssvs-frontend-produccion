@@ -1,59 +1,66 @@
-.bitacora-container {
-    max-width: 100%;
-    margin: auto;
-    overflow-x: auto;
-  }
-  
-  h3 {
-    text-align: center;
-    color: #3f51b5;
-    font-weight: bold;
-  }
-  
-  .filter-date-range {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: 1rem;
-    align-items: center;
-  }
-  
-  .filter-date-range label {
-    font-weight: bold;
-  }
-  
-  .filter-date-range input {
-    padding: 0.5rem;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  .p-table {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  }
-  
-  .p-table thead th {
-    background-color: #3f51b5;
-    color: #ffffff;
-    font-weight: bold;
-    text-align: center;
-    padding: 12px;
-  }
-  
-  .p-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .p-table tbody tr:hover {
-    background-color: #e3f2fd;
-  }
-  
-  .p-table td {
-    padding: 10px;
-    text-align: center;
-  }
-  
+.historia-clinica-container {
+  max-width: 100%;
+  margin: auto;
+  overflow-x: auto;
+}
+
+h3 {
+  text-align: center;
+  color: #3f51b5;
+  font-weight: bold;
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 0.5rem;
+}
+
+.column-selector-container {
+  margin-bottom: 1rem;
+}
+
+.column-selector {
+  background: #f9f9f9;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.column-selector h4 {
+  margin-bottom: 0.5rem;
+}
+
+.column-selector div {
+  margin-bottom: 0.25rem;
+}
+
+.p-table {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.p-table thead th {
+  background-color: #3f51b5;
+  color: #ffffff;
+  font-weight: bold;
+  text-align: center;
+  padding: 12px;
+}
+
+.p-table tbody tr:nth-child(even) {
+  background-color: #f5f5f5;
+}
+
+.p-table tbody tr:hover {
+  background-color: #e0f7fa;
+}
+
+.p-table td {
+  padding: 12px;
+  text-align: center;
+  vertical-align: middle;
+}

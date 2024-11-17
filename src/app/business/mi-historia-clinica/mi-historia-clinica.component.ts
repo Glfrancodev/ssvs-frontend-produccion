@@ -101,7 +101,8 @@ export default class HistoriaClinicaComponent implements OnInit {
       datosFiltrados,
       columnasSeleccionadas,
       'Historia Clínica',
-      'historia_clinica'
+      'historia_clinica',
+      this.aseguradoDatos
     );
   }
 
