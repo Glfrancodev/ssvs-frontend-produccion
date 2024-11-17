@@ -16,52 +16,51 @@ export class PdfExportService {
     aseguradoData: string[] = [] // Datos del asegurado opcionales
   ): void {
     const doc = new jsPDF();
-  
-    doc.setLineWidth(0.5);
-    doc.setDrawColor(40, 116, 240); // Azul para los bordes
-    doc.rect(5, 5, 200, 287); // Borde alrededor de toda la página
-    
 
     // Agregar el título del documento
     doc.setFontSize(18); // Cambiar el tamaño del texto
     doc.setTextColor(40, 116, 240); // Color azul
     doc.setFont('helvetica', 'bold'); // Fuente en negrita
-    doc.text(title, 10, 10); // Texto del título
-    
-  
+    doc.text(title, 10, 15); // Texto del título
+
+    // Ajustar la posición inicial para la tabla
+    let startY = 25;
+
     // Agregar los datos del asegurado si existen
     if (aseguradoData.length > 0) {
       doc.setFontSize(12);
       doc.setTextColor(0); // Color negro
       doc.setFont('helvetica', 'normal');
-      doc.text('Datos del Asegurado:', 10, 20);
-    
+      doc.text('Datos del Asegurado:', 10, startY);
+
       aseguradoData.forEach((linea, index) => {
-        // Fondo gris para las líneas del asegurado
-        doc.setFillColor(240, 240, 240); // Gris claro
-        doc.rect(10, 26 + index * 8, 190, 8, 'F'); // Rectángulo de fondo
+        const posY = startY + 6 + index * 8; // Ajustar posición dinámica
+        doc.setFillColor(240, 240, 240); // Fondo gris claro
+        doc.rect(10, posY - 5, 190, 8, 'F'); // Rectángulo de fondo
         doc.setTextColor(0); // Color negro para el texto
-        doc.text(linea, 12, 31 + index * 8); // Texto
+        doc.text(linea, 12, posY); // Texto
       });
+
+      // Actualizar posición inicial de la tabla según la cantidad de datos del asegurado
+      startY += 10 + aseguradoData.length * 8;
     }
-    
-  
+
     // Crear encabezados con los títulos de las columnas seleccionadas
     const headers = columns.map((col) => col.titulo);
-  
+
     // Mapear los datos para incluir solo las columnas seleccionadas
     const body = data.map((row) =>
       columns.map((col) => row[col.campo] || '') // Usar los campos para extraer datos
     );
-  
+
     console.log('Encabezados:', headers);
     console.log('Cuerpo de la tabla:', body);
-  
+
     // Usar autoTable para renderizar los datos
     autoTable(doc, {
       head: [headers], // Títulos de las columnas
       body, // Datos
-      startY: 50, // Iniciar la tabla después de los datos del asegurado
+      startY: startY, // Iniciar la tabla después de los datos del asegurado
       theme: 'striped', // Tema: grid, striped, plain
       headStyles: {
         fillColor: [40, 116, 240], // Azul para el fondo de los encabezados
@@ -78,8 +77,7 @@ export class PdfExportService {
       tableLineWidth: 0.1, // Grosor de las líneas de la tabla
       tableLineColor: [0, 0, 0], // Color de las líneas de la tabla
     });
-    
-  
+
     doc.save(`${fileName}.pdf`);
-  }  
+  }
 }
