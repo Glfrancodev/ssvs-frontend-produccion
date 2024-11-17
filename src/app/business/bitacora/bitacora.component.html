@@ -1,5 +1,3 @@
-<p-toast></p-toast>
-
 <div class="bitacora-container">
   <h3>Registro de Bitácora</h3>
 
@@ -10,6 +8,36 @@
     <label for="end-date">Fecha Fin:</label>
     <input type="date" id="end-date" [(ngModel)]="selectedRange.end" />
     <button pButton label="Filtrar" icon="pi pi-filter" (click)="filterByDateRange()"></button>
+  </div>
+
+  <!-- Selector de columnas -->
+  <div class="column-selector-container">
+    <button
+      pButton
+      type="button"
+      label="Exportación"
+      icon="pi pi-cog"
+      (click)="mostrarSeleccionColumnas = !mostrarSeleccionColumnas"
+    ></button>
+  </div>
+
+  <div *ngIf="mostrarSeleccionColumnas" class="column-selector">
+    <h4>Selecciona las columnas a exportar:</h4>
+    <div *ngFor="let columna of columnasDisponibles">
+      <input
+        type="checkbox"
+        [checked]="columna.seleccionada"
+        (change)="toggleSeleccionColumna(columna)"
+      />
+      <label>{{ columna.titulo }}</label>
+    </div>
+    <button
+      pButton
+      type="button"
+      label="Exportar Seleccionadas"
+      icon="pi pi-file-pdf"
+      (click)="exportarBitacora()"
+    ></button>
   </div>
 
   <!-- Tabla de registros de bitácora -->

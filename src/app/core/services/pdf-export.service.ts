@@ -8,76 +8,101 @@ import autoTable from 'jspdf-autotable';
 export class PdfExportService {
   constructor() {}
 
-  exportToPDF(
+  // Método para exportar Historia Clínica (con datos del asegurado)
+  exportHistoriaClinica(
     data: any[],
     columns: { campo: string; titulo: string }[],
     title: string,
     fileName: string,
-    aseguradoData: string[] = [] // Datos del asegurado opcionales
+    aseguradoData: string[] = []
   ): void {
     const doc = new jsPDF();
 
     // Agregar el título del documento
-    doc.setFontSize(18); // Cambiar el tamaño del texto
-    doc.setTextColor(40, 116, 240); // Color azul
-    doc.setFont('helvetica', 'bold'); // Fuente en negrita
-    doc.text(title, 10, 15); // Texto del título
+    doc.setFontSize(18);
+    doc.setTextColor(40, 116, 240);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, 10, 15);
 
     // Ajustar la posición inicial para la tabla
     let startY = 25;
 
-    // Agregar los datos del asegurado si existen
+    // Agregar los datos del asegurado
     if (aseguradoData.length > 0) {
       doc.setFontSize(12);
-      doc.setTextColor(0); // Color negro
+      doc.setTextColor(0);
       doc.setFont('helvetica', 'normal');
       doc.text('Datos del Asegurado:', 10, startY);
 
       aseguradoData.forEach((linea, index) => {
-        const posY = startY + 6 + index * 8; // Ajustar posición dinámica
-        doc.setFillColor(240, 240, 240); // Fondo gris claro
-        doc.rect(10, posY - 5, 190, 8, 'F'); // Rectángulo de fondo
-        doc.setTextColor(0); // Color negro para el texto
-        doc.text(linea, 12, posY); // Texto
+        const posY = startY + 6 + index * 8;
+        doc.setFillColor(240, 240, 240);
+        doc.rect(10, posY - 5, 190, 8, 'F');
+        doc.setTextColor(0);
+        doc.text(linea, 12, posY);
       });
 
-      // Actualizar posición inicial de la tabla según la cantidad de datos del asegurado
       startY += 10 + aseguradoData.length * 8;
     }
 
-    // Crear encabezados con los títulos de las columnas seleccionadas
-    const headers = columns.map((col) => col.titulo);
+    // Crear encabezados y cuerpo de la tabla
+    this.generateTable(doc, data, columns, startY);
 
-    // Mapear los datos para incluir solo las columnas seleccionadas
+    doc.save(`${fileName}.pdf`);
+  }
+
+  // Método para exportar Bitácora (sin datos del asegurado)
+  exportBitacora(
+    data: any[],
+    columns: { campo: string; titulo: string }[],
+    title: string,
+    fileName: string
+  ): void {
+    const doc = new jsPDF();
+
+    // Agregar el título del documento
+    doc.setFontSize(18);
+    doc.setTextColor(40, 116, 240);
+    doc.setFont('helvetica', 'bold');
+    doc.text(title, 10, 15);
+
+    // Crear encabezados y cuerpo de la tabla
+    this.generateTable(doc, data, columns, 25);
+
+    doc.save(`${fileName}.pdf`);
+  }
+
+  // Método reutilizable para generar la tabla
+  private generateTable(
+    doc: jsPDF,
+    data: any[],
+    columns: { campo: string; titulo: string }[],
+    startY: number
+  ): void {
+    const headers = columns.map((col) => col.titulo);
     const body = data.map((row) =>
-      columns.map((col) => row[col.campo] || '') // Usar los campos para extraer datos
+      columns.map((col) => row[col.campo] || '')
     );
 
-    console.log('Encabezados:', headers);
-    console.log('Cuerpo de la tabla:', body);
-
-    // Usar autoTable para renderizar los datos
     autoTable(doc, {
-      head: [headers], // Títulos de las columnas
-      body, // Datos
-      startY: startY, // Iniciar la tabla después de los datos del asegurado
-      theme: 'striped', // Tema: grid, striped, plain
+      head: [headers],
+      body,
+      startY: startY,
+      theme: 'striped',
       headStyles: {
-        fillColor: [40, 116, 240], // Azul para el fondo de los encabezados
-        textColor: [255, 255, 255], // Texto blanco
+        fillColor: [40, 116, 240],
+        textColor: [255, 255, 255],
         fontSize: 12,
       },
       bodyStyles: {
         fontSize: 10,
-        cellPadding: 4, // Espaciado interno en las celdas
+        cellPadding: 4,
       },
       alternateRowStyles: {
-        fillColor: [240, 240, 240], // Fondo gris claro para filas alternas
+        fillColor: [240, 240, 240],
       },
-      tableLineWidth: 0.1, // Grosor de las líneas de la tabla
-      tableLineColor: [0, 0, 0], // Color de las líneas de la tabla
+      tableLineWidth: 0.1,
+      tableLineColor: [0, 0, 0],
     });
-
-    doc.save(`${fileName}.pdf`);
   }
 }

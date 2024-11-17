@@ -2,7 +2,7 @@
   <button
     pButton
     type="button"
-    label="Seleccionar Columnas"
+    label="Exportación"
     icon="pi pi-cog"
     (click)="mostrarSeleccionColumnas = !mostrarSeleccionColumnas"
   ></button>
@@ -30,7 +30,6 @@
   
 <div class="historia-clinica-container">
   <h3>Historia Clínica de Usuario</h3>
-  <button pButton type="button" label="Exportar PDF" icon="pi pi-file-pdf" (click)="exportarHistoriaClinica()"></button>
     <p-table [value]="consultas" dataKey="id" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
         <ng-template pTemplate="header">
             <tr>

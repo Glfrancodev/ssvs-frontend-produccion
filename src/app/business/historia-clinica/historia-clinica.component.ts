@@ -179,7 +179,7 @@
           ]
         : [];
     
-      this.pdfExportService.exportToPDF(
+      this.pdfExportService.exportHistoriaClinica(
         datosFiltrados,
         columnasSeleccionadas, // Pasar columnas completas con campo y título
         'Historia Clínica',
