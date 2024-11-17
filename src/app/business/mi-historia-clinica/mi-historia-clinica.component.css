@@ -67,3 +67,24 @@ h3 {
     justify-content: center;
   }
   
+
+  .p-dialog .p-field {
+    margin-bottom: 1rem;
+  }
+  
+  .p-dialog .p-field label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .botones-calificacion {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .p-dialog .p-rating {
+    font-size: 1.5rem; /* Tamaño más grande para las estrellas */
+    color: #ffca28; /* Color amarillo para las estrellas */
+  }
+  

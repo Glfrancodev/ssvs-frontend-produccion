@@ -13,13 +13,14 @@ import { Calificacion } from '../../core/models/calificacion';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { FormsModule } from '@angular/forms';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-mi-historia-clinica',
   standalone: true,
   templateUrl: './mi-historia-clinica.component.html',
   styleUrls: ['./mi-historia-clinica.component.css'],
-  imports: [TableModule, CommonModule, ButtonModule, DialogModule, InputNumberModule, TableModule, FormsModule]
+  imports: [TableModule, CommonModule, ButtonModule, DialogModule, InputNumberModule, TableModule, FormsModule, RatingModule]
 })
 export default class HistoriaClinicaComponent implements OnInit {
   consultas: Consulta[] = [];

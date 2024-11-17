@@ -60,25 +60,25 @@
   </p-table>
   
   <p-dialog 
-    header="Califica a tu médico" 
-    [(visible)]="mostrarModalCalificacion" 
-    [modal]="true" 
-    [closable]="false" 
-    [style]="{ width: '30%' }">
+  header="Califica a tu médico" 
+  [(visible)]="mostrarModalCalificacion" 
+  [modal]="true" 
+  [closable]="false" 
+  [style]="{ width: '30%' }">
+  
+  <div class="p-field">
+    <label for="medico">Médico:</label>
+    <p>{{ medicoSeleccionado }}</p>
+  </div>
+  <div class="p-field">
+    <label for="calificacion">Calificación:</label>
+    <p-rating [(ngModel)]="calificacion" [cancel]="false" [stars]="5"></p-rating>
+  </div>
+  <div class="p-field botones-calificacion">
+    <button pButton type="button" label="Guardar" class="p-button-success" (click)="guardarCalificacion()"></button>
+    <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="mostrarModalCalificacion = false"></button>
+  </div>
+</p-dialog>
 
-
-    <div class="p-field">
-      <label for="medico">Médico:</label>
-      <p>{{ medicoSeleccionado }}</p>
-    </div>
-    <div class="p-field">
-      <label for="calificacion">Calificación (1-5 estrellas):</label>
-      <p-inputNumber [(ngModel)]="calificacion" [min]="1" [max]="5" [step]="1"></p-inputNumber>
-    </div>
-    <div class="p-field">
-      <button pButton type="button" label="Guardar" class="p-button-success" (click)="guardarCalificacion()"></button>
-      <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="mostrarModalCalificacion = false"></button>
-    </div>
-  </p-dialog>
   
 </div>
