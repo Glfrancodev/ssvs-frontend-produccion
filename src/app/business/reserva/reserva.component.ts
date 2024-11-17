@@ -90,15 +90,27 @@ export default class ReservaComponent implements OnInit {
         .map((me) => {
           const medicoId = me.medico!.id!;
           const nombreCompleto = `${me.medico!.usuario!.nombre} ${me.medico!.usuario!.apellido}`;
+  
           return this.medicoService.obtenerPromedioCalificaciones(medicoId).toPromise()
             .then((promedio) => {
-              const calificacion = promedio !== null && promedio !== undefined 
-                ? `${promedio.toFixed(1)} ★` 
+              const calificacion = promedio !== null && promedio !== undefined
+                ? `${promedio.toFixed(1)} ★`
                 : '-'; // Colocar "-" si no tiene calificaciones
               medicosFiltrados.push({
                 id: medicoId,
                 nombreCompleto: `${nombreCompleto} - ${calificacion}`
               });
+            })
+            .catch((error) => {
+              if (error.status === 404) {
+                console.warn(`No se encontró calificación para el médico con ID ${medicoId}, se colocará "-" por defecto.`);
+                medicosFiltrados.push({
+                  id: medicoId,
+                  nombreCompleto: `${nombreCompleto} - Sin calificaciones`
+                });
+              } else {
+                console.error(`Error al obtener la calificación del médico con ID ${medicoId}:`, error);
+              }
             });
         });
   
@@ -110,8 +122,6 @@ export default class ReservaComponent implements OnInit {
     });
   }
   
-  
-
   onMedicoChange(): void {
     if (this.selectedEspecialidad?.id !== undefined && this.selectedMedico?.id !== undefined) {
       this.medicoEspecialidadService
