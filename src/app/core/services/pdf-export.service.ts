@@ -12,13 +12,21 @@ export class PdfExportService {
     const doc = new jsPDF();
     doc.text(title, 10, 10);
 
-    // Encabezados como un array de strings
+    // Crear encabezados como un arreglo de strings
     const headers = columns;
+
+    // Mapear datos para la tabla: solo incluir las propiedades de las columnas seleccionadas
+    const body = data.map((row) =>
+      headers.map((header) => (row[header] !== undefined ? row[header] : ''))
+    );
+
+    console.log('Encabezados:', headers);
+    console.log('Cuerpo de la tabla:', body);
 
     // Usar autoTable para renderizar los datos
     autoTable(doc, {
-      head: [headers], // Encabezados en un array de arrays
-      body: data.map((row) => headers.map((header) => row[header])), // Mapear datos según las columnas seleccionadas
+      head: [headers], // Encabezados
+      body, // Cuerpo de la tabla
       startY: 20, // Ajustar para que no se sobreponga con el título
     });
 
