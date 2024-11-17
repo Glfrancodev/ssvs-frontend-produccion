@@ -64,3 +64,26 @@
     background-color: #2c3e9e !important;
   }
   
+  .column-selector-container {
+    margin-bottom: 1rem;
+  }
+  
+  .column-selector {
+    background: #f9f9f9;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .column-selector h4 {
+    margin-bottom: 0.5rem;
+  }
+  
+  .column-selector div {
+    margin-bottom: 0.25rem;
+  }
+  
+  .column-selector button {
+    margin-top: 1rem;
+  }
+  

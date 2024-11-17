@@ -158,53 +158,31 @@
     }
 
     exportarHistoriaClinica(): void {
-      console.log('Datos originales de las consultas:', this.consultas);
-    
+      // Obtener las columnas seleccionadas
       const columnasSeleccionadas = this.columnasDisponibles
         .filter((columna) => columna.seleccionada)
         .map((columna) => columna.campo);
     
-      console.log('Columnas seleccionadas:', columnasSeleccionadas);
-    
+      // Mapear datos con base en las columnas seleccionadas
       const datosFiltrados = this.consultas.map((consulta) => {
-        const resultado: Record<string, any> = {};
+        const fila: Record<string, any> = {};
         columnasSeleccionadas.forEach((campo) => {
-          if (consulta.hasOwnProperty(campo)) {
-            resultado[campo] = consulta[campo];
-          } else {
-            // Manejo de propiedades anidadas
-            const valorAnidado = this.obtenerValorAnidado(consulta, campo);
-            resultado[campo] = valorAnidado !== undefined ? valorAnidado : '';
-          }
+          fila[campo] = consulta[campo] || ''; // Usar valores existentes o vacío si no existe
         });
-        return resultado;
+        return fila;
       });
     
-      console.log('Datos filtrados para exportación:', datosFiltrados);
-    
+      // Mapear títulos de las columnas seleccionadas
       const titulosSeleccionados = this.columnasDisponibles
         .filter((columna) => columna.seleccionada)
         .map((columna) => columna.titulo);
     
-      if (datosFiltrados.length > 0) {
-        this.pdfExportService.exportToPDF(
-          datosFiltrados,
-          titulosSeleccionados,
-          'Historia Clínica',
-          'historia_clinica'
-        );
-      } else {
-        console.error('No hay datos para exportar.');
-      }
+      // Exportar usando el servicio de PDF
+      this.pdfExportService.exportToPDF(
+        datosFiltrados,
+        titulosSeleccionados,
+        'Historia Clínica',
+        'historia_clinica'
+      );
     }
-    
-    private obtenerValorAnidado(obj: any, ruta: string): any {
-      try {
-        return ruta.split('.').reduce((acumulador, clave) => acumulador[clave], obj);
-      } catch (error) {
-        console.error(`Error al acceder a la ruta "${ruta}" en el objeto:`, obj, error);
-        return undefined;
-      }
-    }
-    
 }

@@ -11,25 +11,26 @@ export class PdfExportService {
   exportToPDF(data: any[], columns: string[], title: string, fileName: string): void {
     const doc = new jsPDF();
     doc.text(title, 10, 10);
-
-    // Crear encabezados como un arreglo de strings
-    const headers = columns;
-
-    // Mapear datos para la tabla: solo incluir las propiedades de las columnas seleccionadas
+  
+    // Crear encabezados
+    const headers = columns.map((col) => ({ header: col, dataKey: col }));
+  
+    // Mapear los datos para incluir solo las columnas seleccionadas
     const body = data.map((row) =>
-      headers.map((header) => (row[header] !== undefined ? row[header] : ''))
+      columns.map((col) => row[col] || '') // Tomar el valor o dejar vacío si no existe
     );
-
+  
     console.log('Encabezados:', headers);
     console.log('Cuerpo de la tabla:', body);
-
+  
     // Usar autoTable para renderizar los datos
     autoTable(doc, {
-      head: [headers], // Encabezados
-      body, // Cuerpo de la tabla
-      startY: 20, // Ajustar para que no se sobreponga con el título
+      head: [columns], // Usar directamente los títulos de las columnas seleccionadas
+      body, // Usar el cuerpo mapeado
+      startY: 20,
     });
-
+  
     doc.save(`${fileName}.pdf`);
   }
+  
 }
