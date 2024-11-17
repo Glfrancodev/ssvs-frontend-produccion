@@ -8,18 +8,28 @@ import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import {CalificacionService } from '../../core/services/calificacion.service';
+import { Calificacion } from '../../core/models/calificacion';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-mi-historia-clinica',
   standalone: true,
   templateUrl: './mi-historia-clinica.component.html',
   styleUrls: ['./mi-historia-clinica.component.css'],
-  imports: [TableModule, CommonModule, ButtonModule]
+  imports: [TableModule, CommonModule, ButtonModule, DialogModule, InputNumberModule, TableModule, FormsModule]
 })
 export default class HistoriaClinicaComponent implements OnInit {
   consultas: Consulta[] = [];
   aseguradoDatos: string[] = [];
   mostrarSeleccionColumnas = false; // Se agrega la propiedad para evitar el error
+
+  mostrarModalCalificacion = false; // Controla el modal
+  calificacion = 0; // Almacena la calificación seleccionada
+  medicoSeleccionado = ''; // Nombre del médico a calificar
+  medicoId = 0; // ID del médico asociado a la consulta seleccionada
 
   columnasDisponibles = [
     { campo: 'fechaConsulta', titulo: 'Fecha de Consulta', seleccionada: true },
@@ -34,7 +44,8 @@ export default class HistoriaClinicaComponent implements OnInit {
     private authService: AuthService,
     private aseguradoService: AseguradoService,
     private pdfExportService: PdfExportService,
-    private router: Router
+    private router: Router,
+    private calificacionService: CalificacionService,
   ) {}
 
   toggleSeleccionColumna(columna: any): void {
@@ -108,5 +119,54 @@ export default class HistoriaClinicaComponent implements OnInit {
 
   irATratamiento(consultaId: number): void {
     this.router.navigate(['/tratamiento', consultaId]);
+  }
+
+  abrirCalificacion(consulta: Consulta): void {
+    this.mostrarModalCalificacion = true;
+    this.medicoSeleccionado = `${consulta.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.nombre || ''} ${
+      consulta.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.apellido || ''
+    }`;
+    this.medicoId = consulta.cupo?.horario?.medicoEspecialidad?.medico?.id || 0;
+  }
+
+  guardarCalificacion(): void {
+    const aseguradocorreo = this.authService.getAuthenticatedUserEmail(); // Obtener el correo del asegurado
+  
+    if (!aseguradocorreo) {
+      console.error('El correo del asegurado no está disponible. No se puede guardar la calificación.');
+      return;
+    }
+  
+    // Obtener el asegurado a partir del correo
+    this.aseguradoService.getAseguradoPorCorreo(aseguradocorreo).subscribe(
+      (asegurado) => {
+        const aseguradoId = asegurado.id; // Obtener el ID del asegurado desde la respuesta
+        if (!aseguradoId) {
+          console.error('El asegurado no tiene un ID válido. No se puede guardar la calificación.');
+          return;
+        }
+  
+        // Crear la nueva calificación
+        const nuevaCalificacion: Calificacion = {
+          medico: { id: this.medicoId , item: ''}, // Relacionar con el médico
+          asegurado: { id: aseguradoId }, // Relacionar con el asegurado
+          estrella: this.calificacion // Asignar la calificación
+        };
+  
+        // Guardar la calificación
+        this.calificacionService.crearCalificacion(nuevaCalificacion).subscribe(
+          () => {
+            console.log('Calificación guardada con éxito.');
+            this.mostrarModalCalificacion = false;
+          },
+          (error) => {
+            console.error('Error al guardar la calificación:', error);
+          }
+        );
+      },
+      (error) => {
+        console.error('Error al obtener el asegurado por correo:', error);
+      }
+    );
   }
 }

@@ -31,7 +31,6 @@
     ></button>
   </div>
 
-  <!-- Tabla de registros de Historia Clínica -->
   <p-table [value]="consultas" [tableStyle]="{ 'min-width': '50rem', 'max-width': '100%' }">
     <ng-template pTemplate="header">
       <tr>
@@ -49,19 +48,37 @@
         <td>{{ consulta.motivoConsulta }}</td>
         <td>{{ consulta.diagnostico }}</td>
         <td>{{ consulta.nota }}</td>
-        <td>{{ consulta.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.nombre || '' }} 
-            {{ consulta.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.apellido || '' }}
+        <td>{{ consulta.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.nombre || '' }}
+          {{ consulta.cupo?.horario?.medicoEspecialidad?.medico?.usuario?.apellido || '' }}
         </td>
         <td>
-          <button 
-            pButton 
-            type="button" 
-            icon="pi pi-arrow-right" 
-            class="p-button-rounded p-button-info" 
-            (click)="irATratamiento(consulta.id)">
-          </button>
+          <button pButton type="button" icon="pi pi-arrow-right" class="p-button-rounded p-button-info" (click)="irATratamiento(consulta.id)"></button>
+          <button pButton type="button" icon="pi pi-star" class="p-button-rounded p-button-warning" (click)="abrirCalificacion(consulta)"></button>
         </td>
       </tr>
     </ng-template>
   </p-table>
+  
+  <p-dialog 
+    header="Califica a tu médico" 
+    [(visible)]="mostrarModalCalificacion" 
+    [modal]="true" 
+    [closable]="false" 
+    [style]="{ width: '30%' }">
+
+
+    <div class="p-field">
+      <label for="medico">Médico:</label>
+      <p>{{ medicoSeleccionado }}</p>
+    </div>
+    <div class="p-field">
+      <label for="calificacion">Calificación (1-5 estrellas):</label>
+      <p-inputNumber [(ngModel)]="calificacion" [min]="1" [max]="5" [step]="1"></p-inputNumber>
+    </div>
+    <div class="p-field">
+      <button pButton type="button" label="Guardar" class="p-button-success" (click)="guardarCalificacion()"></button>
+      <button pButton type="button" label="Cancelar" class="p-button-secondary" (click)="mostrarModalCalificacion = false"></button>
+    </div>
+  </p-dialog>
+  
 </div>
