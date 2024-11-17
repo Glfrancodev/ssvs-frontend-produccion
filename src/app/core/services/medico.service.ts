@@ -56,5 +56,11 @@ export class MedicoService {
     return this.http.get<Medico>(`${this.apiUrl}/correo/${correo}`, { headers: this.getAuthHeaders()});
   }
 
+  // Obtener promedio de calificaciones por médico ID
+  obtenerPromedioCalificaciones(medicoId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/${medicoId}/promedio-calificaciones`, {
+      headers: this.getAuthHeaders()
+    });
+  }  
 
 }

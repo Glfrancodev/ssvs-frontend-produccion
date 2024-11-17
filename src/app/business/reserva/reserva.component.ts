@@ -18,6 +18,7 @@ import { Cupo } from '../../core/models/cupo';
 import { CupoService } from '../../core/services/cupo.service';
 import { AseguradoService } from '../../core/services/asegurado.service';
 import { AuthService } from '../../core/services/auth.service';
+import { MedicoService } from '../../core/services/medico.service';
 
 interface MedicoDropdownItem {
   id: number | undefined;
@@ -58,7 +59,8 @@ export default class ReservaComponent implements OnInit {
     private horarioService: HorarioService,
     private cupoService: CupoService,
     private aseguradoService: AseguradoService,
-    private authService: AuthService
+    private authService: AuthService,
+    private medicoService: MedicoService
   ) {}
 
   ngOnInit(): void {
@@ -81,16 +83,28 @@ export default class ReservaComponent implements OnInit {
   
   obtenerMedicosPorEspecialidad(especialidadId: number): void {
     this.medicoEspecialidadService.getMedicoEspecialidades().subscribe((data) => {
-      const medicosFiltrados: MedicoDropdownItem[] = data
+      const medicosFiltrados: MedicoDropdownItem[] = [];
+  
+      const requests = data
         .filter((me) => me.especialidad!.id === especialidadId && me.medico !== undefined)
-        .map((me) => ({
-          id: me.medico!.id,
-          nombreCompleto: `${me.medico!.usuario!.nombre} ${me.medico!.usuario!.apellido}`
-        }));
-
-      this.medicos = medicosFiltrados;
+        .map((me) => {
+          const medicoId = me.medico!.id!;
+          const nombreCompleto = `${me.medico!.usuario!.nombre} ${me.medico!.usuario!.apellido}`;
+          return this.medicoService.obtenerPromedioCalificaciones(medicoId).toPromise()
+            .then((promedio) => {
+              medicosFiltrados.push({
+                id: medicoId,
+                nombreCompleto: `${nombreCompleto} - ${promedio?.toFixed(1) || 'Sin calificaciones'} ★`
+              });
+            });
+        });
+  
+      Promise.all(requests).then(() => {
+        this.medicos = medicosFiltrados;
+      });
     });
   }
+  
 
   onMedicoChange(): void {
     if (this.selectedEspecialidad?.id !== undefined && this.selectedMedico?.id !== undefined) {
