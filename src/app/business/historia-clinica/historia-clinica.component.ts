@@ -169,11 +169,23 @@
         return fila;
       });
     
+      // Crear los datos del asegurado para exportar
+      const datosAsegurado = this.asegurado
+        ? [
+            `Nombre: ${this.asegurado.usuario?.nombre || ''} ${this.asegurado.usuario?.apellido || ''}`,
+            `CI: ${this.asegurado.usuario?.ci || ''}`,
+            `Fecha de Nacimiento: ${this.asegurado.fechaNacimiento || ''}`,
+            `Tipo de Sangre: ${this.asegurado.tipoSangre || ''}`,
+          ]
+        : [];
+    
       this.pdfExportService.exportToPDF(
         datosFiltrados,
         columnasSeleccionadas, // Pasar columnas completas con campo y título
         'Historia Clínica',
-        'historia_clinica'
+        'historia_clinica',
+        datosAsegurado // Pasar datos del asegurado
       );
-    }    
+    }
+    
 }
