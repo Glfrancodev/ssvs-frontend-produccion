@@ -165,8 +165,11 @@ export default class HistoriaClinicaComponent implements OnInit {
     const datosFiltrados = this.consultas.map((consulta) => {
       const resultado: Record<string, any> = {};
       columnasSeleccionadas.forEach((campo) => {
-        if (consulta.hasOwnProperty(campo)) {
+        // Verifica si el campo existe directamente o en propiedades anidadas
+        if (consulta[campo] !== undefined) {
           resultado[campo] = consulta[campo];
+        } else {
+          resultado[campo] = this.obtenerValorAnidado(consulta, campo) || ''; // Maneja valores anidados o vacíos
         }
       });
       return resultado;
@@ -187,4 +190,14 @@ export default class HistoriaClinicaComponent implements OnInit {
       console.error('No hay datos para exportar.');
     }
   }
+  
+  // Método auxiliar para manejar campos anidados
+  private obtenerValorAnidado(obj: any, ruta: string): any {
+    try {
+      return ruta.split('.').reduce((acumulador, clave) => acumulador[clave], obj);
+    } catch {
+      return undefined;
+    }
+  }
+  
 }
