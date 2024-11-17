@@ -162,23 +162,29 @@ export default class HistoriaClinicaComponent implements OnInit {
       .filter((columna) => columna.seleccionada)
       .map((columna) => columna.campo);
   
-    const datosFiltrados = this.consultas.map((consulta) =>
-      columnasSeleccionadas.reduce((acc: Record<string, any>, key: string) => {
-        acc[key] = consulta[key];
-        return acc;
-      }, {})
-    );
+    const datosFiltrados = this.consultas.map((consulta) => {
+      const resultado: Record<string, any> = {};
+      columnasSeleccionadas.forEach((campo) => {
+        if (consulta.hasOwnProperty(campo)) {
+          resultado[campo] = consulta[campo];
+        }
+      });
+      return resultado;
+    });
   
     const titulosSeleccionados = this.columnasDisponibles
       .filter((columna) => columna.seleccionada)
       .map((columna) => columna.titulo);
   
-    this.pdfExportService.exportToPDF(
-      datosFiltrados,
-      titulosSeleccionados,
-      'Historia Clínica',
-      'historia_clinica'
-    );
+    if (datosFiltrados.length > 0) {
+      this.pdfExportService.exportToPDF(
+        datosFiltrados,
+        titulosSeleccionados,
+        'Historia Clínica',
+        'historia_clinica'
+      );
+    } else {
+      console.error('No hay datos para exportar.');
+    }
   }
-
 }
