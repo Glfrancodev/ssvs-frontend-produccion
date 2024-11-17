@@ -46,4 +46,15 @@ export class CalificacionService {
   eliminarCalificacion(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getAuthHeaders() });
   }
+
+  buscarCalificacion(aseguradoId: number, medicoId: number): Observable<Calificacion | null> {
+    const url = `${this.apiUrl}/buscar?aseguradoId=${aseguradoId}&medicoId=${medicoId}`;
+    return this.http.get<Calificacion | null>(url, { headers: this.getAuthHeaders() });
+  }
+  
+  // Actualizar una calificación existente
+  actualizarCalificacion(calificacion: Calificacion): Observable<Calificacion> {
+    const url = `${this.apiUrl}/${calificacion.id}`;
+    return this.http.put<Calificacion>(url, calificacion, { headers: this.getAuthHeaders() });
+  }
 }

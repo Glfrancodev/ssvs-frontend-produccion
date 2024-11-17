@@ -146,21 +146,43 @@ export default class HistoriaClinicaComponent implements OnInit {
           return;
         }
   
-        // Crear la nueva calificación
-        const nuevaCalificacion: Calificacion = {
-          medico: { id: this.medicoId , item: ''}, // Relacionar con el médico
-          asegurado: { id: aseguradoId }, // Relacionar con el asegurado
-          estrella: this.calificacion // Asignar la calificación
-        };
+        // Verificar si ya existe una calificación para este médico y asegurado
+        this.calificacionService.buscarCalificacion(aseguradoId, this.medicoId).subscribe(
+          (calificacionExistente) => {
+            if (calificacionExistente) {
+              // Si existe una calificación, actualizarla
+              calificacionExistente.estrella = this.calificacion; // Actualizar la calificación con la nueva
+              this.calificacionService.actualizarCalificacion(calificacionExistente).subscribe(
+                () => {
+                  console.log('Calificación actualizada con éxito.');
+                  this.mostrarModalCalificacion = false;
+                },
+                (error) => {
+                  console.error('Error al actualizar la calificación:', error);
+                }
+              );
+            } else {
+              // Si no existe una calificación, crear una nueva
+              const nuevaCalificacion: Calificacion = {
+                medico: { id: this.medicoId, item: '' }, // Relacionar con el médico
+                asegurado: { id: aseguradoId }, // Relacionar con el asegurado
+                estrella: this.calificacion // Asignar la calificación
+              };
   
-        // Guardar la calificación
-        this.calificacionService.crearCalificacion(nuevaCalificacion).subscribe(
-          () => {
-            console.log('Calificación guardada con éxito.');
-            this.mostrarModalCalificacion = false;
+              // Guardar la calificación
+              this.calificacionService.crearCalificacion(nuevaCalificacion).subscribe(
+                () => {
+                  console.log('Calificación guardada con éxito.');
+                  this.mostrarModalCalificacion = false;
+                },
+                (error) => {
+                  console.error('Error al guardar la calificación:', error);
+                }
+              );
+            }
           },
           (error) => {
-            console.error('Error al guardar la calificación:', error);
+            console.error('Error al buscar calificación existente:', error);
           }
         );
       },
@@ -169,4 +191,5 @@ export default class HistoriaClinicaComponent implements OnInit {
       }
     );
   }
+  
 }
