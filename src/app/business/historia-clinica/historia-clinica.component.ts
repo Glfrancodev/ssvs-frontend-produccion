@@ -158,31 +158,22 @@
     }
 
     exportarHistoriaClinica(): void {
-      // Obtener las columnas seleccionadas
-      const columnasSeleccionadas = this.columnasDisponibles
-        .filter((columna) => columna.seleccionada)
-        .map((columna) => columna.campo);
+      const columnasSeleccionadas = this.columnasDisponibles.filter((col) => col.seleccionada);
     
-      // Mapear datos con base en las columnas seleccionadas
+      // Filtrar datos según las columnas seleccionadas
       const datosFiltrados = this.consultas.map((consulta) => {
         const fila: Record<string, any> = {};
-        columnasSeleccionadas.forEach((campo) => {
-          fila[campo] = consulta[campo] || ''; // Usar valores existentes o vacío si no existe
+        columnasSeleccionadas.forEach((col) => {
+          fila[col.campo] = consulta[col.campo] || ''; // Usar el campo para extraer datos
         });
         return fila;
       });
     
-      // Mapear títulos de las columnas seleccionadas
-      const titulosSeleccionados = this.columnasDisponibles
-        .filter((columna) => columna.seleccionada)
-        .map((columna) => columna.titulo);
-    
-      // Exportar usando el servicio de PDF
       this.pdfExportService.exportToPDF(
         datosFiltrados,
-        titulosSeleccionados,
+        columnasSeleccionadas, // Pasar columnas completas con campo y título
         'Historia Clínica',
         'historia_clinica'
       );
-    }
+    }    
 }
