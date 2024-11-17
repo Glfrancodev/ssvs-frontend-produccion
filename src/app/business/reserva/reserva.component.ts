@@ -92,18 +92,24 @@ export default class ReservaComponent implements OnInit {
           const nombreCompleto = `${me.medico!.usuario!.nombre} ${me.medico!.usuario!.apellido}`;
           return this.medicoService.obtenerPromedioCalificaciones(medicoId).toPromise()
             .then((promedio) => {
+              const calificacion = promedio !== null && promedio !== undefined 
+                ? `${promedio.toFixed(1)} ★` 
+                : '-'; // Colocar "-" si no tiene calificaciones
               medicosFiltrados.push({
                 id: medicoId,
-                nombreCompleto: `${nombreCompleto} - ${promedio?.toFixed(1) || 'Sin calificaciones'} ★`
+                nombreCompleto: `${nombreCompleto} - ${calificacion}`
               });
             });
         });
   
       Promise.all(requests).then(() => {
         this.medicos = medicosFiltrados;
+      }).catch((error) => {
+        console.error("Error al cargar las calificaciones de los médicos:", error);
       });
     });
   }
+  
   
 
   onMedicoChange(): void {
