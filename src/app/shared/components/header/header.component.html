@@ -1,4 +1,4 @@
-<div class="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center">
+<div class="flex flex-col-reverse justify-between gap-6 md:flex-row md:items-center relative">
   <div class="capitalize">
     <nav aria-label="breadcrumb" class="w-max">
       <ol class="flex flex-wrap items-center w-full bg-opacity-60 rounded-md bg-transparent p-0 transition-all">
@@ -23,30 +23,32 @@
       </div>
     </div>
 
-  <!-- Botón de campana para notificaciones -->
-  <button
-    (click)="toggleNotificaciones()"
-    class="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30 grid"
-    type="button"
-  >
-    <span class="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-6 w-6 text-blue-gray-500">
-        <path d="M12 2a6 6 0 016 6v5h1a2 2 0 012 2v1a2 2 0 01-2 2h-1a4.978 4.978 0 01-1.528 3.528A4.978 4.978 0 0112 22a4.978 4.978 0 01-3.528-1.472A4.978 4.978 0 017 17H6a2 2 0 01-2-2v-1a2 2 0 012-2h1V8a6 6 0 016-6zm0 2a4 4 0 00-4 4v5H6v1h12v-1h-2V8a4 4 0 00-4-4zm0 16a3 3 0 002.121-.879A2.978 2.978 0 0015 17H9a2.978 2.978 0 00.879 2.121A3 3 0 0012 20z"></path>
-      </svg>
-    </span>
-  </button>
-
-    <!-- Récuadro de notificaciones -->
-    <div *ngIf="mostrarNotificaciones" class="notificaciones-container">
-      <div class="notificaciones-header">
-        <span>Notificaciones</span>
-        <button (click)="marcarTodasComoLeidas()">Marcar todas como leídas</button>
+    <div class="flex items-center relative">
+      <!-- Botón de campana para notificaciones -->
+      <button
+        (click)="toggleNotificaciones()"
+        class="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30 grid"
+        type="button"
+      >
+        <span class="absolute top-1/2 left-1/2 transform -translate-y-1/2 -translate-x-1/2">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="h-6 w-6 text-blue-gray-500">
+            <path d="M12 2a6 6 0 016 6v5h1a2 2 0 012 2v1a2 2 0 01-2 2h-1a4.978 4.978 0 01-1.528 3.528A4.978 4.978 0 0112 22a4.978 4.978 0 01-3.528-1.472A4.978 4.978 0 017 17H6a2 2 0 01-2-2v-1a2 2 0 012-2h1V8a6 6 0 016-6zm0 2a4 4 0 00-4 4v5H6v1h12v-1h-2V8a4 4 0 00-4-4zm0 16a3 3 0 002.121-.879A2.978 2.978 0 0015 17H9a2.978 2.978 0 00.879 2.121A3 3 0 0012 20z"></path>
+          </svg>
+        </span>
+      </button>
+  
+      <!-- Récuadro de notificaciones -->
+      <div *ngIf="mostrarNotificaciones" class="notificaciones-container">
+        <div class="notificaciones-header">
+          <span>Notificaciones</span>
+          <button (click)="marcarTodasComoLeidas()">Marcar todas como leídas</button>
+        </div>
+        <ul>
+          <li *ngFor="let notificacion of notificaciones">
+            <span [class.leido]="notificacion.leido">{{ notificacion.descripcion }}</span>
+          </li>
+        </ul>
       </div>
-      <ul>
-        <li *ngFor="let notificacion of notificaciones">
-          <span [class.leido]="notificacion.leido">{{ notificacion.descripcion }}</span>
-        </li>
-      </ul>
     </div>
 
     <button (click)="toggleSidebar()" class="relative middle none font-sans font-medium text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none w-10 max-w-[40px] h-10 max-h-[40px] rounded-lg text-xs text-gray-500 hover:bg-blue-gray-500/10 active:bg-blue-gray-500/30 grid xl:hidden " type="button">
