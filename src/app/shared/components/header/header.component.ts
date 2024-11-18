@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { SidebarService } from '../../../core/services/sidebar.service';
@@ -6,6 +6,7 @@ import { BitacoraService } from '../../../core/services/bitacora.service';
 import { Bitacora } from '../../../core/models/bitacora';
 import { Notificacion } from '../../../core/models/notificacion';
 import { NotificacionService } from '../../../core/services/notificacion.service';
+import { AseguradoService } from '../../../core/services/asegurado.service';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 
@@ -16,26 +17,46 @@ import { CommonModule } from '@angular/common';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  notificaciones: Notificacion[] = [];
+  mostrarNotificaciones: boolean = false; // Controla la visibilidad del recuadro
+  aseguradoId: number | null = null;
+
   constructor(
     private authService: AuthService,
     private router: Router,
     private sidebarService: SidebarService,
     private bitacoraService: BitacoraService,
-    private notificacionService: NotificacionService
+    private notificacionService: NotificacionService,
+    private aseguradoService: AseguradoService
   ) {}
 
-  notificaciones: Notificacion[] = [];
-  mostrarNotificaciones: boolean = false; // Controla la visibilidad del recuadro
-
   ngOnInit(): void {
-    this.cargarNotificaciones();
+    this.obtenerAseguradoId();
+  }
+
+  obtenerAseguradoId(): void {
+    const correo = this.authService.getAuthenticatedUserEmail();
+    if (correo) {
+      this.aseguradoService.getAseguradoPorCorreo(correo).subscribe({
+        next: (asegurado) => {
+          if (asegurado && asegurado.id !== undefined) {
+            this.aseguradoId = asegurado.id; // Asigna el valor si está definido
+            this.cargarNotificaciones(); // Cargar notificaciones una vez que se obtiene el ID
+          } else {
+            console.error('El asegurado no tiene un ID válido.');
+            this.aseguradoId = null; // Asigna null en caso de que no tenga ID
+          }
+        },
+        error: (err) => console.error('Error al obtener el asegurado:', err),
+      });
+      
+    }
   }
 
   cargarNotificaciones(): void {
-    const correo = this.authService.getAuthenticatedUserEmail();
-    if (correo) {
-      this.notificacionService.obtenerNotificacionesPorCorreo(correo).subscribe({
+    if (this.aseguradoId) {
+      this.notificacionService.obtenerNotificacionesPorAseguradoId(this.aseguradoId).subscribe({
         next: (data) => {
           this.notificaciones = data;
         },
@@ -45,12 +66,14 @@ export class HeaderComponent {
   }
 
   marcarTodasComoLeidas(): void {
-    this.notificacionService.marcarTodasComoLeidas().subscribe({
-      next: () => {
-        this.notificaciones.forEach((notificacion) => (notificacion.leido = true));
-      },
-      error: (err) => console.error('Error al marcar todas como leídas:', err),
-    });
+    if (this.aseguradoId) {
+      this.notificacionService.marcarTodasComoLeidas(this.aseguradoId).subscribe({
+        next: () => {
+          this.notificaciones.forEach((notificacion) => (notificacion.leido = true));
+        },
+        error: (err) => console.error('Error al marcar todas como leídas:', err),
+      });
+    }
   }
 
   toggleNotificaciones(): void {
@@ -69,24 +92,23 @@ export class HeaderComponent {
         const hora = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
 
         const bitacoraEntry: Bitacora = {
-          correo: this.authService.getAuthenticatedUserEmail() || '', // Asume que tienes este método para obtener el correo del usuario autenticado
+          correo: this.authService.getAuthenticatedUserEmail() || '',
           fecha: fecha,
           hora: hora,
           ip: response.ip,
           accion: 'Cierre de sesión',
-          detalle: 'El usuario cerró sesión en la plataforma'
+          detalle: 'El usuario cerró sesión en la plataforma',
         };
 
         this.bitacoraService.createBitacora(bitacoraEntry).subscribe({
           next: () => console.log('Bitácora de cierre de sesión registrada con éxito'),
-          error: (err) => console.error('Error al registrar en la bitácora', err)
+          error: (err) => console.error('Error al registrar en la bitácora', err),
         });
 
-        // Procede a cerrar sesión y redirigir al usuario
         this.authService.logout();
         this.router.navigate(['/login']);
       },
-      error: (err) => console.error('Error al obtener IP', err)
+      error: (err) => console.error('Error al obtener IP', err),
     });
   }
 }

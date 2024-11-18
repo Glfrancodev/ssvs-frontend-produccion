@@ -1,58 +1,51 @@
-.notificaciones-container {
-    position: absolute;
-    top: 50px;
-    right: 20px;
-    width: 300px;
-    max-height: 400px;
-    overflow-y: auto;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+.notification-container {
+    position: relative;
   }
   
-  .notificaciones-header {
+  .notification-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+  }
+  
+  .notification-dropdown {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 300px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .notification-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    background: #f7f7f7;
   }
   
-  .notificaciones-header span {
-    font-weight: bold;
+  .notification-body {
+    max-height: 300px;
+    overflow-y: auto;
   }
   
-  .notificaciones-header button {
-    background: none;
-    border: none;
-    color: #007bff;
-    cursor: pointer;
-  }
-  
-  .notificaciones-container ul {
+  .notification-body ul {
     list-style: none;
-    margin: 0;
     padding: 0;
+    margin: 0;
   }
   
-  .notificaciones-container li {
+  .notification-body li {
     padding: 10px;
     border-bottom: 1px solid #ddd;
   }
   
-  .notificaciones-container li:last-child {
-    border-bottom: none;
-  }
-  
-  .notificaciones-container li span.leido {
-    color: #6c757d;
-    text-decoration: line-through;
-  }
-  
-  .notificaciones-container li span {
-    font-size: 14px;
+  .unread-badge {
+    color: red;
+    font-size: 0.8rem;
   }
   
