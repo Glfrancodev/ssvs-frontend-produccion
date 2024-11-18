@@ -4,11 +4,15 @@ import { Router } from '@angular/router';
 import { SidebarService } from '../../../core/services/sidebar.service';
 import { BitacoraService } from '../../../core/services/bitacora.service';
 import { Bitacora } from '../../../core/models/bitacora';
+import { Notificacion } from '../../../core/models/notificacion';
+import { NotificacionService } from '../../../core/services/notificacion.service';
+import { TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [],
+  imports: [TableModule, CommonModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
@@ -17,8 +21,41 @@ export class HeaderComponent {
     private authService: AuthService,
     private router: Router,
     private sidebarService: SidebarService,
-    private bitacoraService: BitacoraService
+    private bitacoraService: BitacoraService,
+    private notificacionService: NotificacionService
   ) {}
+
+  notificaciones: Notificacion[] = [];
+  mostrarNotificaciones: boolean = false; // Controla la visibilidad del recuadro
+
+  ngOnInit(): void {
+    this.cargarNotificaciones();
+  }
+
+  cargarNotificaciones(): void {
+    const correo = this.authService.getAuthenticatedUserEmail();
+    if (correo) {
+      this.notificacionService.obtenerNotificacionesPorCorreo(correo).subscribe({
+        next: (data) => {
+          this.notificaciones = data;
+        },
+        error: (err) => console.error('Error al cargar las notificaciones:', err),
+      });
+    }
+  }
+
+  marcarTodasComoLeidas(): void {
+    this.notificacionService.marcarTodasComoLeidas().subscribe({
+      next: () => {
+        this.notificaciones.forEach((notificacion) => (notificacion.leido = true));
+      },
+      error: (err) => console.error('Error al marcar todas como leídas:', err),
+    });
+  }
+
+  toggleNotificaciones(): void {
+    this.mostrarNotificaciones = !this.mostrarNotificaciones;
+  }
 
   toggleSidebar() {
     this.sidebarService.toggleSidebar();
