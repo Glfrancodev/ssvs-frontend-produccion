@@ -54,28 +54,33 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  contadorNoLeidas: number = 0;
+
   cargarNotificaciones(): void {
     if (this.aseguradoId) {
       this.notificacionService.obtenerNotificacionesPorAseguradoId(this.aseguradoId).subscribe({
         next: (data) => {
           this.notificaciones = data;
+          // Contar las notificaciones no leídas
+          this.contadorNoLeidas = this.notificaciones.filter((notificacion) => !notificacion.leido).length;
         },
         error: (err) => console.error('Error al cargar las notificaciones:', err),
       });
     }
   }
-
+  
   marcarTodasComoLeidas(): void {
     if (this.aseguradoId) {
       this.notificacionService.marcarTodasComoLeidas(this.aseguradoId).subscribe({
         next: () => {
           this.notificaciones.forEach((notificacion) => (notificacion.leido = true));
+          this.contadorNoLeidas = 0; // Reinicia el contador
         },
         error: (err) => console.error('Error al marcar todas como leídas:', err),
       });
     }
   }
-
+  
   toggleNotificaciones(): void {
     this.mostrarNotificaciones = !this.mostrarNotificaciones;
   }
